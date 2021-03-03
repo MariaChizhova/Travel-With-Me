@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,6 +32,8 @@ public class LoginActivity extends AppCompatActivity {
 
         final Button signUpButton = findViewById(R.id.signup_button);
         final Button loginButton = findViewById(R.id.login_button);
+
+        final TextView resetPasswordTv = findViewById(R.id.reset_pass_tv);
 
         loginButton.setOnClickListener(v -> {
             String email = emailEditText.getText().toString();
@@ -59,6 +62,11 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(intentSingUpActivity);
             finish();
         });
+
+        resetPasswordTv.setOnClickListener(v -> {
+            startActivity(new Intent(getApplicationContext(), ForgotPasswordActivity.class));
+        });
+
     }
 
 }

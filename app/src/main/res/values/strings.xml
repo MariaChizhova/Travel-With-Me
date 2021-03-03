@@ -5,5 +5,8 @@
     <string name="password_hint">password</string>
     <string name="login_button">LOGIN</string>
     <string name="signup_button">SIGN UP</string>
+    <string name="get_password_link">GET PASSWORD LINK</string>
+    <string name="back">BACK</string>
+    <string name="logout">LOGOUT</string>
 
 </resources>
