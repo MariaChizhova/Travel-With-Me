@@ -11,31 +11,37 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
 
+    // Firebase Authentication SDK
+    private FirebaseAuth auth;
+
+    // UI references
+    private Button logoutButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final FirebaseAuth auth = FirebaseAuth.getInstance();
+        // initialization of Firebase Authentication SDK
+        auth = FirebaseAuth.getInstance();
 
         if (auth.getCurrentUser() == null) {
-            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-            finish();
-        } else {
-            Toast.makeText(this, "Already logged in", Toast.LENGTH_LONG).show();
+            toLoginActivity();
         }
 
         setContentView(R.layout.activity_main);
 
-        final Button logoutButton = findViewById(R.id.logout_button);
+        // initialization of UI references
+        logoutButton = findViewById(R.id.logout_button);
 
-        logoutButton.setOnClickListener(v -> {
-            FirebaseAuth.getInstance().signOut();
-            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-            finish();
-        });
+        // set function for the click
+        logoutButton.setOnClickListener(view -> toLoginActivity());
+    }
 
-
-
+    // move to the LoginActivity with sing out
+    private void toLoginActivity() {
+        auth.signOut();
+        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+        finish();
     }
 
 }

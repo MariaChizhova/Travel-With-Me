@@ -14,59 +14,71 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class LoginActivity extends AppCompatActivity {
 
+    // Firebase Authentication SDK
+    private FirebaseAuth auth;
+
+    // UI references
+    private EditText emailEditText;
+    private EditText passwordEditText;
+    private Button loginButton;
+    private Button signUpButton;
+    private TextView resetPasswordTv;
+
+    // Toast messages
+    private static final String emptyCaseMessage = "Please fill all the fields";
+    private static final String successCaseMessage = "Successfully Logged In";
+    private static final String failedCaseMessage = "Login Failed";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        final Intent intentMainActivity = new Intent(this, MainActivity.class);
+        // initialization of Firebase Authentication SDK
+        auth = FirebaseAuth.getInstance();
 
-        final Toast toastEmptyCase = Toast.makeText(this, "Please fill all the fields", Toast.LENGTH_LONG);
-        final Toast toastSuccessCase = Toast.makeText(this, "Successfully Logged In", Toast.LENGTH_LONG);
-        final Toast toastFailedCase = Toast.makeText(this, "Login Failed", Toast.LENGTH_LONG);
+        // initialization of UI references
+        emailEditText = findViewById(R.id.email_edit_text);
+        passwordEditText = findViewById(R.id.pass_edit_text);
+        signUpButton = findViewById(R.id.signup_button);
+        loginButton = findViewById(R.id.login_button);
+        resetPasswordTv = findViewById(R.id.reset_pass_tv);
 
-        final FirebaseAuth auth = FirebaseAuth.getInstance();
+        // set function for the click
+        loginButton.setOnClickListener(view -> login());
+        signUpButton.setOnClickListener(view -> toSignUpActivity());
+        resetPasswordTv.setOnClickListener(view -> toForgotPasswordActivity());
+    }
 
-        final EditText emailEditText = findViewById(R.id.email_edit_text);
-        final EditText passwordEditText = findViewById(R.id.pass_edit_text);
+    // try to login
+    private void login() {
+        String email = emailEditText.getText().toString();
+        String password = passwordEditText.getText().toString();
+        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
+            Toast.makeText(getApplicationContext(), emptyCaseMessage, Toast.LENGTH_LONG).show();
+        } else {
+            auth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(LoginActivity.this, task -> {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(getApplicationContext(), successCaseMessage, Toast.LENGTH_LONG).show();
+                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                            finish();
+                        } else {
+                            Toast.makeText(getApplicationContext(), failedCaseMessage, Toast.LENGTH_LONG).show();
+                        }
+                    });
+        }
+    }
 
-        final Button signUpButton = findViewById(R.id.signup_button);
-        final Button loginButton = findViewById(R.id.login_button);
+    // move to the SignUpActivity
+    private void toSignUpActivity() {
+        startActivity(new Intent(getApplicationContext(), SignUpActivity.class));
+        finish();
+    }
 
-        final TextView resetPasswordTv = findViewById(R.id.reset_pass_tv);
-
-        loginButton.setOnClickListener(v -> {
-            String email = emailEditText.getText().toString();
-            String password = passwordEditText.getText().toString();
-
-            if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
-                toastEmptyCase.show();
-            } else {
-
-                auth.signInWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(LoginActivity.this, task -> {
-                            if (task.isSuccessful()) {
-                                toastSuccessCase.show();
-                                startActivity(intentMainActivity);
-                                finish();
-                            } else {
-                                toastFailedCase.show();
-                            }
-                        });
-
-            }
-        });
-
-        signUpButton.setOnClickListener(v -> {
-            final Intent intentSingUpActivity = new Intent(this, SignUpActivity.class);
-            startActivity(intentSingUpActivity);
-            finish();
-        });
-
-        resetPasswordTv.setOnClickListener(v -> {
-            startActivity(new Intent(getApplicationContext(), ForgotPasswordActivity.class));
-        });
-
+    // move to the ForgotPasswordActivity
+    private void toForgotPasswordActivity() {
+        startActivity(new Intent(getApplicationContext(), ForgotPasswordActivity.class));
     }
 
 }
