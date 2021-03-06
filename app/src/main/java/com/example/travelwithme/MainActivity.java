@@ -5,14 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
 
     // Firebase Authentication SDK
-    private FirebaseAuth auth;
+    private FirebaseAuth mAuth;
 
     // UI references
     private Button logoutButton;
@@ -22,9 +21,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         // initialization of Firebase Authentication SDK
-        auth = FirebaseAuth.getInstance();
+        mAuth = FirebaseAuth.getInstance();
 
-        if (auth.getCurrentUser() == null) {
+        // check if user is signed in(not-null)
+        if (mAuth.getCurrentUser() == null) {
             toLoginActivity();
         }
 
@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
     // move to the LoginActivity with sing out
     private void toLoginActivity() {
-        auth.signOut();
+        mAuth.signOut();
         startActivity(new Intent(getApplicationContext(), LoginActivity.class));
         finish();
     }
