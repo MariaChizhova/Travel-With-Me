@@ -10,63 +10,132 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.GoogleAuthProvider;
 
 public class LoginActivity extends AppCompatActivity {
+
+    // Firebase Authentication SDK
+    private FirebaseAuth mAuth;
+    private GoogleSignInClient mGoogleSignInClient;
+
+    // UI references
+    private EditText emailEditText;
+    private EditText passwordEditText;
+    private Button loginButton;
+    private Button signUpButton;
+    private Button signInWithGoogleButton;
+    private TextView resetPasswordTv;
+
+    // Toast messages
+    private static final String emptyCaseMessage = "Please fill all the fields";
+    private static final String successCaseMessage = "Successfully Logged In";
+    private static final String failedCaseMessage = "Login Failed";
+
+    // request code for sign in with google
+    private static final int RC_SIGN_IN_WITH_GOOGLE = 314;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        final Intent intentMainActivity = new Intent(this, MainActivity.class);
+        // Configure Google Sign In
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
 
-        final Toast toastEmptyCase = Toast.makeText(this, "Please fill all the fields", Toast.LENGTH_LONG);
-        final Toast toastSuccessCase = Toast.makeText(this, "Successfully Logged In", Toast.LENGTH_LONG);
-        final Toast toastFailedCase = Toast.makeText(this, "Login Failed", Toast.LENGTH_LONG);
+        // initialization of Firebase Authentication SDK
+        mAuth = FirebaseAuth.getInstance();
+        mGoogleSignInClient = GoogleSignIn.getClient(getApplicationContext(), gso);
 
-        final FirebaseAuth auth = FirebaseAuth.getInstance();
+        // initialization of UI references
+        emailEditText = findViewById(R.id.email_edit_text);
+        passwordEditText = findViewById(R.id.pass_edit_text);
+        signUpButton = findViewById(R.id.signup_button);
+        loginButton = findViewById(R.id.login_button);
+        signInWithGoogleButton = findViewById(R.id.google_sign_in_button);
+        resetPasswordTv = findViewById(R.id.reset_pass_tv);
 
-        final EditText emailEditText = findViewById(R.id.email_edit_text);
-        final EditText passwordEditText = findViewById(R.id.pass_edit_text);
+        // set function for the click
+        loginButton.setOnClickListener(view -> login());
+        signUpButton.setOnClickListener(view -> toSignUpActivity());
+        signInWithGoogleButton.setOnClickListener(view -> signInWithGoogle());
+        resetPasswordTv.setOnClickListener(view -> toForgotPasswordActivity());
+    }
 
-        final Button signUpButton = findViewById(R.id.signup_button);
-        final Button loginButton = findViewById(R.id.login_button);
+    // try to login
+    private void login() {
+        String email = emailEditText.getText().toString();
+        String password = passwordEditText.getText().toString();
+        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
+            Toast.makeText(getApplicationContext(), emptyCaseMessage, Toast.LENGTH_LONG).show();
+        } else {
+            mAuth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(LoginActivity.this, task -> {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(getApplicationContext(), successCaseMessage, Toast.LENGTH_LONG).show();
+                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                            finish();
+                        } else {
+                            Toast.makeText(getApplicationContext(), failedCaseMessage, Toast.LENGTH_LONG).show();
+                        }
+                    });
+        }
+    }
 
-        final TextView resetPasswordTv = findViewById(R.id.reset_pass_tv);
+    // move to the SignUpActivity
+    private void toSignUpActivity() {
+        startActivity(new Intent(getApplicationContext(), SignUpActivity.class));
+        finish();
+    }
 
-        loginButton.setOnClickListener(v -> {
-            String email = emailEditText.getText().toString();
-            String password = passwordEditText.getText().toString();
+    // move to the ForgotPasswordActivity
+    private void toForgotPasswordActivity() {
+        startActivity(new Intent(getApplicationContext(), ForgotPasswordActivity.class));
+    }
 
-            if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
-                toastEmptyCase.show();
+    // sign in with google
+    private void signInWithGoogle() {
+        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+        startActivityForResult(signInIntent, RC_SIGN_IN_WITH_GOOGLE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        if (requestCode == RC_SIGN_IN_WITH_GOOGLE) {
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            if (task.isSuccessful()) {
+                GoogleSignInAccount account = task.getResult();
+                firebaseAuthWithGoogle(account.getIdToken());
             } else {
-
-                auth.signInWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(LoginActivity.this, task -> {
-                            if (task.isSuccessful()) {
-                                toastSuccessCase.show();
-                                startActivity(intentMainActivity);
-                                finish();
-                            } else {
-                                toastFailedCase.show();
-                            }
-                        });
-
+                Toast.makeText(getApplicationContext(), failedCaseMessage, Toast.LENGTH_LONG).show();
             }
-        });
+        }
+    }
 
-        signUpButton.setOnClickListener(v -> {
-            final Intent intentSingUpActivity = new Intent(this, SignUpActivity.class);
-            startActivity(intentSingUpActivity);
-            finish();
-        });
-
-        resetPasswordTv.setOnClickListener(v -> {
-            startActivity(new Intent(getApplicationContext(), ForgotPasswordActivity.class));
-        });
-
+    private void firebaseAuthWithGoogle(String idToken) {
+        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(getApplicationContext(), successCaseMessage, Toast.LENGTH_LONG).show();
+                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                        finish();
+                    } else {
+                        Toast.makeText(getApplicationContext(), failedCaseMessage, Toast.LENGTH_LONG).show();
+                    }
+                });
     }
 
 }

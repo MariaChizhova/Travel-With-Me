@@ -12,38 +12,52 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class ForgotPasswordActivity extends AppCompatActivity {
 
+    // Firebase Authentication SDK
+    private FirebaseAuth auth;
+
+    // UI references
+    private EditText emailEditText;
+    private Button resetPasswordButton;
+    private Button backButton;
+
+    // Toast messages
+    private static final String emptyCaseMessage = "Please enter email id";
+    private static final String successCaseMessage = "Reset link sent to your email";
+    private static final String failedCaseMessage = "Unable to send reset mail";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forgot_password);
 
-        final FirebaseAuth auth = FirebaseAuth.getInstance();
+        // initialization of Firebase Authentication SDK
+        auth = FirebaseAuth.getInstance();
 
-        final EditText emailEditText = findViewById(R.id.email_edit_text);
+        // initialization of UI references
+        emailEditText = findViewById(R.id.email_edit_text);
+        resetPasswordButton = findViewById(R.id.reset_pass_button);
+        backButton = findViewById(R.id.back_button);
 
-        final Button resetPasswordButton = findViewById(R.id.reset_pass_button);
-        final Button backButton = findViewById(R.id.back_button);
-
-        backButton.setOnClickListener(v -> finish());
-
-        resetPasswordButton.setOnClickListener(v -> {
-            String email = emailEditText.getText().toString();
-
-            if (TextUtils.isEmpty(email)) {
-                Toast.makeText(ForgotPasswordActivity.this, "Please enter email id", Toast.LENGTH_LONG).show();
-            } else {
-
-                auth.sendPasswordResetEmail(email)
-                        .addOnCompleteListener(ForgotPasswordActivity.this, task -> {
-                            if (task.isSuccessful()) {
-                                Toast.makeText(this, "Reset link sent to your email", Toast.LENGTH_LONG).show();
-                            } else {
-                                Toast.makeText(this, "Unable to send reset mail", Toast.LENGTH_LONG).show();
-                            }
-                        });
-
-            }
-        });
-
+        // set function for the click
+        resetPasswordButton.setOnClickListener(view -> resetPassword());
+        backButton.setOnClickListener(view -> finish());
     }
+
+    // try to send a reset link
+    private void resetPassword() {
+        String email = emailEditText.getText().toString();
+        if (TextUtils.isEmpty(email)) {
+            Toast.makeText(getApplicationContext(), emptyCaseMessage, Toast.LENGTH_LONG).show();
+        } else {
+            auth.sendPasswordResetEmail(email)
+                    .addOnCompleteListener(ForgotPasswordActivity.this, task -> {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(getApplicationContext(), successCaseMessage, Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(getApplicationContext(), failedCaseMessage, Toast.LENGTH_LONG).show();
+                        }
+                    });
+        }
+    }
+
 }

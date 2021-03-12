@@ -13,52 +13,63 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class SignUpActivity extends AppCompatActivity {
 
+    // Firebase Authentication SDK
+    private FirebaseAuth auth;
+
+    // UI references
+    private EditText emailEditText;
+    private EditText passwordEditText;
+    private Button signUpButton;
+    private Button loginButton;
+
+    // Toast messages
+    private static final String emptyCaseMessage = "Please fill all the fields";
+    private static final String successCaseMessage = "Successfully Registered";
+    private static final String failedCaseMessage = "Registration Failed";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_singup);
 
-        final Intent intentMainActivity = new Intent(this, MainActivity.class);
+        // initialization of Firebase Authentication SDK
+        auth = FirebaseAuth.getInstance();
 
-        final Toast toastEmptyCase = Toast.makeText(this, "Please fill all the fields", Toast.LENGTH_LONG);
-        final Toast toastSuccessCase = Toast.makeText(this, "Successfully Registered", Toast.LENGTH_LONG);
-        final Toast toastFailedCase = Toast.makeText(this, "Registration Failed", Toast.LENGTH_LONG);
+        // initialization of UI references
+        emailEditText = findViewById(R.id.email_edit_text);
+        passwordEditText = findViewById(R.id.pass_edit_text);
+        signUpButton = findViewById(R.id.signup_button);
+        loginButton = findViewById(R.id.login_button);
 
-        final FirebaseAuth auth = FirebaseAuth.getInstance();
+        // set function for the click
+        signUpButton.setOnClickListener(view -> signUp());
+        loginButton.setOnClickListener(view -> toLoginActivity());
+    }
 
-        final EditText emailEditText = findViewById(R.id.email_edit_text);
-        final EditText passwordEditText = findViewById(R.id.pass_edit_text);
+    // try to sing up
+    private void signUp() {
+        String email = emailEditText.getText().toString();
+        String password = passwordEditText.getText().toString();
+        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
+            Toast.makeText(getApplicationContext(), emptyCaseMessage, Toast.LENGTH_LONG).show();
+        } else {
+            auth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(SignUpActivity.this, task -> {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(getApplicationContext(), successCaseMessage, Toast.LENGTH_LONG).show();
+                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                            finish();
+                        } else {
+                            Toast.makeText(getApplicationContext(), failedCaseMessage, Toast.LENGTH_LONG).show();
+                        }
+                    });
+        }
+    }
 
-        final Button signUpButton = findViewById(R.id.signup_button);
-        final Button loginButton = findViewById(R.id.login_button);
-
-        signUpButton.setOnClickListener(v -> {
-            String email = emailEditText.getText().toString();
-            String password = passwordEditText.getText().toString();
-
-            if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
-                toastEmptyCase.show();
-            } else {
-
-                auth.createUserWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(SignUpActivity.this, task -> {
-                            if (task.isSuccessful()) {
-                                toastSuccessCase.show();
-                                startActivity(intentMainActivity);
-                                finish();
-                            } else {
-                                toastFailedCase.show();
-                            }
-                        });
-            }
-        });
-
-        loginButton.setOnClickListener(v -> {
-            final Intent intentLoginActivity = new Intent(this, LoginActivity.class);
-            startActivity(intentLoginActivity);
-            finish();
-        });
-
+    // move to the LoginActivity
+    private void toLoginActivity() {
+        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+        finish();
     }
 
 }
