@@ -82,7 +82,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.activity_user_info, container, false);
+        view = inflater.inflate(R.layout.fragment_profile, container, false);
         userImageView = view.findViewById(R.id.user_image_view);
         nameTextView = view.findViewById(R.id.user_name_text_view);
         nickTextView = view.findViewById(R.id.user_nick_text_view);
@@ -92,7 +92,7 @@ public class ProfileFragment extends Fragment {
         followersCountTextView = view.findViewById(R.id.followers_count_text_view);
         initRecyclerView();
         loadUserInfo();
-    //    loadPosts();
+        loadPosts();
         return view;
     }
 
@@ -129,7 +129,6 @@ public class ProfileFragment extends Fragment {
 
     private void initRecyclerView() {
         postsRecyclerView = view.findViewById(R.id.posts_recycler_view);
-        //   postsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         postsRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         postAdapter = new PostAdapter();
         postsRecyclerView.setAdapter(postAdapter);
@@ -141,7 +140,6 @@ public class ProfileFragment extends Fragment {
     }
 
     private void displayUserInfo(User user) {
-        // Picasso.with(this).load(user.getImageUrl()).into(userImageView);
         Picasso.with(view.getContext()).load(user.getImageUrl()).into(userImageView);
         nameTextView.setText(user.getName());
         nickTextView.setText(user.getNick());
