@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="8dp">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/profile_image_view"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="@dimen/text_small_margin"
+        android:src="@mipmap/ic_launcher"
+        android:layout_marginRight="@dimen/text_small_margin" />
+
+    <TextView
+        android:id="@+id/author_name_text_view"
+        style="@style/TextView.Primary.Bold"
+        android:layout_toEndOf="@id/profile_image_view"
+        android:layout_toRightOf="@id/profile_image_view" />
+
+    <TextView
+        android:id="@+id/author_nick_text_view"
+        style="@style/TextView.Secondary"
+        android:layout_marginStart="@dimen/text_small_margin"
+        android:layout_toEndOf="@+id/author_name_text_view"
+        android:layout_marginLeft="@dimen/text_small_margin"
+        android:layout_toRightOf="@+id/author_name_text_view" />
+
+    <TextView
+        android:id="@+id/creation_date_text_view"
+        style="@style/TextView.Secondary"
+        android:layout_marginStart="@dimen/text_small_margin"
+        android:layout_toEndOf="@+id/author_nick_text_view"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:layout_toRightOf="@+id/author_nick_text_view"
+        android:layout_marginLeft="@dimen/text_small_margin" />
+
+    <TextView
+        android:id="@+id/post_content_text_view"
+        style="@style/TextView.Primary"
+        android:layout_below="@id/author_name_text_view"
+        android:layout_marginTop="@dimen/text_small_margin"
+        android:layout_toEndOf="@id/profile_image_view"
+        android:layout_toRightOf="@id/profile_image_view" />
+
+    <ImageView
+        android:id="@+id/post_image_view"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_below="@id/post_content_text_view"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_toEndOf="@id/profile_image_view"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/ic_launcher"
+        android:layout_toRightOf="@id/profile_image_view" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/post_image_view"
+        android:layout_toEndOf="@id/profile_image_view"
+        android:orientation="horizontal"
+        android:layout_toRightOf="@id/profile_image_view">
+
+        <LinearLayout
+            style="@style/HalfWidth"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/TextIcon"
+                android:text="@string/fa_repost"/>
+
+            <TextView
+                android:id="@+id/reposts_text_view"
+                style="@style/TextView.Secondary"
+                android:layout_marginStart="@dimen/text_small_margin"
+                android:text="16"
+                android:layout_marginLeft="@dimen/text_small_margin" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            style="@style/HalfWidth"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/TextIcon"
+                android:text="@string/fa_heart_o"/>
+
+            <TextView
+                android:id="@+id/likes_text_view"
+                style="@style/TextView.Secondary"
+                android:layout_marginStart="@dimen/text_small_margin"
+                android:text="16"
+                android:layout_marginLeft="@dimen/text_small_margin" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>
