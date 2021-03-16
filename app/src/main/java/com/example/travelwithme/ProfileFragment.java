@@ -1,5 +1,6 @@
 package com.example.travelwithme;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -9,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -41,7 +43,7 @@ public class ProfileFragment extends Fragment {
     private TextView followingCountTextView;
     private TextView followersCountTextView;
     private RecyclerView postsRecyclerView;
-    private PostAdapter postAdapter;
+    public static PostAdapter postAdapter;
     private View view;
 
     // TODO: Rename and change types of parameters
@@ -92,40 +94,47 @@ public class ProfileFragment extends Fragment {
         followersCountTextView = view.findViewById(R.id.followers_count_text_view);
         initRecyclerView();
         loadUserInfo();
-    //    loadPosts();
+        //loadPosts();
+
+
+        final Button plus = view.findViewById(R.id.b_plus);
+        plus.setOnClickListener(v -> {
+            startActivity((new Intent(view.getContext(), MapActivity.class)));
+        });
+
         return view;
     }
+//
+//
+//    private void loadPosts() {
+//        Collection<Post> posts = getPosts();
+//        postAdapter.setItems(posts);
+//    }
 
-
-    private void loadPosts() {
-        Collection<Post> posts = getPosts();
-        postAdapter.setItems(posts);
-    }
-
-    private Collection<Post> getPosts() {
-        return Arrays.asList(
-                new Post(getUser(), 1L, "Thu Apr 1 07:31:08 +0000 2021", "Описание поста",
-                        10L, 15L, "https://www.w3schools.com/w3css/img_fjords.jpg"),
-                new Post(getUser(), 2L, "Thu Apr 1 07:31:08 +0000 2021", "Описание поста",
-                        10L, 15L, "https://www.w3schools.com/w3images/lights.jpg"),
-                new Post(getUser(), 3L, "Thu Apr 1 07:31:08 +0000 2021", "Описание поста",
-                        16L, 16L, "https://www.w3schools.com/css/img_mountains.jpg"),
-                new Post(getUser(), 4L, "Thu Apr 1 07:31:08 +0000 2021", "Описание поста",
-                        26L, 63L, "https://www.w3schools.com/w3css/img_corniglia.jpg"),
-                new Post(getUser(), 5L, "Thu Apr 1 07:31:08 +0000 2021", "Описание поста",
-                        25L, 55L, "https://www.w3schools.com/w3css/img_riomaggiore.jpg"),
-                new Post(getUser(), 6L, "Thu Apr 1 07:31:08 +0000 2017", "Описание поста",
-                        63L, 56L, "https://www.w3schools.com/w3css/img_manarola.jpg"),
-                new Post(getUser(), 7L, "Thu Apr 1 07:31:08 +0000 2017", "Описание поста",
-                        612L, 623L, "https://www.w3schools.com/css/img_mountains.jpg"),
-                new Post(getUser(), 8L, "Thu Apr 1 07:31:08 +0000 2017", "Описание поста",
-                        65L, 64L, "https://www.w3schools.com/w3css/img_5terre.jpg"),
-                new Post(getUser(), 9L, "Thu Apr 1 07:31:08 +0000 2017", "Описание поста",
-                        66L, 63L, "https://www.w3schools.com/w3images/streetart2.jpg"),
-                new Post(getUser(), 10L, "Thu Apr 1 07:31:08 +0000 2017", "Описание поста",
-                        64L, 63L, "https://www.w3schools.com/w3css/img_forest.jpg")
-        );
-    }
+//    private Collection<Post> getPosts() {
+//        return Arrays.asList(
+//                new Post(getUser(), 1L, "Thu Apr 1 07:31:08 +0000 2021", "Описание поста",
+//                        10L, 15L, "https://www.w3schools.com/w3css/img_fjords.jpg"),
+//                new Post(getUser(), 2L, "Thu Apr 1 07:31:08 +0000 2021", "Описание поста",
+//                        10L, 15L, "https://www.w3schools.com/w3images/lights.jpg"),
+//                new Post(getUser(), 3L, "Thu Apr 1 07:31:08 +0000 2021", "Описание поста",
+//                        16L, 16L, "https://www.w3schools.com/css/img_mountains.jpg"),
+//                new Post(getUser(), 4L, "Thu Apr 1 07:31:08 +0000 2021", "Описание поста",
+//                        26L, 63L, "https://www.w3schools.com/w3css/img_corniglia.jpg"),
+//                new Post(getUser(), 5L, "Thu Apr 1 07:31:08 +0000 2021", "Описание поста",
+//                        25L, 55L, "https://www.w3schools.com/w3css/img_riomaggiore.jpg"),
+//                new Post(getUser(), 6L, "Thu Apr 1 07:31:08 +0000 2017", "Описание поста",
+//                        63L, 56L, "https://www.w3schools.com/w3css/img_manarola.jpg"),
+//                new Post(getUser(), 7L, "Thu Apr 1 07:31:08 +0000 2017", "Описание поста",
+//                        612L, 623L, "https://www.w3schools.com/css/img_mountains.jpg"),
+//                new Post(getUser(), 8L, "Thu Apr 1 07:31:08 +0000 2017", "Описание поста",
+//                        65L, 64L, "https://www.w3schools.com/w3css/img_5terre.jpg"),
+//                new Post(getUser(), 9L, "Thu Apr 1 07:31:08 +0000 2017", "Описание поста",
+//                        66L, 63L, "https://www.w3schools.com/w3images/streetart2.jpg"),
+//                new Post(getUser(), 10L, "Thu Apr 1 07:31:08 +0000 2017", "Описание поста",
+//                        64L, 63L, "https://www.w3schools.com/w3css/img_forest.jpg")
+//        );
+//    }
 
     private void initRecyclerView() {
         postsRecyclerView = view.findViewById(R.id.posts_recycler_view);
@@ -142,7 +151,7 @@ public class ProfileFragment extends Fragment {
 
     private void displayUserInfo(User user) {
         // Picasso.with(this).load(user.getImageUrl()).into(userImageView);
-        Picasso.with(view.getContext()).load(user.getImageUrl()).into(userImageView);
+        Picasso.get().load(user.getImageUrl()).into(userImageView);
         nameTextView.setText(user.getName());
         nickTextView.setText(user.getNick());
         descriptionTextView.setText(user.getDescription());
@@ -155,7 +164,7 @@ public class ProfileFragment extends Fragment {
         followersCountTextView.setText(followersCount);
     }
 
-    private User getUser() {
+    public static User getUser() {
         return new User(
                 1L,
                 "https://www.w3schools.com/w3images/streetart2.jpg",

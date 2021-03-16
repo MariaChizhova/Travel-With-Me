@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -85,12 +86,15 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             String creationDateFormatted = getFormattedDate(post.getCreationDate());
             creationDateTextView.setText(creationDateFormatted);
 
-            Picasso.with(itemView.getContext()).load(post.getUser().getImageUrl()).into(userImageView);
+            Picasso.get().load(post.getUser().getImageUrl()).into(userImageView);
 
-            String postPhotoUrl = post.getImageUrl();
-            Picasso.with(itemView.getContext()).load(postPhotoUrl).into(postImageView);
+//            String postPhotoUrl = post.getImageUrl();
+//            Picasso.get().load(postPhotoUrl).into(postImageView);
+//
+//            postImageView.setVisibility(postPhotoUrl != null ? View.VISIBLE : View.GONE);
 
-            postImageView.setVisibility(postPhotoUrl != null ? View.VISIBLE : View.GONE);
+            postImageView.setImageBitmap(post.getImage());  // без сервера картинка делается из битов, потом нужно переделать Url
+
         }
 
         private String getFormattedDate(String rawDate) {

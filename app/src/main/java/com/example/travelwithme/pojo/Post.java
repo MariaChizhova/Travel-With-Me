@@ -1,5 +1,8 @@
 package com.example.travelwithme.pojo;
 
+import android.graphics.Bitmap;
+import android.widget.ImageView;
+
 public class Post {
     private User user;
     private Long id;
@@ -7,16 +10,16 @@ public class Post {
     private String text;
     private Long repostCount;
     private Long likedCount;
-    private String imageUrl;
+    private Bitmap image;
 
-    public Post(User user, Long id, String creationDate, String text, Long repostCount, Long likedCount, String imageUrl) {
+    public Post(User user, Long id, String creationDate, String text, Long repostCount, Long likedCount, Bitmap image) {
         this.user = user;
         this.id = id;
         this.creationDate = creationDate;
         this.text = text;
         this.repostCount = repostCount;
         this.likedCount = likedCount;
-        this.imageUrl = imageUrl;
+        this.image = image;
     }
 
     public User getUser() {
@@ -43,8 +46,8 @@ public class Post {
         return likedCount;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public Bitmap getImage() {
+        return image;
     }
 
     @Override
@@ -60,7 +63,7 @@ public class Post {
         if (!text.equals(post.text)) return false;
         if (!repostCount.equals(post.repostCount)) return false;
         if (!likedCount.equals(post.likedCount)) return false;
-        return imageUrl != null ? imageUrl.equals(post.imageUrl) : post.imageUrl == null;
+        return image != null ? image.equals(post.image) : post.image == null;
     }
 
     @Override
@@ -71,7 +74,7 @@ public class Post {
         result = 31 * result + text.hashCode();
         result = 31 * result + repostCount.hashCode();
         result = 31 * result + likedCount.hashCode();
-        result = 31 * result + (imageUrl != null ? imageUrl.hashCode() : 0);
+        result = 31 * result + (image != null ? image.hashCode() : 0);
         return result;
     }
 }
