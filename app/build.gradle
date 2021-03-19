@@ -5,7 +5,6 @@ plugins {
 
 android {
     compileSdkVersion 30
-    buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "com.example.travelwithme"
@@ -55,6 +54,10 @@ dependencies {
     implementation 'com.squareup.retrofit:retrofit:1.9.0'
     implementation 'com.google.maps.android:android-maps-utils:2.2.0'
 
-    implementation group: 'commons-io', name: 'commons-io', version: '2.5'
+    implementation group: 'commons-io', name: 'commons-io', version: '20030203.000550'
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+    implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'com.github.jd-alexander:LikeButton:0.2.3'
 
+    implementation 'com.jakewharton:butterknife:10.2.3'
 }

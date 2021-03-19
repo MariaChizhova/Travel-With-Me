@@ -20,12 +20,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.travelwithme.ProfileFragment;
 import com.example.travelwithme.ViewingMapActivity;
+import com.like.LikeButton;
+import com.like.OnLikeListener;
 import com.squareup.picasso.Picasso;
 
 import com.example.travelwithme.R;
 import com.example.travelwithme.pojo.Post;
 
-import org.apache.commons.io.IOUtils;
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder> {
     private static final String RESPONSE_FORMAT = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
@@ -55,6 +56,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         return postList.size();
     }
 
+
     public void setItems(Collection<Post> posts) {
         postList.addAll(posts);
         notifyDataSetChanged();
@@ -74,6 +76,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         private ImageView postImageView;
         private TextView repostsTextView;
         private TextView likesTextView;
+        private LikeButton heartButton;
 
         public PostViewHolder(View itemView) {
             super(itemView);
@@ -85,7 +88,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             postImageView = itemView.findViewById(R.id.post_image_view);
             repostsTextView = itemView.findViewById(R.id.reposts_text_view);
             likesTextView = itemView.findViewById(R.id.likes_text_view);
+            heartButton = itemView.findViewById(R.id.heart_button);
         }
+
 
         public void bind(Post post) {
             nameTextView.setText(post.getUser().getName());
@@ -93,6 +98,21 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             contentTextView.setText(post.getText());
             repostsTextView.setText(String.valueOf(post.getRepostCount()));
             likesTextView.setText(String.valueOf(post.getFavouriteCount()));
+            heartButton.setLiked(false);
+            heartButton.setOnLikeListener(new OnLikeListener() {
+                public void liked(LikeButton heartButton) {
+                    long count = Long.parseLong(likesTextView.getText().toString());
+                    String text = Long.toString(count + 1);
+                    likesTextView.setText(text);
+                }
+
+                public void unLiked(LikeButton heartButton) {
+                    long count = Long.parseLong(likesTextView.getText().toString());
+                    String text = Long.toString(count - 1);
+                    likesTextView.setText(text);
+                }
+        });
+
 
             String creationDateFormatted = getFormattedDate(post.getCreationDate());
             creationDateTextView.setText(creationDateFormatted);

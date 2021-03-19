@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">TravelWithMe</string>
+    <string name="app_name">Travel With Me</string>
 
     <string name="email_hint">email</string>
     <string name="password_hint">password</string>

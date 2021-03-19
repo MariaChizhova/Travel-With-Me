@@ -107,7 +107,6 @@
             app:icon="@drawable/ic_add_24dp"
             />
 
-
     </RelativeLayout>
 
     <View

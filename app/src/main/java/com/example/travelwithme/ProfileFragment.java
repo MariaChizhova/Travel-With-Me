@@ -20,8 +20,7 @@ import com.squareup.picasso.Picasso;
 import com.example.travelwithme.pojo.Post;
 import com.example.travelwithme.pojo.User;
 
-
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -29,6 +28,8 @@ import java.util.Collection;
  * Use the {@link ProfileFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
+
+
 public class ProfileFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
@@ -46,6 +47,7 @@ public class ProfileFragment extends Fragment {
     private RecyclerView postsRecyclerView;
     public static PostAdapter postAdapter;
     private View view;
+    private long currentId = 1;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -143,10 +145,8 @@ public class ProfileFragment extends Fragment {
 //    }
 
 
-
     private void initRecyclerView() {
         postsRecyclerView = view.findViewById(R.id.posts_recycler_view);
-        //   postsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         postsRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         postAdapter = new PostAdapter(this);
         postsRecyclerView.setAdapter(postAdapter);
