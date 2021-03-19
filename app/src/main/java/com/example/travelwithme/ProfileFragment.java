@@ -17,8 +17,7 @@ import com.squareup.picasso.Picasso;
 import com.example.travelwithme.pojo.Post;
 import com.example.travelwithme.pojo.User;
 
-
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -26,6 +25,8 @@ import java.util.Collection;
  * Use the {@link ProfileFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
+
+
 public class ProfileFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
@@ -43,6 +44,7 @@ public class ProfileFragment extends Fragment {
     private RecyclerView postsRecyclerView;
     private PostAdapter postAdapter;
     private View view;
+    private long currentId = 1;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -96,35 +98,34 @@ public class ProfileFragment extends Fragment {
         return view;
     }
 
-
     private void loadPosts() {
         Collection<Post> posts = getPosts();
         postAdapter.setItems(posts);
     }
 
     private Collection<Post> getPosts() {
-        return Arrays.asList(
-                new Post(getUser(), 1L, "Thu Apr 1 07:31:08 +0000 2021", "Описание поста",
-                        10L, 15L, "https://www.w3schools.com/w3css/img_fjords.jpg"),
-                new Post(getUser(), 2L, "Thu Apr 1 07:31:08 +0000 2021", "Описание поста",
-                        10L, 15L, "https://www.w3schools.com/w3images/lights.jpg"),
-                new Post(getUser(), 3L, "Thu Apr 1 07:31:08 +0000 2021", "Описание поста",
-                        16L, 16L, "https://www.w3schools.com/css/img_mountains.jpg"),
-                new Post(getUser(), 4L, "Thu Apr 1 07:31:08 +0000 2021", "Описание поста",
-                        26L, 63L, "https://www.w3schools.com/w3css/img_corniglia.jpg"),
-                new Post(getUser(), 5L, "Thu Apr 1 07:31:08 +0000 2021", "Описание поста",
-                        25L, 55L, "https://www.w3schools.com/w3css/img_riomaggiore.jpg"),
-                new Post(getUser(), 6L, "Thu Apr 1 07:31:08 +0000 2017", "Описание поста",
-                        63L, 56L, "https://www.w3schools.com/w3css/img_manarola.jpg"),
-                new Post(getUser(), 7L, "Thu Apr 1 07:31:08 +0000 2017", "Описание поста",
-                        612L, 623L, "https://www.w3schools.com/css/img_mountains.jpg"),
-                new Post(getUser(), 8L, "Thu Apr 1 07:31:08 +0000 2017", "Описание поста",
-                        65L, 64L, "https://www.w3schools.com/w3css/img_5terre.jpg"),
-                new Post(getUser(), 9L, "Thu Apr 1 07:31:08 +0000 2017", "Описание поста",
-                        66L, 63L, "https://www.w3schools.com/w3images/streetart2.jpg"),
-                new Post(getUser(), 10L, "Thu Apr 1 07:31:08 +0000 2017", "Описание поста",
-                        64L, 63L, "https://www.w3schools.com/w3css/img_forest.jpg")
-        );
+        Collection<Post> lst = new ArrayList<>();
+        lst.add(new Post(getUser(), 1L, "Thu Apr 1 07:31:08 +0000 2021", "Описание поста",
+                10L, 15L, "https://www.w3schools.com/w3css/img_fjords.jpg"));
+        lst.add(new Post(getUser(), ++currentId, "Thu Apr 1 07:31:08 +0000 2021", "Описание поста",
+                10L, 15L, "https://www.w3schools.com/w3images/lights.jpg"));
+        lst.add(new Post(getUser(), ++currentId, "Thu Apr 1 07:31:08 +0000 2021", "Описание поста",
+                16L, 16L, "https://www.w3schools.com/css/img_mountains.jpg"));
+        lst.add(new Post(getUser(), ++currentId, "Thu Apr 1 07:31:08 +0000 2021", "Описание поста",
+                26L, 63L, "https://www.w3schools.com/w3css/img_corniglia.jpg"));
+        lst.add(new Post(getUser(), ++currentId, "Thu Apr 1 07:31:08 +0000 2021", "Описание поста",
+                25L, 55L, "https://www.w3schools.com/w3css/img_riomaggiore.jpg"));
+        lst.add(new Post(getUser(), ++currentId, "Thu Apr 1 07:31:08 +0000 2017", "Описание поста",
+                63L, 56L, "https://www.w3schools.com/w3css/img_manarola.jpg"));
+        lst.add(new Post(getUser(), ++currentId, "Thu Apr 1 07:31:08 +0000 2017", "Описание поста",
+                612L, 623L, "https://www.w3schools.com/css/img_mountains.jpg"));
+        lst.add(new Post(getUser(), ++currentId, "Thu Apr 1 07:31:08 +0000 2017", "Описание поста",
+                65L, 64L, "https://www.w3schools.com/w3css/img_5terre.jpg"));
+        lst.add(new Post(getUser(), ++currentId, "Thu Apr 1 07:31:08 +0000 2017", "Описание поста",
+                66L, 63L, "https://www.w3schools.com/w3images/streetart2.jpg"));
+        lst.add(new Post(getUser(), ++currentId, "Thu Apr 1 07:31:08 +0000 2017", "Описание поста",
+                64L, 63L, "https://www.w3schools.com/w3css/img_forest.jpg"));
+        return lst;
     }
 
     private void initRecyclerView() {

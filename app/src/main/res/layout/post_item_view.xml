@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="8dp">
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -86,16 +86,20 @@
             style="@style/HalfWidth"
             android:orientation="horizontal">
 
-            <TextView
-                style="@style/TextIcon"
-                android:text="@string/fa_heart_o"/>
+            <com.like.LikeButton
+                android:id="@+id/heart_button"
+                app:icon_type="heart"
+                app:icon_size="7dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:anim_scale_factor="3" />
 
             <TextView
                 android:id="@+id/likes_text_view"
                 style="@style/TextView.Secondary"
                 android:layout_marginStart="@dimen/text_small_margin"
-                android:text="16"
-                android:layout_marginLeft="@dimen/text_small_margin" />
+                android:layout_marginLeft="@dimen/text_small_margin"
+                android:text="20" />
         </LinearLayout>
 
     </LinearLayout>

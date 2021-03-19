@@ -48,5 +48,7 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview:1.1.0"
     implementation 'de.hdodenhof:circleimageview:2.1.0'
     implementation 'com.squareup.picasso:picasso:2.5.2'
+    implementation 'com.github.jd-alexander:LikeButton:0.2.3'
 
+    implementation 'com.jakewharton:butterknife:8.8.1'
 }
