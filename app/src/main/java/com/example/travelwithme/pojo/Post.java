@@ -3,6 +3,8 @@ package com.example.travelwithme.pojo;
 import android.graphics.Bitmap;
 import android.widget.ImageView;
 
+import com.example.travelwithme.MapData;
+
 public class Post {
     private User user;
     private Long id;
@@ -11,8 +13,9 @@ public class Post {
     private Long repostCount;
     private Long likedCount;
     private Bitmap image;
+    private MapData mapData;
 
-    public Post(User user, Long id, String creationDate, String text, Long repostCount, Long likedCount, Bitmap image) {
+    public Post(User user, Long id, String creationDate, String text, Long repostCount, Long likedCount, Bitmap image, MapData mapData) {
         this.user = user;
         this.id = id;
         this.creationDate = creationDate;
@@ -20,6 +23,7 @@ public class Post {
         this.repostCount = repostCount;
         this.likedCount = likedCount;
         this.image = image;
+        this.mapData = mapData;
     }
 
     public User getUser() {
@@ -48,6 +52,10 @@ public class Post {
 
     public Bitmap getImage() {
         return image;
+    }
+
+    public MapData getMapData() {
+        return mapData;
     }
 
     @Override

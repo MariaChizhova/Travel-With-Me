@@ -3,6 +3,7 @@ package com.example.travelwithme;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -84,7 +85,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.activity_user_info, container, false);
+        view = inflater.inflate(R.layout.fragment_profile, container, false);
         userImageView = view.findViewById(R.id.user_image_view);
         nameTextView = view.findViewById(R.id.user_name_text_view);
         nickTextView = view.findViewById(R.id.user_nick_text_view);
@@ -104,9 +105,14 @@ public class ProfileFragment extends Fragment {
 
         return view;
     }
-//
-//
-//    private void loadPosts() {
+
+
+    public View getLocalView() {
+        return view;
+    }
+
+
+    //    private void loadPosts() {
 //        Collection<Post> posts = getPosts();
 //        postAdapter.setItems(posts);
 //    }
@@ -136,11 +142,13 @@ public class ProfileFragment extends Fragment {
 //        );
 //    }
 
+
+
     private void initRecyclerView() {
         postsRecyclerView = view.findViewById(R.id.posts_recycler_view);
         //   postsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         postsRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        postAdapter = new PostAdapter();
+        postAdapter = new PostAdapter(this);
         postsRecyclerView.setAdapter(postAdapter);
     }
 

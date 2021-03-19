@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,16 +18,26 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.travelwithme.ProfileFragment;
+import com.example.travelwithme.ViewingMapActivity;
 import com.squareup.picasso.Picasso;
 
 import com.example.travelwithme.R;
 import com.example.travelwithme.pojo.Post;
 
+import org.apache.commons.io.IOUtils;
+
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder> {
     private static final String RESPONSE_FORMAT = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
     private static final String MONTH_DAY_FORMAT = "MMM d";
 
+    ProfileFragment parent;
+
     private List<Post> postList = new ArrayList<>();
+
+    public PostAdapter(ProfileFragment profileFragment){
+        parent = profileFragment;
+    }
 
     @Override
     public PostViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -95,6 +106,11 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
             postImageView.setImageBitmap(post.getImage());  // без сервера картинка делается из битов, потом нужно переделать Url
 
+            postImageView.setOnClickListener(v -> {
+                Intent i = new Intent(parent.getLocalView().getContext(), ViewingMapActivity.class);
+                i.putExtra("mapData", post.getMapData());
+                parent.startActivity(i);
+            });
         }
 
         private String getFormattedDate(String rawDate) {

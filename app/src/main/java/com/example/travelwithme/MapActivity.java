@@ -20,7 +20,6 @@ import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit.Callback;
@@ -32,12 +31,13 @@ import retrofit.client.Response;
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap map;
-    private List<LatLng> way;
     LatLngBounds.Builder latLngBuilder;
     StringBuilder markers;
     private static boolean firstMarker;
     StringBuilder pathMarkers;
     private static boolean firstPathMarker;
+
+    MapData mapData;
 
     private static final int COLOR_BLACK_ARGB = 0xff0066ff;
     private static final int POLYLINE_STROKE_WIDTH_PX = 10;
@@ -49,7 +49,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        way = new ArrayList<>();
+        mapData = new MapData();
         latLngBuilder = new LatLngBounds.Builder();
         markers = new StringBuilder();
         firstMarker = true;
@@ -68,7 +68,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             markerOptions.position(latlng);
             //markerOptions.draggable(true);  // перетаскивание метки
             markerOptions.title("" + latlng.latitude + " " + latlng.longitude);
-            way.add(latlng);
+            mapData.addToMarkers(latlng);
             if (!firstMarker) {
                 markers.append("|");
             }
@@ -76,7 +76,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             firstMarker = false;
             map.addMarker(markerOptions);
             latLngBuilder.include(latlng);
-            if (way.size() >= 2) {
+            if (mapData.sizeMarkers() >= 2) {
                 showRoute();
             }
         });
@@ -95,9 +95,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         RouteApi routeService = restAdapter.create(RouteApi.class);
 
         //Вызов запроса на маршрут (асинхрон)
-        String from = "" + way.get(way.size() - 2).latitude + "," + way.get(way.size() - 2).longitude;
-        String to = "" + way.get(way.size() - 1).latitude + "," + way.get(way.size() - 1).longitude;
-        routeService.getRoute(from, to, true, "ru", "AIzaSyB__g8hXOSvYsgukwchDL-CeFTeROm9a58", new Callback<RouteResponse>() {
+        String from = "" + mapData.getMarkers(mapData.sizeMarkers() - 2).latitude + "," + mapData.getMarkers(mapData.sizeMarkers() - 2).longitude;
+        String to = "" + mapData.getMarkers(mapData.sizeMarkers() - 1).latitude + "," + mapData.getMarkers(mapData.sizeMarkers() - 1).longitude;
+        routeService.getRoute(from, to, true, "ru", "", new Callback<RouteResponse>() {
             public void success(RouteResponse arg0, retrofit.client.Response arg1) {
                 //Если прошло успешно, то декодируем маршрут в точки LatLng
                 List<LatLng> mPoints = PolyUtil.decode(arg0.getPoints());
@@ -110,6 +110,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     }
                     pathMarkers.append(mPoints.get(i).latitude).append(",").append(mPoints.get(i).longitude);
                     firstPathMarker = false;
+                    mapData.addToWay(mPoints.get(i));
                 }
                 Polyline polyline = map.addPolyline(line);
                 polyline.setStartCap(new RoundCap());
@@ -139,7 +140,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         StaticApi routeService = restAdapter.create(StaticApi.class);
 
         String size = "600x600";
-        routeService.getRoute(size, markers.toString(), pathMarkers.toString(), "AIzaSyB__g8hXOSvYsgukwchDL-CeFTeROm9a58", new Callback<Response>() {
+        routeService.getRoute(size, markers.toString(), pathMarkers.toString(), "", new Callback<Response>() {
 
             @Override
             public void success(Response response, Response response2) {
@@ -147,6 +148,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     InputStream inputStream = response2.getBody().in();
                     Intent i = new Intent(getApplicationContext(), StaticMapActivity.class);
                     i.putExtra("data", IOUtils.toByteArray(inputStream));
+                    i.putExtra("mapData", mapData);
                     startActivity(i);
                     finish();
                 } catch (IOException e) {
