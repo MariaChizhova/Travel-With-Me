@@ -2,10 +2,12 @@ package com.example.travelwithme;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +20,9 @@ import com.example.travelwithme.pojo.Post;
 import com.example.travelwithme.pojo.User;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -45,7 +49,9 @@ public class ProfileFragment extends Fragment {
     private PostAdapter postAdapter;
     private View view;
     private long currentId = 1;
-
+    boolean isLoading = false;
+    Collection<Post> postsList;
+    private long currentLike = 0;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -95,36 +101,37 @@ public class ProfileFragment extends Fragment {
         initRecyclerView();
         loadUserInfo();
         loadPosts();
+        initScrollListener();
         return view;
     }
 
     private void loadPosts() {
-        Collection<Post> posts = getPosts();
-        postAdapter.setItems(posts);
+        postsList = getPosts();
+        postAdapter.setItems(postsList);
     }
 
     private Collection<Post> getPosts() {
         Collection<Post> lst = new ArrayList<>();
         lst.add(new Post(getUser(), 1L, "Thu Apr 1 07:31:08 +0000 2021", "Описание поста",
-                10L, 15L, "https://www.w3schools.com/w3css/img_fjords.jpg"));
+                10L, ++currentLike, "https://www.w3schools.com/w3css/img_fjords.jpg"));
         lst.add(new Post(getUser(), ++currentId, "Thu Apr 1 07:31:08 +0000 2021", "Описание поста",
-                10L, 15L, "https://www.w3schools.com/w3images/lights.jpg"));
+                10L, ++currentLike, "https://www.w3schools.com/w3images/lights.jpg"));
         lst.add(new Post(getUser(), ++currentId, "Thu Apr 1 07:31:08 +0000 2021", "Описание поста",
-                16L, 16L, "https://www.w3schools.com/css/img_mountains.jpg"));
+                16L, ++currentLike, "https://www.w3schools.com/css/img_mountains.jpg"));
         lst.add(new Post(getUser(), ++currentId, "Thu Apr 1 07:31:08 +0000 2021", "Описание поста",
-                26L, 63L, "https://www.w3schools.com/w3css/img_corniglia.jpg"));
+                26L, ++currentLike, "https://www.w3schools.com/w3css/img_corniglia.jpg"));
         lst.add(new Post(getUser(), ++currentId, "Thu Apr 1 07:31:08 +0000 2021", "Описание поста",
-                25L, 55L, "https://www.w3schools.com/w3css/img_riomaggiore.jpg"));
-        lst.add(new Post(getUser(), ++currentId, "Thu Apr 1 07:31:08 +0000 2017", "Описание поста",
-                63L, 56L, "https://www.w3schools.com/w3css/img_manarola.jpg"));
-        lst.add(new Post(getUser(), ++currentId, "Thu Apr 1 07:31:08 +0000 2017", "Описание поста",
-                612L, 623L, "https://www.w3schools.com/css/img_mountains.jpg"));
-        lst.add(new Post(getUser(), ++currentId, "Thu Apr 1 07:31:08 +0000 2017", "Описание поста",
-                65L, 64L, "https://www.w3schools.com/w3css/img_5terre.jpg"));
-        lst.add(new Post(getUser(), ++currentId, "Thu Apr 1 07:31:08 +0000 2017", "Описание поста",
-                66L, 63L, "https://www.w3schools.com/w3images/streetart2.jpg"));
-        lst.add(new Post(getUser(), ++currentId, "Thu Apr 1 07:31:08 +0000 2017", "Описание поста",
-                64L, 63L, "https://www.w3schools.com/w3css/img_forest.jpg"));
+                25L, ++currentLike, "https://www.w3schools.com/w3css/img_riomaggiore.jpg"));
+        lst.add(new Post(getUser(), ++currentId, "Thu Apr 1 07:31:08 +0000 2021", "Описание поста",
+                10L, ++currentLike, "https://www.w3schools.com/w3images/lights.jpg"));
+        lst.add(new Post(getUser(), ++currentId, "Thu Apr 1 07:31:08 +0000 2021", "Описание поста",
+                16L, ++currentLike, "https://www.w3schools.com/css/img_mountains.jpg"));
+        lst.add(new Post(getUser(), ++currentId, "Thu Apr 1 07:31:08 +0000 2021", "Описание поста",
+                26L, ++currentLike, "https://www.w3schools.com/w3css/img_corniglia.jpg"));
+        lst.add(new Post(getUser(), ++currentId, "Thu Apr 1 07:31:08 +0000 2021", "Описание поста",
+                25L, ++currentLike, "https://www.w3schools.com/w3css/img_riomaggiore.jpg"));
+        lst.add(new Post(getUser(), ++currentId, "Thu Apr 1 07:31:08 +0000 2021", "Описание поста",
+                10L, ++currentLike, "https://www.w3schools.com/w3images/lights.jpg"));
         return lst;
     }
 
@@ -134,6 +141,57 @@ public class ProfileFragment extends Fragment {
         postAdapter = new PostAdapter();
         postsRecyclerView.setAdapter(postAdapter);
     }
+
+    private void initScrollListener() {
+        postsRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+
+                if (!isLoading) {
+                    if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() ==  postsList.size() - 1) {
+                        loadMore();
+                        isLoading = true;
+                    }
+                }
+            }
+        });
+    }
+
+    private void loadMore() {
+        postsList.add(null);
+        postAdapter.notifyItemInserted(postsList.size() - 1);
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                postsList.remove(postsList.size() - 1);
+                int scrollPosition = postsList.size();
+                postAdapter.notifyItemRemoved(scrollPosition);
+                int currentSize = scrollPosition;
+                int nextLimit = currentSize + 10;
+                while (currentSize - 1 < nextLimit) {
+                    Post p = new Post(getUser(), ++currentId, "Thu Apr 1 07:31:08 +0000 2017", "Описание поста",
+                            1L, ++currentLike, "https://www.w3schools.com/w3css/img_manarola.jpg");
+                    postsList.add(p);
+                    postAdapter.setItems(Arrays.asList(p));
+                    postAdapter.notifyDataSetChanged();
+                    currentSize++;
+                }
+                postAdapter.notifyDataSetChanged();
+                isLoading = false;
+            }
+        }, 2000);
+    }
+
+
 
     private void loadUserInfo() {
         User user = getUser();
