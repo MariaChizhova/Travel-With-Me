@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">TravelWithMe</string>
+
+    <string name="email_hint">email</string>
+    <string name="password_hint">password</string>
+    <string name="login_button">LOGIN</string>
+    <string name="signup_button">SIGN UP</string>
+    <string name="get_password_link">GET PASSWORD LINK</string>
+    <string name="back">BACK</string>
+    <string name="logout">LOGOUT</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+</resources>
