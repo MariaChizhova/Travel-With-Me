@@ -1,6 +1,6 @@
 package com.example.demo.models;
 
-import com.example.demo.requests.UserCreateRequest;
+import com.example.demo.requests.UserUpdateRequest;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,19 +14,16 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private String firstName;
-    private String lastName;
-    private String email;
-    private String avatar;
+    private String firstName = null;
+    private String lastName = null;
+    private String email = null;
+    private String avatar = null;
 
     public User() {
     }
 
-    public User(UserCreateRequest user) {
-        this.firstName = user.getFirstName();
-        this.lastName = user.getLastName();
-        this.email = user.getEmail();
-        this.avatar = user.getAvatar();
+    public User(String email) {
+        this.email = email;
     }
 
     public String getFirstName() {
@@ -50,11 +47,9 @@ public class User {
         return this;
     }
 
-    public User setAll(UserCreateRequest user) {
+    public User setAll(UserUpdateRequest user) {
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
-        this.email = user.getEmail();
-        this.avatar = user.getAvatar();
         return this;
     }
 }

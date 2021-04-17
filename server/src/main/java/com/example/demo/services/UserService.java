@@ -2,7 +2,7 @@ package com.example.demo.services;
 
 import com.example.demo.models.User;
 import com.example.demo.repo.UserRepository;
-import com.example.demo.requests.UserCreateRequest;
+import com.example.demo.requests.UserUpdateRequest;
 import com.sun.istack.NotNull;
 import org.springframework.stereotype.Service;
 
@@ -23,21 +23,21 @@ public class UserService {
         this.storageService = storageService;
     }
 
-    public UserCreateRequest getUser(@NotNull String email) {
+    public User getUser(@NotNull String email) {
         Optional<User> user = userRepository.findByEmail(email);
-        return user.map(UserCreateRequest::new).orElse(null);
+        return user.orElse(null);
     }
 
     public byte[] getAvatar(@NotNull String keyName) {
         return storageService.downloadFile(keyName);
     }
 
-    public void addUser(@NotNull UserCreateRequest user) {
-        userRepository.save(new User(user));
+    public void addUser(@NotNull String email) {
+        userRepository.save(new User(email));
     }
 
-    public void editUser(@NotNull UserCreateRequest updatedUser) {
-        Optional<User> user = userRepository.findByEmail(updatedUser.getEmail());
+    public void editUser(@NotNull UserUpdateRequest updatedUser) {
+        Optional<User> user = userRepository.findById(updatedUser.getId());
         user.ifPresent(value -> userRepository.save(value.setAll(updatedUser)));
     }
 
