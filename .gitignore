@@ -2,7 +2,6 @@
 .build/
 build/
 .output/
-.idea/
 *.iml
 out/
 local.properties
