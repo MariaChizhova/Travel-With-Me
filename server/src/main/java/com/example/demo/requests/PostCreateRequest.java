@@ -1,36 +1,27 @@
 package com.example.demo.requests;
 
 
-import com.example.demo.models.Post;
-
 public class PostCreateRequest {
 
-    private String author;    // email of author
+    private Long authorId;
     private String date;
     private String description;
     private String picture;
 
-    public PostCreateRequest(String author, String date,
+    public PostCreateRequest(Long author, String date,
                              String description, String picture) {
-        this.author = author;
+        this.authorId = author;
         this.date = date;
         this.description = description;
         this.picture = picture;
     }
 
-    public PostCreateRequest(Post post) {
-        this.author = post.getAuthor();
-        this.date = post.getDate();
-        this.description = post.getDescription();
-        this.picture = post.getPicture();
+    public Long getAuthorId() {
+        return authorId;
     }
 
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
+    public void setAuthorId(Long authorId) {
+        this.authorId = authorId;
     }
 
     public String getDate() {

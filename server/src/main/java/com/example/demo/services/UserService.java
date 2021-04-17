@@ -1,7 +1,7 @@
 package com.example.demo.services;
 
 import com.example.demo.models.User;
-import com.example.demo.repo.UserRepository;
+import com.example.demo.repositories.UserRepository;
 import com.example.demo.requests.UserUpdateRequest;
 import com.sun.istack.NotNull;
 import org.springframework.stereotype.Service;

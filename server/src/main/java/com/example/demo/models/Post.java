@@ -14,7 +14,7 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private String author;    // email of author
+    private Long authorId;
     private String date;
     private String description;
     private String picture;
@@ -23,14 +23,14 @@ public class Post {
     }
 
     public Post(PostCreateRequest post) {
-        this.author = post.getAuthor();
+        this.authorId = post.getAuthorId();
         this.date = post.getDate();
         this.description = post.getDescription();
         this.picture = post.getPicture();
     }
 
-    public String getAuthor() {
-        return author;
+    public Long getAuthorId() {
+        return authorId;
     }
 
     public String getDate() {
