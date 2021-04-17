@@ -14,10 +14,12 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private Long authorId;
-    private String date;
+    private Long authorId;    // unchanged
+    private String date;      // unchanged
     private String description;
     private String picture;
+
+    private int numberLikes = 0;
 
     public Post() {
     }
@@ -43,5 +45,19 @@ public class Post {
 
     public String getPicture() {
         return picture;
+    }
+
+    public int getNumberLikes() {
+        return numberLikes;
+    }
+
+    public Post setDescription(String description) {
+        this.description = description;
+        return this;
+    }
+
+    public Post incNumberLikes() {
+        this.numberLikes += 1;
+        return this;
     }
 }

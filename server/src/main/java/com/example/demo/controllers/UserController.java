@@ -6,7 +6,6 @@ import com.example.demo.services.UserService;
 import com.sun.istack.NotNull;
 import org.springframework.web.bind.annotation.*;
 
-
 @RestController
 public class UserController {
 
