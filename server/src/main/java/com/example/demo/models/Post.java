@@ -17,18 +17,18 @@ public class Post {
     private Long authorId;    // unchanged
     private String date;      // unchanged
     private String description;
-    private String picture;
+    private String pictureName;    // name in the amazon s3 database
 
     private int numberLikes = 0;
 
     public Post() {
     }
 
-    public Post(PostCreateRequest post) {
+    public Post(PostCreateRequest post, String pictureName) {
         this.authorId = post.getAuthorId();
         this.date = post.getDate();
         this.description = post.getDescription();
-        this.picture = post.getPicture();
+        this.pictureName = pictureName;
     }
 
     public Long getAuthorId() {
@@ -43,8 +43,8 @@ public class Post {
         return description;
     }
 
-    public String getPicture() {
-        return picture;
+    public String getPictureName() {
+        return pictureName;
     }
 
     public int getNumberLikes() {
@@ -56,8 +56,18 @@ public class Post {
         return this;
     }
 
+    public Post setPictureName(String pictureName) {
+        this.pictureName = pictureName;
+        return this;
+    }
+
     public Post incNumberLikes() {
         this.numberLikes += 1;
+        return this;
+    }
+
+    public Post decNumberLikes() {
+        this.numberLikes -= 1;
         return this;
     }
 }

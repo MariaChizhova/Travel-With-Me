@@ -6,10 +6,6 @@ import com.example.demo.requests.UserUpdateRequest;
 import com.sun.istack.NotNull;
 import org.springframework.stereotype.Service;
 
-import javax.xml.bind.DatatypeConverter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Optional;
 
 @Service
@@ -41,20 +37,17 @@ public class UserService {
         user.ifPresent(value -> userRepository.save(value.setAll(updatedUser)));
     }
 
-    public void editAvatar(@NotNull String email, @NotNull String newAvatar) {
-        String nameAvatar = "avatar_" + email;
-        storageService.removeFile(nameAvatar);
-        try {
-            // add changes to amazon s3 database
-            Path uploadFilePath = Files.createTempFile(nameAvatar, "jpg");
-            byte[] bytes = DatatypeConverter.parseBase64Binary(newAvatar);
-            Files.write(uploadFilePath, bytes);
-            storageService.uploadFile(nameAvatar, uploadFilePath);
+    public void editAvatar(@NotNull Long userId, @NotNull String newAvatar) {
+        // name avatar in the amazon s3 database
+        String avatarName = "avatar_" + userId;
 
-            // add changes to mysql database
-            Optional<User> user = userRepository.findByEmail(email);
-            user.ifPresent(value -> userRepository.save(value.setAvatar(nameAvatar)));
-        } catch (IOException ignored) {}
+        // add changes to amazon s3 database
+        storageService.removeFile(avatarName);
+        storageService.uploadFile(avatarName, newAvatar);
+
+        // add changes to mysql database
+        Optional<User> user = userRepository.findById(userId);
+        user.ifPresent(value -> userRepository.save(value.setAvatar(avatarName)));
     }
 
 }

@@ -36,9 +36,9 @@ public class UserController {
     }
 
     @PostMapping("/edit_avatar")
-    public void editAvatar(@RequestParam @NotNull String email,
+    public void editAvatar(@RequestParam @NotNull Long userId,
                            @RequestParam @NotNull String newAvatar) {
-        userService.editAvatar(email, newAvatar);
+        userService.editAvatar(userId, newAvatar);
     }
 
 }

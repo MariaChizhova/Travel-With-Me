@@ -12,12 +12,12 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private Long id;    // unchanged
 
     private String firstName = null;
     private String lastName = null;
-    private String email = null;
-    private String avatar = null;
+    private String email = null;    // unchanged
+    private String avatar = null;    // name file in the amazon s3 database
 
     public User() {
     }
