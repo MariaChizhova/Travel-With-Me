@@ -22,7 +22,6 @@ import com.example.travelwithme.pojo.User;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -112,7 +111,7 @@ public class ProfileFragment extends Fragment {
 
     private Collection<Post> getPosts() {
         Collection<Post> lst = new ArrayList<>();
-        lst.add(new Post(getUser(), 1L, "Thu Apr 1 07:31:08 +0000 2021", "Описание поста",
+        lst.add(new Post(getUser(), currentId, "Thu Apr 1 07:31:08 +0000 2021", "Описание поста",
                 10L, ++currentLike, "https://www.w3schools.com/w3css/img_fjords.jpg"));
         lst.add(new Post(getUser(), ++currentId, "Thu Apr 1 07:31:08 +0000 2021", "Описание поста",
                 10L, ++currentLike, "https://www.w3schools.com/w3images/lights.jpg"));
@@ -154,7 +153,6 @@ public class ProfileFragment extends Fragment {
                 super.onScrolled(recyclerView, dx, dy);
 
                 LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-
                 if (!isLoading) {
                     if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() ==  postsList.size() - 1) {
                         loadMore();
