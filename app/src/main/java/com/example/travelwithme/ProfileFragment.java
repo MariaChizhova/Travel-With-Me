@@ -49,7 +49,6 @@ public class ProfileFragment extends Fragment {
     private View view;
     private long currentId = 1;
     boolean isLoading = false;
-    Collection<Post> postsList;
     private long currentLike = 0;
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -105,7 +104,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private void loadPosts() {
-        postsList = getPosts();
+        Collection<Post> postsList = getPosts();
         postAdapter.setItems(postsList);
     }
 
@@ -151,10 +150,9 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-
                 LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
                 if (!isLoading) {
-                    if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() ==  postsList.size() - 1) {
+                    if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() ==  postAdapter.postsList.size() - 1) {
                         loadMore();
                         isLoading = true;
                     }
@@ -164,29 +162,27 @@ public class ProfileFragment extends Fragment {
     }
 
     private void loadMore() {
-        postsList.add(null);
-        postAdapter.notifyItemInserted(postsList.size() - 1);
+        postAdapter.postsList.add(null);
+        postAdapter.notifyItemInserted(postAdapter.postsList.size() - 1);
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                postsList.remove(postsList.size() - 1);
-                int scrollPosition = postsList.size();
+                postAdapter.postsList.remove(postAdapter.postsList.size() - 1);
+                int scrollPosition = postAdapter.postsList.size();
                 postAdapter.notifyItemRemoved(scrollPosition);
                 int currentSize = scrollPosition;
                 int nextLimit = currentSize + 10;
                 while (currentSize - 1 < nextLimit) {
-                    Post p = new Post(getUser(), ++currentId, "Thu Apr 1 07:31:08 +0000 2017", "Описание поста",
+                    Post p = new Post(getUser(), ++currentId, "Thu Apr 1 07:31:08 +0000 2021", "Описание поста",
                             1L, ++currentLike, "https://www.w3schools.com/w3css/img_manarola.jpg");
-                    postsList.add(p);
-                    postAdapter.setItems(Arrays.asList(p));
-                    postAdapter.notifyDataSetChanged();
+                    postAdapter.postsList.add(p);
                     currentSize++;
                 }
                 postAdapter.notifyDataSetChanged();
                 isLoading = false;
             }
-        }, 2000);
+        }, 1000);
     }
 
 

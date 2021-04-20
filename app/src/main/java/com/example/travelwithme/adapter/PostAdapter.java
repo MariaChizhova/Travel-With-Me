@@ -32,7 +32,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final int VIEW_TYPE_LOADING = 1;
 
 
-    private List<Post> postsList = new ArrayList<>();
+    public List<Post> postsList = new ArrayList<>();
 
 
     @Override
