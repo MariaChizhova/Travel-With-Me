@@ -6,6 +6,8 @@ public class Message {
     private String name;
     private String photoUrl;
     private String imageUrl;
+    private String time;
+    private String date;
 
     public Message() { }
 
@@ -14,6 +16,8 @@ public class Message {
         this.name = name;
         this.photoUrl = photoUrl;
         this.imageUrl = imageUrl;
+        this.time = time;
+        this.date = date;
     }
 
     public void setText(String text) {
@@ -47,4 +51,21 @@ public class Message {
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
 }

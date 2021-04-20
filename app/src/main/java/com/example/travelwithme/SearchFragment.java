@@ -93,7 +93,7 @@ public class SearchFragment extends Fragment {
 
     private Collection<User> getFriends() {
         Collection<User> lst = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 5; i++) {
             lst.add(new User(
                     currentId,
                     "https://sun9-6.userapi.com/impf/c845217/v845217483/8560e/LRcTo6l9VBE.jpg?size=1864x2048&quality=96&sign=b2f39df96c4d2fe3e6f16f6df6f528c5&type=album",
@@ -101,8 +101,18 @@ public class SearchFragment extends Fragment {
                     "@anchouls",
                     "I love teorver",
                     "Russia",
-                    10,
-                    10
+                    100,
+                    100
+            ));
+            lst.add(new User(
+                    currentId,
+                    "https://www.w3schools.com/w3images/streetart2.jpg",
+                    "Andrew",
+                    "@andrew",
+                    "No description",
+                    "Russia",
+                    100,
+                    100
             ));
         }
         return lst;
