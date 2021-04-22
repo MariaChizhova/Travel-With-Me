@@ -1,26 +1,51 @@
 package com.example.travelwithme;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.RectF;
+import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
+import android.Manifest;
 
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.*;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.JointType;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.RoundCap;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.maps.android.PolyUtil;
 
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import retrofit.Callback;
 import retrofit.RestAdapter;
@@ -28,14 +53,32 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+
+
+public class MapActivity extends AppCompatActivity implements
+        GoogleMap.OnMyLocationButtonClickListener,
+        GoogleMap.OnMyLocationClickListener,
+        OnMapReadyCallback,
+        ActivityCompat.OnRequestPermissionsResultCallback {
 
     private GoogleMap map;
     LatLngBounds.Builder latLngBuilder;
     StringBuilder markers;
-    private static boolean firstMarker;
+    private boolean firstMarker;
     StringBuilder pathMarkers;
-    private static boolean firstPathMarker;
+    private boolean firstPathMarker;
+    Map<Integer, MarkerDescription> description;
+    int currentDialog;
+    Marker currentMarker;
+
+
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+    private boolean permissionDenied = false;
+
+    PlacesClient placesClient;
 
     MapData mapData;
 
@@ -52,22 +95,52 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mapData = new MapData();
         latLngBuilder = new LatLngBounds.Builder();
         markers = new StringBuilder();
-        firstMarker = true;
         pathMarkers = new StringBuilder();
         firstPathMarker = true;
+        firstMarker = true;
+        description = new HashMap<>();
+
+
+        if (!Places.isInitialized()) {
+            Places.initialize(getApplicationContext(), "");
+        }
+        placesClient = Places.createClient(this);
+        AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
+                getSupportFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG));
+
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(@NonNull Place place) {
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(), 12.0f));
+                MarkerOptions markerOptions = new MarkerOptions();
+                markerOptions.position(place.getLatLng());
+                map.addMarker(markerOptions);
+            }
+
+            @Override
+            public void onError(@NonNull Status status) {
+                Log.i("Error", "An error occurred: " + status);
+            }
+        });
     }
 
 
+    @SuppressLint("PotentialBehaviorOverride")
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
         map.getUiSettings().setZoomControlsEnabled(true);
 
+        map.setOnMyLocationButtonClickListener(this);
+        map.setOnMyLocationClickListener(this);
+        enableMyLocation();
+
         map.setOnMapClickListener(latlng -> {
             MarkerOptions markerOptions = new MarkerOptions();
             markerOptions.position(latlng);
             //markerOptions.draggable(true);  // перетаскивание метки
-            markerOptions.title("" + latlng.latitude + " " + latlng.longitude);
+            //markerOptions.title("" + latlng.latitude + " " + latlng.longitude);
             mapData.addToMarkers(latlng);
             if (!firstMarker) {
                 markers.append("|");
@@ -81,10 +154,45 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         });
 
+        map.setOnMarkerClickListener(marker -> {
+            Log.i("Click", "test");
+            if (!description.containsKey(marker.hashCode())) {
+                description.put(marker.hashCode(), new MarkerDescription());
+            }
+            currentDialog = mapData.getIndexOfMarker(marker);
+            currentMarker = marker;
+            description.get(marker.hashCode()).show(getSupportFragmentManager(), "example dialog");
+            return true;
+        });
+
         final Button save = findViewById(R.id.b_save);
         save.setOnClickListener(v -> {
             getStaticMap();
         });
+    }
+
+    public void addDescriptionOnMarker(String text, List<Bitmap> image) {
+        mapData.addToMarkersDescription(currentDialog, text, image);
+        if (image.size() > 0) {
+            Bitmap bmpWithBorder = Bitmap.createBitmap(image.get(0).getWidth() + 20, image.get(0).getHeight() + 30, image.get(0).getConfig());
+            Canvas canvas = new Canvas(bmpWithBorder);
+//            canvas.drawColor(Color.WHITE);
+            canvas.drawBitmap(image.get(0), 10, 10, null);
+
+            Paint paint = new Paint();
+            paint.setAntiAlias(true);
+            paint.setColor(Color.BLACK);
+            paint.setStrokeWidth(5);
+            paint.setStyle(Paint.Style.STROKE);
+            Path path = new Path();
+            path.moveTo(10, image.get(0).getHeight() + 10);
+            path.lineTo(((float) image.get(0).getWidth() + 20)/2, image.get(0).getHeight() + 25);
+            path.lineTo(image.get(0).getWidth() + 10, image.get(0).getHeight() + 10);
+            path.close();
+            canvas.drawPath(path, paint);
+
+            currentMarker.setIcon(BitmapDescriptorFactory.fromBitmap(bmpWithBorder));
+        }
     }
 
     public void showRoute() {
@@ -95,8 +203,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         RouteApi routeService = restAdapter.create(RouteApi.class);
 
         //Вызов запроса на маршрут (асинхрон)
-        String from = "" + mapData.getMarkers(mapData.sizeMarkers() - 2).latitude + "," + mapData.getMarkers(mapData.sizeMarkers() - 2).longitude;
-        String to = "" + mapData.getMarkers(mapData.sizeMarkers() - 1).latitude + "," + mapData.getMarkers(mapData.sizeMarkers() - 1).longitude;
+        String from = "" + mapData.getMarker(mapData.sizeMarkers() - 2).latitude + "," + mapData.getMarker(mapData.sizeMarkers() - 2).longitude;
+        String to = "" + mapData.getMarker(mapData.sizeMarkers() - 1).latitude + "," + mapData.getMarker(mapData.sizeMarkers() - 1).longitude;
         routeService.getRoute(from, to, true, "ru", "", new Callback<RouteResponse>() {
             public void success(RouteResponse arg0, retrofit.client.Response arg1) {
                 //Если прошло успешно, то декодируем маршрут в точки LatLng
@@ -162,4 +270,66 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         });
     }
+
+    private void enableMyLocation() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            if (map != null) {
+                map.setMyLocationEnabled(true);
+            }
+        } else {
+            // Permission to access the location is missing. Show rationale and request permission
+            PermissionUtils.requestPermission(this, LOCATION_PERMISSION_REQUEST_CODE,
+                    Manifest.permission.ACCESS_FINE_LOCATION, true);
+        }
+    }
+
+    @Override
+    public void onMyLocationClick(@NonNull Location location) {
+//        Toast.makeText(this, "Current location:\n" + location, Toast.LENGTH_LONG)
+//                .show();
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                new LatLng(location.getLatitude(), location.getLongitude()), 12.0f));
+    }
+
+    @Override
+    public boolean onMyLocationButtonClick() {
+//        Toast.makeText(this, "MyLocation button clicked", Toast.LENGTH_SHORT)
+//                .show();
+        // Return false so that we don't consume the event and the default behavior still occurs
+        // (the camera animates to the user's current position).
+        return false;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode != LOCATION_PERMISSION_REQUEST_CODE) {
+            return;
+        }
+
+        if (PermissionUtils.isPermissionGranted(permissions, grantResults, Manifest.permission.ACCESS_FINE_LOCATION)) {
+            // Enable the my location layer if the permission has been granted.
+            enableMyLocation();
+        } else {
+            // Permission was denied. Display an error message
+            // Display the missing permission error dialog when the fragments resume.
+            permissionDenied = true;
+        }
+    }
+
+    @Override
+    protected void onResumeFragments() {
+        super.onResumeFragments();
+        if (permissionDenied) {
+            // Permission was not granted, display error dialog.
+            showMissingPermissionError();
+            permissionDenied = false;
+        }
+    }
+
+    private void showMissingPermissionError() {
+        PermissionUtils.PermissionDeniedDialog
+                .newInstance(true).show(getSupportFragmentManager(), "dialog");
+    }
+
 }

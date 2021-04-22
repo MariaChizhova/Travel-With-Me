@@ -3,7 +3,9 @@ package com.example.travelwithme;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -18,10 +20,14 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.RoundCap;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class ViewingMapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap map;
     MapData mapData;
+    Map<Integer,ViewingMarkerDescription> description;
 
     private static final int COLOR_BLACK_ARGB = 0xff0066ff;
     private static final int POLYLINE_STROKE_WIDTH_PX = 10;
@@ -37,6 +43,7 @@ public class ViewingMapActivity extends AppCompatActivity implements OnMapReadyC
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         mapData = getIntent().getParcelableExtra("mapData");
+        description = new HashMap<>();
     }
 
     @Override
@@ -51,6 +58,7 @@ public class ViewingMapActivity extends AppCompatActivity implements OnMapReadyC
     }
 
 
+    @SuppressLint("PotentialBehaviorOverride")
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
@@ -60,10 +68,10 @@ public class ViewingMapActivity extends AppCompatActivity implements OnMapReadyC
 
         for (int i = 0; i < mapData.sizeMarkers(); i++) {
             MarkerOptions markerOptions = new MarkerOptions();
-            markerOptions.position(mapData.getMarkers(i));
-            markerOptions.title("" + mapData.getMarkers(i).latitude + " " + mapData.getMarkers(i).longitude);
+            markerOptions.position(mapData.getMarker(i));
+            //markerOptions.title(mapData.getText(i));
             map.addMarker(markerOptions);
-            latLngBuilder.include(mapData.getMarkers(i));
+            latLngBuilder.include(mapData.getMarker(i));
         }
 
         PolylineOptions line = new PolylineOptions();
@@ -80,6 +88,20 @@ public class ViewingMapActivity extends AppCompatActivity implements OnMapReadyC
         LatLngBounds latLngBounds = latLngBuilder.build();
         CameraUpdate track = CameraUpdateFactory.newLatLngBounds(latLngBounds, size, size, 25);
         map.moveCamera(track);
+
+        map.setOnMarkerClickListener(marker -> {
+            Log.i("Click", "test");
+            if (!description.containsKey(marker.hashCode())) {
+                description.put(marker.hashCode(),new ViewingMarkerDescription());
+            }
+            Bundle bundle = new Bundle();
+            int ind = mapData.getIndexOfMarker(marker);
+            bundle.putString("text", mapData.getText(ind));
+            bundle.putParcelableArrayList("image", mapData.getImages(ind));
+            description.get(marker.hashCode()).setArguments(bundle);
+            description.get(marker.hashCode()).show(getSupportFragmentManager(), "example dialog");
+            return true;
+        });
 
     }
 

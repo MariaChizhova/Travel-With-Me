@@ -17,11 +17,8 @@ import android.widget.TextView;
 
 import com.example.travelwithme.adapter.PostAdapter;
 import com.squareup.picasso.Picasso;
-import com.example.travelwithme.pojo.Post;
 import com.example.travelwithme.pojo.User;
 
-import java.util.ArrayList;
-import java.util.Collection;
 
 /**
  * A simple {@link Fragment} subclass.
