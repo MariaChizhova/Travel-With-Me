@@ -21,14 +21,17 @@ public class Post {
 
     private int numberLikes = 0;
 
-    public Post() {
-    }
+    public Post() {}
 
     public Post(PostCreateRequest post, String pictureName) {
         this.authorId = post.getAuthorId();
         this.date = post.getDate();
         this.description = post.getDescription();
         this.pictureName = pictureName;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public Long getAuthorId() {

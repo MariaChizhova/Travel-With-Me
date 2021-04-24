@@ -1,7 +1,12 @@
 package com.example.demo.services;
 
+import com.example.demo.models.Marker;
+import com.example.demo.models.MarkerPhoto;
 import com.example.demo.models.Post;
+import com.example.demo.repositories.MarkerPhotoRepository;
+import com.example.demo.repositories.MarkerRepository;
 import com.example.demo.repositories.PostRepository;
+import com.example.demo.requests.MarkerCreateRequest;
 import com.example.demo.requests.PostCreateRequest;
 import com.sun.istack.NotNull;
 
@@ -12,16 +17,22 @@ import java.util.Optional;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final MarkerRepository markerRepository;
+    private final MarkerPhotoRepository markerPhotoRepository;
     private final StorageService storageService;
 
-    public PostService(PostRepository postRepository, StorageService storageService) {
+    public PostService(PostRepository postRepository, MarkerRepository markerRepository,
+                       MarkerPhotoRepository markerPhotoRepository, StorageService storageService) {
         this.postRepository = postRepository;
+        this.markerRepository = markerRepository;
+        this.markerPhotoRepository = markerPhotoRepository;
         this.storageService = storageService;
     }
 
     public void addPost(@NotNull PostCreateRequest postCreateRequest) {
         // name in the amazon s3 database
-        String pictureName = "post_" + postCreateRequest.getAuthorId() + "_" + System.currentTimeMillis();
+        String pictureName = "post_" + postCreateRequest.getAuthorId() +
+                "_" + System.currentTimeMillis();
 
         // add picture to amazon s3 database
         storageService.uploadFile(pictureName, postCreateRequest.getPicture());
@@ -29,6 +40,9 @@ public class PostService {
         // add post to mysql database
         Post post = new Post(postCreateRequest, pictureName);
         postRepository.save(post);
+
+        // add marker to mysql
+        addMarkers(postCreateRequest.getMarkers(), post.getId());
     }
 
     public List<Post> getPosts(@NotNull Long authorId) {
@@ -70,6 +84,21 @@ public class PostService {
 
     public void deletePost(@NotNull Long id) {
         postRepository.deleteById(id);
+    }
+
+
+    private void addMarkers(Iterable<MarkerCreateRequest> markers, Long postId) {
+        int index = 0;
+        for (var markerRequest : markers) {
+            Marker marker = new Marker(markerRequest, postId, index);
+            markerRepository.save(marker);
+            for (var photo : markerRequest.getPhotos()) {
+                String pictureName = marker.getId().toString() + "_" + Integer.valueOf(index).toString();  // maybe fix
+                storageService.uploadFile(pictureName, photo.getPhoto());
+                markerPhotoRepository.save(new MarkerPhoto(marker.getId(), pictureName));
+            }
+            index += 1;
+        }
     }
 
 
