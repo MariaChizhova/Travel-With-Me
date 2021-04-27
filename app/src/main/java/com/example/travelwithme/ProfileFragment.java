@@ -2,6 +2,7 @@ package com.example.travelwithme;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -17,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.travelwithme.adapter.PostAdapter;
+import com.example.travelwithme.pojo.Post;
 import com.squareup.picasso.Picasso;
 import com.example.travelwithme.pojo.User;
 
@@ -106,7 +108,7 @@ public class ProfileFragment extends Fragment {
         plus.setOnClickListener(v -> {
             startActivity((new Intent(view.getContext(), MapActivity.class)));
         });
-    //    loadPosts();
+        //    loadPosts();
         //initScrollListener();
         return view;
     }
@@ -114,13 +116,14 @@ public class ProfileFragment extends Fragment {
 
     public View getLocalView() {
         return view;
-
-    private void loadPosts() {
-        Collection<Post> postsList = getPosts();
-        postAdapter.setItems(postsList);
     }
 
-    private Collection<Post> getPosts() {
+  /*  private void loadPosts() {
+        Collection<Post> postsList = getPosts();
+        postAdapter.setItems(postsList);
+    }*/
+
+  /*  private Collection<Post> getPosts() {
         Collection<Post> lst = new ArrayList<>();
         lst.add(new Post(getUser(), currentId, "Thu Apr 1 07:31:08 +0000 2021", "Описание поста",
                 10L, ++currentLike, "https://www.w3schools.com/w3css/img_fjords.jpg"));
@@ -143,6 +146,7 @@ public class ProfileFragment extends Fragment {
         lst.add(new Post(getUser(), ++currentId, "Thu Apr 1 07:31:08 +0000 2021", "Описание поста",
                 10L, ++currentLike, "https://www.w3schools.com/w3images/lights.jpg"));
         return lst;
+    }*/
 
     private void initRecyclerView() {
         postsRecyclerView = view.findViewById(R.id.posts_recycler_view);
@@ -163,7 +167,7 @@ public class ProfileFragment extends Fragment {
                 super.onScrolled(recyclerView, dx, dy);
                 LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
                 if (!isLoading) {
-                    if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() ==  postAdapter.postsList.size() - 1) {
+                    if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() == postAdapter.postsList.size() - 1) {
                         loadMore();
                         isLoading = true;
                     }
@@ -185,9 +189,9 @@ public class ProfileFragment extends Fragment {
                 int currentSize = scrollPosition;
                 int nextLimit = currentSize + 10;
                 while (currentSize - 1 < nextLimit) {
-                    Post p = new Post(getUser(), ++currentId, "Thu Apr 1 07:31:08 +0000 2021", "Описание поста",
-                            1L, ++currentLike, "https://www.w3schools.com/w3css/img_manarola.jpg");
-                    postAdapter.postsList.add(p);
+               //     Post p = new Post(getUser(), ++currentId, "Thu Apr 1 07:31:08 +0000 2021", "Описание поста",
+                 //           1L, ++currentLike, "https://www.w3schools.com/w3css/img_manarola.jpg");
+                   // postAdapter.postsList.add(p);
                     currentSize++;
                 }
                 postAdapter.notifyDataSetChanged();
@@ -197,7 +201,6 @@ public class ProfileFragment extends Fragment {
     }
 
 
-
     private void loadUserInfo() {
         User user = getUser();
         displayUserInfo(user);
@@ -205,7 +208,7 @@ public class ProfileFragment extends Fragment {
 
     private void displayUserInfo(User user) {
         // Picasso.with(this).load(user.getImageUrl()).into(userImageView);
-        Picasso.get().load(user.getImageUrl()).into(userImageView);
+    //    Picasso.get().load(user.getImageUrl()).into(userImageView);
         nameTextView.setText(user.getName());
         nickTextView.setText(user.getNick());
         descriptionTextView.setText(user.getDescription());
