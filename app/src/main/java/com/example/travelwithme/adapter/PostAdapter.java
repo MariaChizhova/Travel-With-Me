@@ -1,6 +1,5 @@
 package com.example.travelwithme.adapter;
 
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -14,8 +13,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.travelwithme.ProfileFragment;
@@ -28,9 +29,14 @@ import com.example.travelwithme.R;
 import com.example.travelwithme.pojo.Post;
 
 
-public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder> {
+public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final String RESPONSE_FORMAT = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
     private static final String MONTH_DAY_FORMAT = "MMM d";
+    private final int VIEW_TYPE_ITEM = 0;
+    private final int VIEW_TYPE_LOADING = 1;
+
+
+    public List<Post> postsList = new ArrayList<>();
 
     ProfileFragment parent;
 
@@ -41,30 +47,61 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     }
 
     @Override
-    public PostViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.post_item_view, parent, false);
-        return new PostViewHolder(view);
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType == VIEW_TYPE_ITEM) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.post_item_view, parent, false);
+            return new PostViewHolder(view);
+        } else {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_loading, parent, false);
+            return new LoadingViewHolder(view);
+        }
     }
 
     @Override
-    public void onBindViewHolder(PostViewHolder holder, int position) {
-        holder.bind(postList.get(position));
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof PostViewHolder) {
+            populateItemRows((PostViewHolder) holder, position);
+        } else if (holder instanceof LoadingViewHolder) {
+            showLoadingView((LoadingViewHolder) holder, position);
+        }
     }
+
+    private void showLoadingView(LoadingViewHolder viewHolder, int position) { }
+
+    private void populateItemRows(PostViewHolder holder, int position) {
+        ((PostViewHolder) holder).bind(postsList.get(position));
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return postsList.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
+    }
+
 
     @Override
     public int getItemCount() {
-        return postList.size();
+        return postsList.size();
     }
 
 
+
     public void setItems(Collection<Post> posts) {
-        postList.addAll(posts);
+        postsList.addAll(posts);
         notifyDataSetChanged();
     }
 
     public void clearItems() {
-        postList.clear();
+        postsList.clear();
         notifyDataSetChanged();
+    }
+
+
+    private class LoadingViewHolder extends RecyclerView.ViewHolder {
+        ProgressBar progressBar;
+        public LoadingViewHolder(@NonNull View itemView) {
+            super(itemView);
+            progressBar = itemView.findViewById(R.id.progressBar);
+        }
     }
 
     class PostViewHolder extends RecyclerView.ViewHolder {
@@ -111,7 +148,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                     String text = Long.toString(count - 1);
                     likesTextView.setText(text);
                 }
-        });
+            });
 
 
             String creationDateFormatted = getFormattedDate(post.getCreationDate());

@@ -5,7 +5,9 @@ import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.ProgressBar;
 
+import com.example.travelwithme.databinding.ActivityMainBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -54,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
                         selectedFragment = new FeedFragment();
                         break;
                     case R.id.navigation_messages:
-                        selectedFragment = new MessegesFragment();
+                        selectedFragment = new MessagesFragment();
                         break;
                     case R.id.navigation_profile:
                         selectedFragment = new ProfileFragment();
