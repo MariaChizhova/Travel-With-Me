@@ -18,6 +18,8 @@ public class User {
     private String lastName = null;
     private String email = null;    // unchanged
     private String avatar = null;    // name file in the amazon s3 database
+    private int numberFollowers = 0;
+    private int numberFollowing = 0;
 
     public User() {
     }
@@ -52,4 +54,25 @@ public class User {
         this.lastName = user.getLastName();
         return this;
     }
+
+    public User incNumberFollowers() {
+        this.numberFollowers++;
+        return this;
+    }
+
+    public User decNumberFollowers() {
+        this.numberFollowers--;
+        return this;
+    }
+
+    public User incNumberFollowing() {
+        this.numberFollowing++;
+        return this;
+    }
+
+    public User decNumberFollowing() {
+        this.numberFollowing--;
+        return this;
+    }
+
 }

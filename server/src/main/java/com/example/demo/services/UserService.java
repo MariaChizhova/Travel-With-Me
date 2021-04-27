@@ -19,9 +19,12 @@ public class UserService {
         this.storageService = storageService;
     }
 
+    public User getUserById(@NotNull Long userId) {
+        return userRepository.findById(userId).orElse(null);
+    }
+
     public User getUser(@NotNull String email) {
-        Optional<User> user = userRepository.findByEmail(email);
-        return user.orElse(null);
+        return userRepository.findByEmail(email).orElse(null);
     }
 
     public byte[] getAvatar(@NotNull String keyName) {
@@ -48,6 +51,26 @@ public class UserService {
         // add changes to mysql database
         Optional<User> user = userRepository.findById(userId);
         user.ifPresent(value -> userRepository.save(value.setAvatar(avatarName)));
+    }
+
+    public void incNumberFollowers(@NotNull Long userId) {
+        Optional<User> user = userRepository.findById(userId);
+        user.ifPresent(value -> userRepository.save(value.incNumberFollowers()));
+    }
+
+    public void decNumberFollowers(@NotNull Long userId) {
+        Optional<User> user = userRepository.findById(userId);
+        user.ifPresent(value -> userRepository.save(value.decNumberFollowers()));
+    }
+
+    public void incNumberFollowing(@NotNull Long userId) {
+        Optional<User> user = userRepository.findById(userId);
+        user.ifPresent(value -> userRepository.save(value.incNumberFollowing()));
+    }
+
+    public void decNumberFollowing(@NotNull Long userId) {
+        Optional<User> user = userRepository.findById(userId);
+        user.ifPresent(value -> userRepository.save(value.decNumberFollowing()));
     }
 
 }

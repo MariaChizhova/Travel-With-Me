@@ -9,11 +9,13 @@ import com.example.demo.repositories.PostRepository;
 import com.example.demo.requests.MarkerCreateRequest;
 import com.example.demo.requests.PostCreateRequest;
 import com.sun.istack.NotNull;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class PostService {
 
     private final PostRepository postRepository;
