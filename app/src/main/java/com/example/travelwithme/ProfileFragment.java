@@ -1,7 +1,8 @@
 package com.example.travelwithme;
 
+import android.content.Intent;
 import android.os.Bundle;
-
+import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -11,12 +12,12 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.travelwithme.adapter.PostAdapter;
 import com.squareup.picasso.Picasso;
-import com.example.travelwithme.pojo.Post;
 import com.example.travelwithme.pojo.User;
 
 import java.util.ArrayList;
@@ -45,7 +46,7 @@ public class ProfileFragment extends Fragment {
     private TextView followingCountTextView;
     private TextView followersCountTextView;
     private RecyclerView postsRecyclerView;
-    private PostAdapter postAdapter;
+    public static PostAdapter postAdapter;
     private View view;
     private long currentId = 1;
     boolean isLoading = false;
@@ -98,10 +99,21 @@ public class ProfileFragment extends Fragment {
         followersCountTextView = view.findViewById(R.id.followers_count_text_view);
         initRecyclerView();
         loadUserInfo();
-        loadPosts();
-        initScrollListener();
+        //loadPosts();
+
+
+        final Button plus = view.findViewById(R.id.b_plus);
+        plus.setOnClickListener(v -> {
+            startActivity((new Intent(view.getContext(), MapActivity.class)));
+        });
+    //    loadPosts();
+        //initScrollListener();
         return view;
     }
+
+
+    public View getLocalView() {
+        return view;
 
     private void loadPosts() {
         Collection<Post> postsList = getPosts();
@@ -131,12 +143,11 @@ public class ProfileFragment extends Fragment {
         lst.add(new Post(getUser(), ++currentId, "Thu Apr 1 07:31:08 +0000 2021", "Описание поста",
                 10L, ++currentLike, "https://www.w3schools.com/w3images/lights.jpg"));
         return lst;
-    }
 
     private void initRecyclerView() {
         postsRecyclerView = view.findViewById(R.id.posts_recycler_view);
         postsRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        postAdapter = new PostAdapter();
+        postAdapter = new PostAdapter(this);
         postsRecyclerView.setAdapter(postAdapter);
     }
 
@@ -193,7 +204,8 @@ public class ProfileFragment extends Fragment {
     }
 
     private void displayUserInfo(User user) {
-        Picasso.with(view.getContext()).load(user.getImageUrl()).into(userImageView);
+        // Picasso.with(this).load(user.getImageUrl()).into(userImageView);
+        Picasso.get().load(user.getImageUrl()).into(userImageView);
         nameTextView.setText(user.getName());
         nickTextView.setText(user.getNick());
         descriptionTextView.setText(user.getDescription());
@@ -206,7 +218,7 @@ public class ProfileFragment extends Fragment {
         followersCountTextView.setText(followersCount);
     }
 
-    private User getUser() {
+    public static User getUser() {
         return new User(
                 1L,
                 "https://www.w3schools.com/w3images/streetart2.jpg",

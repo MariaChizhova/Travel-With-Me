@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,12 +19,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.travelwithme.ProfileFragment;
+import com.example.travelwithme.ViewingMapActivity;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
 import com.squareup.picasso.Picasso;
 
 import com.example.travelwithme.R;
 import com.example.travelwithme.pojo.Post;
+
 
 public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final String RESPONSE_FORMAT = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
@@ -34,6 +38,13 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public List<Post> postsList = new ArrayList<>();
 
+    ProfileFragment parent;
+
+    private List<Post> postList = new ArrayList<>();
+
+    public PostAdapter(ProfileFragment profileFragment){
+        parent = profileFragment;
+    }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -143,12 +154,20 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             String creationDateFormatted = getFormattedDate(post.getCreationDate());
             creationDateTextView.setText(creationDateFormatted);
 
-            Picasso.with(itemView.getContext()).load(post.getUser().getImageUrl()).into(userImageView);
+            Picasso.get().load(post.getUser().getImageUrl()).into(userImageView);
 
-            String postPhotoUrl = post.getImageUrl();
-            Picasso.with(itemView.getContext()).load(postPhotoUrl).into(postImageView);
+//            String postPhotoUrl = post.getImageUrl();
+//            Picasso.get().load(postPhotoUrl).into(postImageView);
+//
+//            postImageView.setVisibility(postPhotoUrl != null ? View.VISIBLE : View.GONE);
 
-            postImageView.setVisibility(postPhotoUrl != null ? View.VISIBLE : View.GONE);
+            postImageView.setImageBitmap(post.getImage());  // без сервера картинка делается из битов, потом нужно переделать Url
+
+            postImageView.setOnClickListener(v -> {
+                Intent i = new Intent(parent.getLocalView().getContext(), ViewingMapActivity.class);
+                i.putExtra("mapData", post.getMapData());
+                parent.startActivity(i);
+            });
         }
 
         private String getFormattedDate(String rawDate) {

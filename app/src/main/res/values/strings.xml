@@ -14,8 +14,19 @@
     <string name="followers_hint">Followers</string>
     <string name="following_hint">Following</string>
 
-    '   <string name="fa_map_marker">\uf041</string>
+    '
+    <string name="fa_map_marker">\uf041</string>
     <string name="fa_heart_o">\uf08a</string>
     <string name="fa_repost">\uf079</string>
+
+    <string name="save">save</string>
+    <string name="picture">picture</string>
+    <string name="post">post</string>
+    <string name="post_description">Введите описание маршрута</string>
+    <string name="location_permission_denied">Отказано</string>
+    <string name="permission_rationale_location">Разрешить доступ к вашему местоположению?</string>
+    <string name="describe_this_place">Describe this place...</string>
+
+    <string name="ok">ok</string>
 
 </resources>
