@@ -27,5 +27,7 @@
     <string name="describe_this_place">Describe this place...</string>
 
     <string name="ok">ok</string>
+    <string name="search_query_hint">Enter user name</string>
+    <string name="ion_search"></string>
 
 </resources>

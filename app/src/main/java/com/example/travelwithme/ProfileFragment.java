@@ -54,6 +54,7 @@ public class ProfileFragment extends Fragment {
     private long currentId = 1;
     boolean isLoading = false;
     private long currentLike = 0;
+    public static final String USER_ID = "userId";
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -109,7 +110,7 @@ public class ProfileFragment extends Fragment {
         plus.setOnClickListener(v -> {
             startActivity((new Intent(view.getContext(), MapActivity.class)));
         });
-
+// TO DO: ЭТО НЕ РАБОТАЕТ
         final Button followersButton = view.findViewById(R.id.followers_count_text_view);
         followersButton.setOnClickListener(v -> {
             SearchFragment  someFragment = new SearchFragment();

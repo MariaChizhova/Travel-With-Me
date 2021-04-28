@@ -1,16 +1,26 @@
 package com.example.travelwithme;
 
+import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.example.travelwithme.adapter.FriendsAdapter;
+import com.example.travelwithme.adapter.UsersAdapter;
 import com.example.travelwithme.adapter.ViewPagerAdapter;
 import com.example.travelwithme.pojo.User;
 import com.google.android.material.tabs.TabLayout;
@@ -38,6 +48,13 @@ public class SearchFragment extends Fragment {
     TabLayout tabLayout;
     ViewPager viewPager;
     ViewPagerAdapter viewPagerAdapter;
+
+    private RecyclerView usersRecyclerView;
+    private UsersAdapter usersAdapter;
+    private Toolbar toolbar;
+    private EditText queryEditText;
+    private Button searchButton;
+    private long currentId = 1;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -79,8 +96,9 @@ public class SearchFragment extends Fragment {
         viewPagerAdapter = new ViewPagerAdapter(getFragmentManager());
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
+        toolbar = view.findViewById(R.id.toolbar);
+        searchButton = toolbar.findViewById(R.id.search_button);
         return view;
     }
-
 }
 
