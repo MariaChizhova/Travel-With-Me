@@ -72,7 +72,7 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'androidx.recyclerview:recyclerview:1.2.0'
 
-  //  implementation 'com.google.android.gms:play-services:12.0.1'
+    //  implementation 'com.google.android.gms:play-services:12.0.1'
     implementation 'com.squareup.retrofit:retrofit:1.9.0'
     implementation 'com.google.maps.android:android-maps-utils:2.2.0'
     implementation group: 'commons-io', name: 'commons-io', version: '2.6'

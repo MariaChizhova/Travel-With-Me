@@ -18,9 +18,14 @@ import java.util.Collection;
 import java.util.List;
 
 
-public class FriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class UsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<User> friendsList = new ArrayList<>();
+    private List<User> usersList = new ArrayList<>();
+    private OnUsersClickListener onUsersClickListener;
+
+    public UsersAdapter(OnUsersClickListener onUserClickListener) {
+        this.onUsersClickListener = onUserClickListener;
+    }
 
     @Override
     public FriendViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -30,21 +35,21 @@ public class FriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        ((FriendsAdapter.FriendViewHolder) holder).bind(friendsList.get(position));
+        ((UsersAdapter.FriendViewHolder) holder).bind(usersList.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return friendsList.size();
+        return usersList.size();
     }
 
-    public void setItems(Collection<User> friends) {
-        friendsList.addAll(friends);
+    public void setItems(Collection<User> users) {
+        usersList.addAll(users);
         notifyDataSetChanged();
     }
 
     public void clearItems() {
-        friendsList.clear();
+        usersList.clear();
         notifyDataSetChanged();
     }
 
@@ -58,6 +63,14 @@ public class FriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             userImageView = itemView.findViewById(R.id.profile_image_view);
             nameTextView = itemView.findViewById(R.id.user_name_text_view);
             nickTextView = itemView.findViewById(R.id.user_nick_text_view);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    User user = usersList.get(getLayoutPosition());
+                    onUsersClickListener.onUserClick(user);
+                }
+            });
         }
 
         public void bind(User user) {
@@ -67,7 +80,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
-    public interface OnFriendsClickListener {
+    public interface OnUsersClickListener {
         void onUserClick(User user);
     }
 }

@@ -1,17 +1,29 @@
 package com.example.travelwithme;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.example.travelwithme.adapter.FriendsAdapter;
+import com.example.travelwithme.adapter.UsersAdapter;
+import com.example.travelwithme.adapter.ViewPagerAdapter;
 import com.example.travelwithme.pojo.User;
+import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,7 +35,7 @@ import java.util.Collection;
  */
 public class SearchFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
+   // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -31,13 +43,18 @@ public class SearchFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
-    private FriendsAdapter friendsAdapter;
-    private RecyclerView friendsRecyclerView;
-    Collection<User> friendsList;
     private View view;
-    private long currentId = 1;
 
+    TabLayout tabLayout;
+    ViewPager viewPager;
+    ViewPagerAdapter viewPagerAdapter;
+
+    private RecyclerView usersRecyclerView;
+    private UsersAdapter usersAdapter;
+    private Toolbar toolbar;
+    private EditText queryEditText;
+    private Button searchButton;
+    private long currentId = 1;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -74,48 +91,14 @@ public class SearchFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_search, container, false);
-        initRecyclerView();
-        loadFriends();
+        viewPager = view.findViewById(R.id.view_pager);
+        tabLayout = view.findViewById(R.id.tabs);
+        viewPagerAdapter = new ViewPagerAdapter(getFragmentManager());
+        viewPager.setAdapter(viewPagerAdapter);
+        tabLayout.setupWithViewPager(viewPager);
+        toolbar = view.findViewById(R.id.toolbar);
+        searchButton = toolbar.findViewById(R.id.search_button);
         return view;
-    }
-
-    private void loadFriends() {
-        friendsList = getFriends();
-        friendsAdapter.setItems(friendsList);
-    }
-
-    private void initRecyclerView() {
-        friendsRecyclerView = view.findViewById(R.id.posts_recycler_view);
-        friendsRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        friendsAdapter = new FriendsAdapter();
-        friendsRecyclerView.setAdapter(friendsAdapter);
-    }
-
-    private Collection<User> getFriends() {
-        Collection<User> lst = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            lst.add(new User(
-                    currentId,
-                    "https://sun9-6.userapi.com/impf/c845217/v845217483/8560e/LRcTo6l9VBE.jpg?size=1864x2048&quality=96&sign=b2f39df96c4d2fe3e6f16f6df6f528c5&type=album",
-                    "Anna",
-                    "@anchouls",
-                    "I love teorver",
-                    "Russia",
-                    100,
-                    100
-            ));
-            lst.add(new User(
-                    currentId,
-                    "https://www.w3schools.com/w3images/streetart2.jpg",
-                    "Andrew",
-                    "@andrew",
-                    "No description",
-                    "Russia",
-                    100,
-                    100
-            ));
-        }
-        return lst;
     }
 }
 
