@@ -9,6 +9,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/fragment_profile"
         android:padding="8dp">
 
         <de.hdodenhof.circleimageview.CircleImageView
@@ -114,6 +115,7 @@
             android:layout_marginTop="150dp"
             android:padding="8dp"
             app:icon="@drawable/ic_add_24dp" />
+
 
     </RelativeLayout>
 

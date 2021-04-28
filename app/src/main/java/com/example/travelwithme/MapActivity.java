@@ -73,6 +73,7 @@ public class MapActivity extends AppCompatActivity implements
     Map<Integer, MarkerDescription> description;
     int currentDialog;
     Marker currentMarker;
+    private final String KEY = "";
 
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
@@ -102,7 +103,7 @@ public class MapActivity extends AppCompatActivity implements
 
 
         if (!Places.isInitialized()) {
-            Places.initialize(getApplicationContext(), "");
+            Places.initialize(getApplicationContext(), KEY);
         }
         placesClient = Places.createClient(this);
         AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
@@ -205,7 +206,7 @@ public class MapActivity extends AppCompatActivity implements
         //Вызов запроса на маршрут (асинхрон)
         String from = "" + mapData.getMarker(mapData.sizeMarkers() - 2).latitude + "," + mapData.getMarker(mapData.sizeMarkers() - 2).longitude;
         String to = "" + mapData.getMarker(mapData.sizeMarkers() - 1).latitude + "," + mapData.getMarker(mapData.sizeMarkers() - 1).longitude;
-        routeService.getRoute(from, to, true, "ru", "", new Callback<RouteResponse>() {
+        routeService.getRoute(from, to, true, "ru", KEY, new Callback<RouteResponse>() {
             public void success(RouteResponse arg0, retrofit.client.Response arg1) {
                 //Если прошло успешно, то декодируем маршрут в точки LatLng
                 List<LatLng> mPoints = PolyUtil.decode(arg0.getPoints());
@@ -248,7 +249,7 @@ public class MapActivity extends AppCompatActivity implements
         StaticApi routeService = restAdapter.create(StaticApi.class);
 
         String size = "600x600";
-        routeService.getRoute(size, markers.toString(), pathMarkers.toString(), "", new Callback<Response>() {
+        routeService.getRoute(size, markers.toString(), pathMarkers.toString(), KEY, new Callback<Response>() {
 
             @Override
             public void success(Response response, Response response2) {
