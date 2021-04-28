@@ -11,15 +11,16 @@
         android:layout_centerInParent="true"
         android:textSize="30sp"/>
 
-    <View
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabs"
         android:layout_width="match_parent"
-        android:layout_height="6dp"
-        android:layout_marginTop="@dimen/text_small_margin"
-        android:background="@color/gray_mercury"/>
+        android:layout_height="wrap_content"
+        tools:ignore="MissingConstraints" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/posts_recycler_view"
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/view_pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="wrap_content"
+        tools:ignore="MissingConstraints" />
 
 </RelativeLayout>

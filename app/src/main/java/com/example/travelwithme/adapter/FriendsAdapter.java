@@ -64,7 +64,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         public void bind(User user) {
             nameTextView.setText(user.getName());
             nickTextView.setText(user.getNick());
-          //  Picasso.with(itemView.getContext()).load(user.getImageUrl()).into(userImageView);
+            Picasso.get().load(user.getImageUrl()).into(userImageView);
         }
     }
 }

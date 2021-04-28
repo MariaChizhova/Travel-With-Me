@@ -208,7 +208,7 @@ public class ProfileFragment extends Fragment {
 
     private void displayUserInfo(User user) {
         // Picasso.with(this).load(user.getImageUrl()).into(userImageView);
-    //    Picasso.get().load(user.getImageUrl()).into(userImageView);
+        Picasso.get().load(user.getImageUrl()).into(userImageView);
         nameTextView.setText(user.getName());
         nickTextView.setText(user.getNick());
         descriptionTextView.setText(user.getDescription());
