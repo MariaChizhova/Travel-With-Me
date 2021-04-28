@@ -13,8 +13,7 @@
 
     <string name="followers_hint">Followers</string>
     <string name="following_hint">Following</string>
-
-    '
+    <string name="edit_profile">Edit Profile</string>
     <string name="fa_map_marker">\uf041</string>
     <string name="fa_heart_o">\uf08a</string>
     <string name="fa_repost">\uf079</string>

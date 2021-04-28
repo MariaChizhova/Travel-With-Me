@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -108,8 +109,24 @@ public class ProfileFragment extends Fragment {
         plus.setOnClickListener(v -> {
             startActivity((new Intent(view.getContext(), MapActivity.class)));
         });
-        //    loadPosts();
-        //initScrollListener();
+
+        final Button followersButton = view.findViewById(R.id.followers_count_text_view);
+        followersButton.setOnClickListener(v -> {
+            SearchFragment  someFragment = new SearchFragment();
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.search_id, someFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        });
+
+        final Button followingButton = view.findViewById(R.id.following_count_text_view);
+        followingButton.setOnClickListener(v -> {
+            Fragment someFragment = new Following();
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.following_id, someFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        });
         return view;
     }
 
