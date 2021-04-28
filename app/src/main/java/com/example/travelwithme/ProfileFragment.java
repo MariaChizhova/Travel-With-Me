@@ -6,6 +6,8 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -106,7 +108,12 @@ public class ProfileFragment extends Fragment {
 
         final Button plus = view.findViewById(R.id.b_plus);
         plus.setOnClickListener(v -> {
-            startActivity((new Intent(view.getContext(), MapActivity.class)));
+            startActivity(new Intent(view.getContext(), MapActivity.class));
+        });
+
+        final Button settings = view.findViewById(R.id.b_profile_settings);
+        settings.setOnClickListener(v -> {
+            startActivity(new Intent(view.getContext(), SettingsProfileActivity.class));
         });
         //    loadPosts();
         //initScrollListener();
@@ -208,7 +215,7 @@ public class ProfileFragment extends Fragment {
 
     private void displayUserInfo(User user) {
         // Picasso.with(this).load(user.getImageUrl()).into(userImageView);
-    //    Picasso.get().load(user.getImageUrl()).into(userImageView);
+        Picasso.get().load(user.getImageUrl()).into(userImageView);
         nameTextView.setText(user.getName());
         nickTextView.setText(user.getNick());
         descriptionTextView.setText(user.getDescription());

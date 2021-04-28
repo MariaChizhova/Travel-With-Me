@@ -9,6 +9,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/fragment_profile"
         android:padding="8dp">
 
         <de.hdodenhof.circleimageview.CircleImageView
@@ -96,16 +97,31 @@
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@+id/followers_count_text_view" />
 
-        <Button
-            android:layout_width="40dp"
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/b_plus"
-            android:padding="8dp"
-            android:layout_marginStart="280dp"
-            android:layout_marginLeft="280dp"
-            android:layout_marginTop="100dp"
-            app:icon="@drawable/ic_add_24dp"
-            />
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:orientation="horizontal">
+            <Button
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/b_plus"
+                android:padding="8dp"
+                android:layout_marginLeft="250dp"
+                app:icon="@drawable/ic_add_24dp"
+                />
+
+            <Button
+                android:layout_below="@id/b_plus"
+                android:layout_marginLeft="10dp"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:id="@+id/b_profile_settings"
+                app:icon="@drawable/ic_settings"
+                />
+        </LinearLayout>
 
     </RelativeLayout>
 
