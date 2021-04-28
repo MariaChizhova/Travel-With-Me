@@ -112,7 +112,7 @@ public class ProfileFragment extends Fragment {
             startActivity(new Intent(view.getContext(), MapActivity.class));
         });
 
-        final Button settings = view.findViewById(R.id.b_profile_settings);
+        final Button settings = view.findViewById(R.id.edit_profile);
         settings.setOnClickListener(v -> {
             startActivity(new Intent(view.getContext(), SettingsProfileActivity.class));
         });

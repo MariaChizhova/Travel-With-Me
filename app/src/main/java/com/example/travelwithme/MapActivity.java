@@ -73,7 +73,7 @@ public class MapActivity extends AppCompatActivity implements
     Map<Integer, MarkerDescription> description;
     int currentDialog;
     Marker currentMarker;
-    private final String KEY = "AIzaSyCtRvgMG4Kw76saQoY-9e3-14-2vxb9hC4";
+    private final String KEY = "";
 
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
