@@ -60,20 +60,6 @@ public class PostService {
         post.ifPresent(value -> postRepository.save(value.setDescription(newDescription)));
     }
 
-    public void editPicture(@NotNull Long postId, @NotNull Long authorId,
-                            @NotNull String oldPictureName, @NotNull String newPicture) {
-        // name picture in the amazon s3 database
-        String newPictureName = "post_" + authorId + "_" + System.currentTimeMillis();
-
-        // add changes to amazon s3 database
-        storageService.removeFile(oldPictureName);
-        storageService.uploadFile(newPictureName, newPicture);
-
-        // add changes to mysql database
-        Optional<Post> post = postRepository.findById(postId);
-        post.ifPresent(value -> postRepository.save(value.setPictureName(newPictureName)));
-    }
-
     public void incNumberLikes(@NotNull Long postId) {
         Optional<Post> post = postRepository.findById(postId);
         post.ifPresent(value -> postRepository.save(value.incNumberLikes()));
@@ -84,8 +70,8 @@ public class PostService {
         post.ifPresent(value -> postRepository.save(value.decNumberLikes()));
     }
 
-    public void deletePost(@NotNull Long id) {
-        postRepository.deleteById(id);
+    public void deletePost(@NotNull Long postId) {
+        postRepository.deleteById(postId);
     }
 
 
