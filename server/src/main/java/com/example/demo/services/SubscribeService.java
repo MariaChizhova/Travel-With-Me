@@ -11,12 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class FollowerService {
+public class SubscribeService {
 
     private final SubscribeRepository subscribeRepository;
     private final UserService userService;
 
-    public FollowerService(SubscribeRepository subscribeRepository, UserService userService) {
+    public SubscribeService(SubscribeRepository subscribeRepository, UserService userService) {
         this.subscribeRepository = subscribeRepository;
         this.userService = userService;
     }
