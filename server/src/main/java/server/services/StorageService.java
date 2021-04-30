@@ -2,6 +2,7 @@ package server.services;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.S3Object;
+import com.sun.istack.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +24,7 @@ public class StorageService {
         this.client = client;
     }
 
-    public void uploadFile(String keyName, String data) {
+    public void uploadFile(@NotNull String keyName, @NotNull String data) {
         try {
             Path uploadFilePath = Files.createTempFile(keyName, "jpg");
             byte[] bytes = DatatypeConverter.parseBase64Binary(data);
@@ -32,7 +33,7 @@ public class StorageService {
         } catch (IOException ignored) {}
     }
 
-    public byte[] downloadFile(String keyName) {
+    public byte[] downloadFile(@NotNull String keyName) {
         S3Object object = client.getObject(bucketName, keyName);
         InputStream data = object.getObjectContent();
         try {
@@ -41,7 +42,7 @@ public class StorageService {
         return null;
     }
 
-    public void removeFile(String keyName) {
+    public void removeFile(@NotNull String keyName) {
         client.deleteObject(bucketName, keyName);
     }
 }

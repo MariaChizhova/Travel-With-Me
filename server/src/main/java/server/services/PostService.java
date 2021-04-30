@@ -32,12 +32,15 @@ public class PostService {
     }
 
     public void addPost(@NotNull PostCreateRequest postCreateRequest) {
-        // name in the amazon s3 database
-        String pictureName = "post_" + postCreateRequest.getAuthorId() +
-                "_" + System.currentTimeMillis();
+        String pictureName = null;
+        if (postCreateRequest.getPicture() != null) {
+            // name in the amazon s3 database
+            pictureName = "post_" + postCreateRequest.getAuthorId() +
+                    "_" + System.currentTimeMillis();
 
-        // add picture to amazon s3 database
-        storageService.uploadFile(pictureName, postCreateRequest.getPicture());
+            // add picture to amazon s3 database
+            storageService.uploadFile(pictureName, postCreateRequest.getPicture());
+        }
 
         // add post to mysql database
         Post post = new Post(postCreateRequest, pictureName);
