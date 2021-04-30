@@ -1,16 +1,16 @@
 package server.requests;
 
-public class UserUpdateRequest {
+public class UserEditRequest {
 
     private final Long id;
     private String firstName = null;
     private String lastName = null;
 
-    public UserUpdateRequest(Long id) {
+    public UserEditRequest(Long id) {
         this.id = id;
     }
 
-    public UserUpdateRequest(Long id, String firstName, String lastName) {
+    public UserEditRequest(Long id, String firstName, String lastName) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;

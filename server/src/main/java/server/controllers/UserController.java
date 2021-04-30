@@ -1,7 +1,7 @@
 package server.controllers;
 
 import server.models.User;
-import server.requests.UserUpdateRequest;
+import server.requests.UserEditRequest;
 import server.services.UserService;
 import com.sun.istack.NotNull;
 import org.springframework.web.bind.annotation.*;
@@ -31,8 +31,8 @@ public class UserController {
     }
 
     @PostMapping("/edit_user")
-    public void editUser(@RequestBody @NotNull UserUpdateRequest updatedUser) {
-        userService.editUser(updatedUser);
+    public void editUser(@RequestBody @NotNull UserEditRequest editedUser) {
+        userService.editUser(editedUser);
     }
 
     @PostMapping("/edit_avatar")

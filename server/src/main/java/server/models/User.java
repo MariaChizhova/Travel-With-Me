@@ -1,6 +1,6 @@
 package server.models;
 
-import server.requests.UserUpdateRequest;
+import server.requests.UserEditRequest;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -49,7 +49,7 @@ public class User {
         return this;
     }
 
-    public User setAll(UserUpdateRequest user) {
+    public User setAll(UserEditRequest user) {
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
         return this;

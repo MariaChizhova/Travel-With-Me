@@ -2,7 +2,7 @@ package server.services;
 
 import server.models.User;
 import server.repositories.UserRepository;
-import server.requests.UserUpdateRequest;
+import server.requests.UserEditRequest;
 import com.sun.istack.NotNull;
 import org.springframework.stereotype.Service;
 
@@ -35,9 +35,9 @@ public class UserService {
         userRepository.save(new User(email));
     }
 
-    public void editUser(@NotNull UserUpdateRequest updatedUser) {
-        Optional<User> user = userRepository.findById(updatedUser.getId());
-        user.ifPresent(value -> userRepository.save(value.setAll(updatedUser)));
+    public void editUser(@NotNull UserEditRequest editedUser) {
+        Optional<User> user = userRepository.findById(editedUser.getId());
+        user.ifPresent(value -> userRepository.save(value.setAll(editedUser)));
     }
 
     public void editAvatar(@NotNull Long userId, @NotNull String newAvatar) {
