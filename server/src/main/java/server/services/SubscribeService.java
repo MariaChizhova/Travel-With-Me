@@ -24,13 +24,13 @@ public class SubscribeService {
     public void addSubscribe(@NotNull SubscribeRequest subscribeRequest) {
         subscribeRepository.save(new Subscribe(subscribeRequest));
         userService.incNumberFollowers(subscribeRequest.getFollowingId());
-        userService.incNumberFollowing(subscribeRequest.getFollowerId());
+        userService.incNumberFollowings(subscribeRequest.getFollowerId());
     }
 
     public void deleteSubscribe(@NotNull SubscribeRequest subscribeRequest) {
         subscribeRepository.delete(new Subscribe(subscribeRequest));
         userService.decNumberFollowers(subscribeRequest.getFollowingId());
-        userService.decNumberFollowing(subscribeRequest.getFollowerId());
+        userService.decNumberFollowings(subscribeRequest.getFollowerId());
     }
 
     public List<User> getFollowings(Long userId) {

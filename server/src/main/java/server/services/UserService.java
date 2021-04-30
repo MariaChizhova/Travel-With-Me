@@ -63,12 +63,12 @@ public class UserService {
         user.ifPresent(value -> userRepository.save(value.decNumberFollowers()));
     }
 
-    public void incNumberFollowing(@NotNull Long userId) {
+    public void incNumberFollowings(@NotNull Long userId) {
         Optional<User> user = userRepository.findById(userId);
         user.ifPresent(value -> userRepository.save(value.incNumberFollowing()));
     }
 
-    public void decNumberFollowing(@NotNull Long userId) {
+    public void decNumberFollowings(@NotNull Long userId) {
         Optional<User> user = userRepository.findById(userId);
         user.ifPresent(value -> userRepository.save(value.decNumberFollowing()));
     }
