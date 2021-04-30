@@ -2,22 +2,22 @@ package server.requests;
 
 public class UserEditRequest {
 
-    private final Long id;
+    private final Long userId;
     private String firstName = null;
     private String lastName = null;
 
-    public UserEditRequest(Long id) {
-        this.id = id;
+    public UserEditRequest(Long userId) {
+        this.userId = userId;
     }
 
-    public UserEditRequest(Long id, String firstName, String lastName) {
-        this.id = id;
+    public UserEditRequest(Long userId, String firstName, String lastName) {
+        this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
     }
 
-    public Long getId() {
-        return id;
+    public Long getUserId() {
+        return userId;
     }
 
     public String getFirstName() {

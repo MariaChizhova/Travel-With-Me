@@ -1,0 +1,30 @@
+{
+  "authorId": 18,
+  "date": "14:07 30 april 2021",
+  "description": "I went to Cuba this weekend",
+  "picture": "{DatatypeConverter.printBase64Binary()}",
+  "marker": [
+    {
+      "name": "Havana Airport",
+      "description": "It was an amazing place",
+      "latitude": 23.11,
+      "longitude": -82.41,
+      "photos": [
+        {"photo": "{DatatypeConverter.printBase64Binary()}"},
+        {"photo": "{DatatypeConverter.printBase64Binary()}"},
+        {"photo": "{DatatypeConverter.printBase64Binary()}"}
+      ]
+    },
+
+    {
+      "name": "Plaza of Revolution",
+      "description": "It was a very big square and the great obelisk",
+      "latitude": 23.12,
+      "longitude": -82.38,
+      "photos": [
+        {"photo": "{DatatypeConverter.printBase64Binary()}"},
+        {"photo": "{DatatypeConverter.printBase64Binary()}"}
+      ]
+    }
+  ]
+}

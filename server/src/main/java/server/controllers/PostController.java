@@ -1,12 +1,10 @@
 package server.controllers;
 
+import org.springframework.web.bind.annotation.*;
 import server.models.Post;
 import server.requests.PostCreateRequest;
 import server.services.PostService;
 import com.sun.istack.NotNull;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -20,32 +18,33 @@ public class PostController {
     }
 
     @PostMapping("/add_post")
-    public void addPost(@NotNull PostCreateRequest postCreateRequest) {
+    public void addPost(@RequestBody @NotNull PostCreateRequest postCreateRequest) {
         postService.addPost(postCreateRequest);
     }
 
     @GetMapping("/get_posts")
-    public List<Post> getPosts(@NotNull Long authorId) {
+    public List<Post> getPosts(@RequestParam @NotNull Long authorId) {
         return postService.getPosts(authorId);
     }
 
     @PostMapping("/edit_description")
-    public void editDescription(@NotNull Long postId, @NotNull String newDescription) {
+    public void editDescription(@RequestParam @NotNull Long postId,
+                                @RequestParam @NotNull String newDescription) {
         postService.editDescription(postId, newDescription);
     }
 
     @PostMapping("/inc_post_number_likes")
-    public void incNumberLikes(@NotNull Long postId) {
+    public void incNumberLikes(@RequestParam @NotNull Long postId) {
         postService.incNumberLikes(postId);
     }
 
     @PostMapping("/dec_post_number_likes")
-    public void decNumberLikes(@NotNull Long postId) {
+    public void decNumberLikes(@RequestParam @NotNull Long postId) {
         postService.decNumberLikes(postId);
     }
 
     @PostMapping("/delete_post")
-    public void deletePost(@NotNull Long postId) {
+    public void deletePost(@RequestParam @NotNull Long postId) {
         postService.deletePost(postId);
     }
 

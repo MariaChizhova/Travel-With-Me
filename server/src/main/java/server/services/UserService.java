@@ -36,7 +36,7 @@ public class UserService {
     }
 
     public void editUser(@NotNull UserEditRequest editedUser) {
-        Optional<User> user = userRepository.findById(editedUser.getId());
+        Optional<User> user = userRepository.findById(editedUser.getUserId());
         user.ifPresent(value -> userRepository.save(value.setAll(editedUser)));
     }
 
