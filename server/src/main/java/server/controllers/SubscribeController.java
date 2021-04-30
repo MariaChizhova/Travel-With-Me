@@ -1,12 +1,11 @@
 package server.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 import server.models.User;
 import server.requests.SubscribeRequest;
 import server.services.SubscribeService;
 import com.sun.istack.NotNull;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -15,27 +14,28 @@ public class SubscribeController {
 
     private final SubscribeService subscribeService;
 
+    @Autowired
     public SubscribeController(SubscribeService subscribeService) {
         this.subscribeService = subscribeService;
     }
 
     @PostMapping("/add_subscribe")
-    public void addSubscribe(@NotNull SubscribeRequest subscribeRequest) {
+    public void addSubscribe(@RequestBody @NotNull SubscribeRequest subscribeRequest) {
         subscribeService.addSubscribe(subscribeRequest);
     }
 
     @PostMapping("/delete_subscribe")
-    public void deleteSubscribe(@NotNull SubscribeRequest subscribeRequest) {
+    public void deleteSubscribe(@RequestBody @NotNull SubscribeRequest subscribeRequest) {
         subscribeService.deleteSubscribe(subscribeRequest);
     }
 
-    @GetMapping("/get_followings")
-    public List<User> getFollowings(Long userId) {
+    @GetMapping("/get_followings/{userId}")
+    public List<User> getFollowings(@PathVariable @NotNull Long userId) {
         return subscribeService.getFollowings(userId);
     }
 
-    @GetMapping("/get_followers")
-    public List<User> getFollowers(Long userId) {
+    @GetMapping("/get_followers/{userId}")
+    public List<User> getFollowers(@PathVariable @NotNull Long userId) {
         return subscribeService.getFollowers(userId);
     }
 

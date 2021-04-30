@@ -1,5 +1,6 @@
 package server.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import server.models.User;
 import server.requests.UserEditRequest;
 import server.services.UserService;
@@ -11,6 +12,7 @@ public class UserController {
 
     private final UserService userService;
 
+    @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
     }
