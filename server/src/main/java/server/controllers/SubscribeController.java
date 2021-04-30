@@ -24,7 +24,7 @@ public class SubscribeController {
         subscribeService.addSubscribe(subscribeRequest);
     }
 
-    @PostMapping("/delete_subscribe")
+    @DeleteMapping("/delete_subscribe")
     public void deleteSubscribe(@RequestBody @NotNull SubscribeRequest subscribeRequest) {
         subscribeService.deleteSubscribe(subscribeRequest);
     }

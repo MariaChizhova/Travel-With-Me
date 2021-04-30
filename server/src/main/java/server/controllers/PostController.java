@@ -29,23 +29,23 @@ public class PostController {
         return postService.getPosts(authorId);
     }
 
-    @PostMapping("/edit_description")
+    @PutMapping("/edit_description")
     public void editDescription(@RequestParam @NotNull Long postId,
                                 @RequestParam @NotNull String newDescription) {
         postService.editDescription(postId, newDescription);
     }
 
-    @PostMapping("/inc_post_number_likes")
+    @PutMapping("/inc_post_number_likes")
     public void incNumberLikes(@RequestParam @NotNull Long postId) {
         postService.incNumberLikes(postId);
     }
 
-    @PostMapping("/dec_post_number_likes")
+    @PutMapping("/dec_post_number_likes")
     public void decNumberLikes(@RequestParam @NotNull Long postId) {
         postService.decNumberLikes(postId);
     }
 
-    @PostMapping("/delete_post")
+    @PutMapping("/delete_post")
     public void deletePost(@RequestParam @NotNull Long postId) {
         postService.deletePost(postId);
     }
