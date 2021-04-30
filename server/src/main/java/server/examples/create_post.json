@@ -3,7 +3,7 @@
   "date": "14:07 30 april 2021",
   "description": "I went to Cuba this weekend",
   "picture": "{DatatypeConverter.printBase64Binary()}",
-  "marker": [
+  "markers": [
     {
       "name": "Havana Airport",
       "description": "It was an amazing place",
@@ -26,5 +26,6 @@
         {"photo": "{DatatypeConverter.printBase64Binary()}"}
       ]
     }
+
   ]
 }
