@@ -5,11 +5,14 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -20,7 +23,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.travelwithme.adapter.PostAdapter;
+import com.example.travelwithme.adapter.ViewPagerAdapter;
 import com.example.travelwithme.pojo.Post;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.squareup.picasso.Picasso;
 import com.example.travelwithme.pojo.User;
 
@@ -116,23 +121,23 @@ public class ProfileFragment extends Fragment {
         settings.setOnClickListener(v -> {
             startActivity(new Intent(view.getContext(), SettingsProfileActivity.class));
         });
-// TO DO: ЭТО НЕ РАБОТАЕТ
+
         final Button followersButton = view.findViewById(R.id.followers_count_text_view);
         followersButton.setOnClickListener(v -> {
-            SearchFragment  someFragment = new SearchFragment();
-            FragmentTransaction transaction = getFragmentManager().beginTransaction();
-            transaction.replace(R.id.search_id, someFragment);
-            transaction.addToBackStack(null);
-            transaction.commit();
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                    new Followers()).commit();
+            BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.navigation_view);
+            bottomNavigationView.setSelectedItemId(R.id.navigation_search);
         });
 
         final Button followingButton = view.findViewById(R.id.following_count_text_view);
         followingButton.setOnClickListener(v -> {
-            Fragment someFragment = new Following();
-            FragmentTransaction transaction = getFragmentManager().beginTransaction();
-            transaction.replace(R.id.following_id, someFragment);
-            transaction.addToBackStack(null);
-            transaction.commit();
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                    new SearchFragment()).commit();
+            BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.navigation_view);
+            bottomNavigationView.setSelectedItemId(R.id.navigation_search);
+            ViewPager viewPager = getActivity().findViewById(R.id.view_pager);
+            viewPager.setCurrentItem(1);
         });
         return view;
     }

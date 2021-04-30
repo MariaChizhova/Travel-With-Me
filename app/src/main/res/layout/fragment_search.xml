@@ -3,12 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SearchFragment">
-
-    <FrameLayout
-        android:id="@+id/search_id"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    tools:context=".SearchFragment"
+    android:id="@+id/search_id">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
