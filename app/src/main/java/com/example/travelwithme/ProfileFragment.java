@@ -1,6 +1,7 @@
 package com.example.travelwithme;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +26,9 @@ import android.widget.TextView;
 
 import com.example.travelwithme.adapter.PostAdapter;
 import com.example.travelwithme.pojo.Post;
+import com.example.travelwithme.requests.PostCreateRequest;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.squareup.picasso.Picasso;
 import com.example.travelwithme.pojo.User;
 
@@ -32,6 +37,12 @@ import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collection;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 /**
@@ -151,34 +162,40 @@ public class ProfileFragment extends Fragment {
     private Collection<Post> getPosts() {
         Collection<Post> lst = new ArrayList<>();
 
-//        RestAdapter restAdapter = new RestAdapter.Builder()
-//                .setEndpoint("http://192.168.0.8:9090")
-//                .setLogLevel(RestAdapter.LogLevel.FULL)
-//                .build();
-//        GetPostsApi getPostsApi = restAdapter.create(GetPostsApi.class);
-//        getPostsApi.getPosts(1L, new retrofit2.Callback<List<GetPostResponse>>() {
-//            @RequiresApi(api = Build.VERSION_CODES.O)
-//            @Override
-//            public void onResponse(Call<List<GetPostResponse>> call, retrofit2.Response<List<GetPostResponse>> response) {
-//                if (response.isSuccessful()) {
-//                    for (GetPostResponse getPostResponse : response.body()) {
-//                        byte[] picture = Base64.getDecoder().decode(getPostResponse.getPicture());
-//                        lst.add(new Post(getPostResponse.getAuthorId(), getPostResponse.getPostId(),
-//                                getPostResponse.getDate(),
-//                                getPostResponse.getDescription(), getPostResponse.getNumberLikes(),
-//                                BitmapFactory.decodeByteArray(picture, 0, picture.length),
-//                                getPostResponse.getMarkers()));
-//                    }
-//                } else {
-//                    System.out.println(response.errorBody());
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<List<GetPostResponse>> call, Throwable t) {
-//                t.printStackTrace();
-//            }
-//        });
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://192.168.0.8:9090")
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+
+        GetPostsApi getPostsApi = retrofit.create(GetPostsApi.class);
+        Call<List<PostCreateRequest>> call = getPostsApi.getPosts(ProfileFragment.getUser().getId());
+        call.enqueue(new Callback<List<PostCreateRequest>>() {
+
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onResponse(Call<List<PostCreateRequest>> call, Response<List<PostCreateRequest>> response) {
+                if (response.isSuccessful()) {
+                    if(response.body() != null) {
+                        for (PostCreateRequest postCreateRequest : response.body()) {
+                            lst.add(postCreateRequest.getPost());
+                        }
+                    } else {
+                        Log.i("error", "response body is null");
+                    }
+                } else {
+                    Log.i("error", "error");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<PostCreateRequest>> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
 
         return lst;
     }

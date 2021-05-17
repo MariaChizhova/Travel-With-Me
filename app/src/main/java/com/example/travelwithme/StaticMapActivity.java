@@ -1,9 +1,11 @@
 package com.example.travelwithme;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -11,6 +13,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.example.travelwithme.pojo.Post;
+import com.example.travelwithme.requests.PostCreateRequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -27,6 +30,7 @@ public class StaticMapActivity extends AppCompatActivity {
 
     private Date date;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,10 +59,11 @@ public class StaticMapActivity extends AppCompatActivity {
                     .addConverterFactory(GsonConverterFactory.create(gson))
                     .build();
             AddPostApi addPostApi = retrofit.create(AddPostApi.class);
-            Call<BaseResponse> call = addPostApi.addPost(newPost);
-            call.enqueue(new Callback<BaseResponse>() {
+            PostCreateRequest postCreateRequest = new PostCreateRequest(newPost);
+            Call<Void> call = addPostApi.addPost(postCreateRequest);
+            call.enqueue(new Callback<Void>() {
                 @Override
-                public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+                public void onResponse(Call<Void> call, Response<Void> response) {
                     if (response.isSuccessful()) {
                         Log.i("sucsess", "sucsess");
                     } else {
@@ -67,11 +72,11 @@ public class StaticMapActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onFailure(Call<BaseResponse> call, Throwable t) {
+                public void onFailure(Call<Void> call, Throwable t) {
                     t.printStackTrace();
+                    Log.i("eeeerrror", "error2");
                 }
             });
-
 
             finish();
         });

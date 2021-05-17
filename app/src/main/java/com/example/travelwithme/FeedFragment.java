@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 
 import com.example.travelwithme.adapter.PostAdapter;
 import com.example.travelwithme.pojo.Post;
+import com.example.travelwithme.requests.PostCreateRequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -108,26 +109,19 @@ public class FeedFragment extends Fragment {
                 .build();
 
         GetPostApi getPostApi = retrofit.create(GetPostApi.class);
-        Call<GetPostResponse> call = getPostApi.getPost((long) 5);
-        call.enqueue(new Callback<GetPostResponse>() {
+        Call<PostCreateRequest> call = getPostApi.getPost((long) 5);
+        call.enqueue(new Callback<PostCreateRequest>() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
-            public void onResponse(Call<GetPostResponse> call, Response<GetPostResponse> response) {
-                GetPostResponse getPostResponse = response.body();
-                Bitmap image = null;
-                if(getPostResponse.getPicture() != null){
-                    byte[] picture = Base64.getDecoder().decode(getPostResponse.getPicture());
-                    image = BitmapFactory.decodeByteArray(picture, 0, picture.length);
+            public void onResponse(Call<PostCreateRequest> call, Response<PostCreateRequest> response) {
+                PostCreateRequest postCreateRequest = response.body();
+                if(postCreateRequest != null) {
+                    lst.add(postCreateRequest.getPost());
                 }
-                lst.add(new Post(getPostResponse.getAuthorId(), getPostResponse.getPostId(),
-                        getPostResponse.getDate(),
-                        getPostResponse.getDescription(), getPostResponse.getNumberLikes(),
-                        image,
-                        getPostResponse.getMarkers()));
             }
 
             @Override
-            public void onFailure(Call<GetPostResponse> call, Throwable t) {
+            public void onFailure(Call<PostCreateRequest> call, Throwable t) {
                 t.printStackTrace();
             }
         });

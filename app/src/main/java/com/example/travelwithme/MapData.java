@@ -1,10 +1,14 @@
 package com.example.travelwithme;
 
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 
+import androidx.annotation.RequiresApi;
+
+import com.example.travelwithme.requests.MarkerCreateRequest;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 
@@ -18,59 +22,19 @@ public class MapData implements Parcelable {
         markers = new ArrayList<>();
     }
 
-    private static class Marker implements Parcelable {
-        public String name;
-        public String description;
-        public LatLng latLng;
-        public List<Bitmap> photos;
-
-        public Marker(LatLng latLng) {
-            this.latLng = latLng;
-            photos = new ArrayList<>();
-        }
-
-        protected Marker(Parcel in) {
-            name = in.readString();
-            description = in.readString();
-            latLng = in.readParcelable(LatLng.class.getClassLoader());
-            photos = in.createTypedArrayList(Bitmap.CREATOR);
-        }
-
-        public static final Creator<MapData.Marker> CREATOR = new Creator<MapData.Marker>() {
-            @Override
-            public MapData.Marker createFromParcel(Parcel in) {
-                return new MapData.Marker(in);
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public MapData(List<MarkerCreateRequest> markers) {
+        this.markers = new ArrayList<>();
+        if(markers != null) {
+            for (MarkerCreateRequest m : markers) {
+                Marker marker = new Marker(m);
+                this.markers.add(marker);
             }
-
-            @Override
-            public MapData.Marker[] newArray(int size) {
-                return new MapData.Marker[size];
-            }
-        };
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        @Override
-        public void writeToParcel(Parcel dest, int flags) {
-            dest.writeString(name);
-            dest.writeString(description);
-            dest.writeParcelable(latLng,flags);
-            dest.writeTypedList(photos);
-        }
-
-        @Override
-        public String toString() {
-            final Gson gson = new Gson();
-            return gson.toJson(this);
         }
     }
 
-
     protected MapData(Parcel in) {
-        markers = in.createTypedArrayList(MapData.Marker.CREATOR);
+        markers = in.createTypedArrayList(Marker.CREATOR);
     }
 
     public static final Creator<MapData> CREATOR = new Creator<MapData>() {
@@ -136,9 +100,7 @@ public class MapData implements Parcelable {
         return markers.get(ind).name;
     }
 
-    @Override
-    public String toString() {
-        final Gson gson = new Gson();
-        return gson.toJson(this);
+    public List<Marker> getMarkers() {
+        return markers;
     }
 }
