@@ -7,13 +7,16 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import com.example.travelwithme.Followers;
 import com.example.travelwithme.Following;
 
+import org.jetbrains.annotations.NotNull;
+
+
 public class ViewPagerAdapter extends FragmentPagerAdapter {
-    public ViewPagerAdapter(FragmentManager fm) {
-        super(fm);
+    public ViewPagerAdapter(@NotNull FragmentManager fragmentManager, int behavior) {
+        super(fragmentManager, behavior);
     }
 
     @Override
-    public Fragment getItem(int position) {
+    public @NotNull Fragment getItem(int position) {
         Fragment fragment = null;
         switch (position) {
             case 0:

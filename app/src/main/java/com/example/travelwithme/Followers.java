@@ -13,14 +13,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.travelwithme.adapter.FriendsAdapter;
 import com.example.travelwithme.pojo.User;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.Collection;
 
 public class Followers extends Fragment {
     private FriendsAdapter followersAdapter;
-    private RecyclerView followersRecyclerView;
     Collection<User> followersList;
     private View view;
     private long currentId = 1;
@@ -41,7 +38,7 @@ public class Followers extends Fragment {
     }
 
     private void initRecyclerView() {
-        followersRecyclerView = view.findViewById(R.id.followers_recycler_view);
+        RecyclerView followersRecyclerView = view.findViewById(R.id.followers_recycler_view);
         followersRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         followersAdapter = new FriendsAdapter();
         followersRecyclerView.setAdapter(followersAdapter);
@@ -51,7 +48,7 @@ public class Followers extends Fragment {
         Collection<User> lst = new ArrayList<>();
         for (int i = 0; i < 25; i++) {
             lst.add(new User(
-                    currentId,
+                    currentId++,
                     "https://www.w3schools.com/w3images/streetart2.jpg",
                     "Andrew",
                     "@andrew",

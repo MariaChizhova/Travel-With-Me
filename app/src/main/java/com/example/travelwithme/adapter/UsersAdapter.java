@@ -13,6 +13,8 @@ import com.example.travelwithme.R;
 import com.example.travelwithme.pojo.User;
 import com.squareup.picasso.Picasso;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -28,7 +30,7 @@ public class UsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     @Override
-    public FriendViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public @NotNull FriendViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.user_item_view, parent, false);
         return new FriendViewHolder(view);
     }
@@ -45,11 +47,6 @@ public class UsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     public void setItems(Collection<User> users) {
         usersList.addAll(users);
-        notifyDataSetChanged();
-    }
-
-    public void clearItems() {
-        usersList.clear();
         notifyDataSetChanged();
     }
 

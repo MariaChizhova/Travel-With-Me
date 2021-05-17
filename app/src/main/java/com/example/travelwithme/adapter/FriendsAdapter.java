@@ -13,6 +13,8 @@ import com.example.travelwithme.R;
 import com.example.travelwithme.pojo.User;
 import com.squareup.picasso.Picasso;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -20,10 +22,10 @@ import java.util.List;
 
 public class FriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<User> friendsList = new ArrayList<>();
+    private final List<User> friendsList = new ArrayList<>();
 
     @Override
-    public FriendViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public @NotNull FriendViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.user_item_view, parent, false);
         return new FriendViewHolder(view);
     }
@@ -43,15 +45,10 @@ public class FriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         notifyDataSetChanged();
     }
 
-    public void clearItems() {
-        friendsList.clear();
-        notifyDataSetChanged();
-    }
-
-    class FriendViewHolder extends RecyclerView.ViewHolder {
-        private ImageView userImageView;
-        private TextView nameTextView;
-        private TextView nickTextView;
+    static class FriendViewHolder extends RecyclerView.ViewHolder {
+        private final ImageView userImageView;
+        private final TextView nameTextView;
+        private final TextView nickTextView;
 
         public FriendViewHolder(View itemView) {
             super(itemView);
@@ -67,7 +64,4 @@ public class FriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
-    public interface OnFriendsClickListener {
-        void onUserClick(User user);
-    }
 }

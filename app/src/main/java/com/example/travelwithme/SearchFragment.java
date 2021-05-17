@@ -1,32 +1,15 @@
 package com.example.travelwithme;
 
-import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
-
-import com.example.travelwithme.adapter.FriendsAdapter;
-import com.example.travelwithme.adapter.UsersAdapter;
 import com.example.travelwithme.adapter.ViewPagerAdapter;
-import com.example.travelwithme.pojo.User;
 import com.google.android.material.tabs.TabLayout;
 
-import java.util.ArrayList;
-import java.util.Collection;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -48,13 +31,6 @@ public class SearchFragment extends Fragment {
     TabLayout tabLayout;
     ViewPager viewPager;
     ViewPagerAdapter viewPagerAdapter;
-
-    private RecyclerView usersRecyclerView;
-    private UsersAdapter usersAdapter;
-    private Toolbar toolbar;
-    private EditText queryEditText;
-    private Button searchButton;
-    private long currentId = 1;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -92,12 +68,10 @@ public class SearchFragment extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_search, container, false);
         viewPager = view.findViewById(R.id.view_pager);
-        tabLayout = view.findViewById(R.id.tabs);
-        viewPagerAdapter = new ViewPagerAdapter(getFragmentManager());
+        viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         viewPager.setAdapter(viewPagerAdapter);
+        tabLayout = view.findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
-        toolbar = view.findViewById(R.id.toolbar);
-        searchButton = toolbar.findViewById(R.id.search_button);
         return view;
     }
 }

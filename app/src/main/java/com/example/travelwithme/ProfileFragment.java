@@ -1,5 +1,6 @@
 package com.example.travelwithme;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -60,7 +61,6 @@ public class ProfileFragment extends Fragment {
     private long currentId = 1;
     boolean isLoading = false;
     private long currentLike = 0;
-    public static final String USER_ID = "userId";
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -113,14 +113,10 @@ public class ProfileFragment extends Fragment {
 
 
         final Button plus = view.findViewById(R.id.b_plus);
-        plus.setOnClickListener(v -> {
-            startActivity(new Intent(view.getContext(), MapActivity.class));
-        });
+        plus.setOnClickListener(v -> startActivity(new Intent(view.getContext(), MapActivity.class)));
 
         final Button settings = view.findViewById(R.id.edit_profile);
-        settings.setOnClickListener(v -> {
-            startActivity(new Intent(view.getContext(), SettingsProfileActivity.class));
-        });
+        settings.setOnClickListener(v -> startActivity(new Intent(view.getContext(), SettingsProfileActivity.class)));
 
         final Button followersButton = view.findViewById(R.id.followers_count_text_view);
         followersButton.setOnClickListener(v -> {
@@ -129,15 +125,15 @@ public class ProfileFragment extends Fragment {
             BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.navigation_view);
             bottomNavigationView.setSelectedItemId(R.id.navigation_search);
         });
-
+        // TODO: redirect to followings
         final Button followingButton = view.findViewById(R.id.following_count_text_view);
         followingButton.setOnClickListener(v -> {
             getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    new SearchFragment()).commit();
+                    new Following()).commit();
             BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.navigation_view);
             bottomNavigationView.setSelectedItemId(R.id.navigation_search);
-            ViewPager viewPager = getActivity().findViewById(R.id.view_pager);
-            viewPager.setCurrentItem(1);
+        //    ViewPager viewPager = getActivity().findViewById(R.id.view_pager);
+          //  viewPager.setCurrentItem(1);
         });
         return view;
     }

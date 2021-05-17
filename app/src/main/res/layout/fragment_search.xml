@@ -3,8 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SearchFragment"
-    android:id="@+id/search_id">
+    tools:context=".SearchFragment">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -23,6 +22,7 @@
                 android:layout_toStartOf="@+id/search_button"
                 android:layout_height="wrap_content"
                 android:hint="Введите имя"/>
+
             <Button
                 android:id="@+id/search_button"
                 android:layout_alignParentEnd="true"
@@ -33,23 +33,17 @@
         </RelativeLayout>
     </androidx.appcompat.widget.Toolbar>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:textSize="30sp"/>
-
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabs"
         android:layout_below="@id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:ignore="MissingConstraints" />
+        android:layout_height="wrap_content" />
+
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/view_pager"
+        android:layout_alignTop="@id/tabs"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:ignore="MissingConstraints" />
+        android:layout_height="wrap_content"  />
 
 </RelativeLayout>

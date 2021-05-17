@@ -28,6 +28,8 @@ import com.squareup.picasso.Picasso;
 import com.example.travelwithme.R;
 import com.example.travelwithme.pojo.Post;
 
+import org.jetbrains.annotations.NotNull;
+
 
 public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final String RESPONSE_FORMAT = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
@@ -40,14 +42,12 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     ProfileFragment parent;
 
-    private List<Post> postList = new ArrayList<>();
-
     public PostAdapter(ProfileFragment profileFragment){
         parent = profileFragment;
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.@NotNull ViewHolder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
         if (viewType == VIEW_TYPE_ITEM) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.post_item_view, parent, false);
             return new PostViewHolder(view);
@@ -87,11 +87,6 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public void setItems(Collection<Post> posts) {
         postsList.addAll(posts);
-        notifyDataSetChanged();
-    }
-
-    public void clearItems() {
-        postsList.clear();
         notifyDataSetChanged();
     }
 

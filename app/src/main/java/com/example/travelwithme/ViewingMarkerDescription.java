@@ -42,7 +42,7 @@ public class ViewingMarkerDescription extends AppCompatDialogFragment {
         LinearLayoutManager l = new LinearLayoutManager(view.getContext());
         l.setOrientation(RecyclerView.HORIZONTAL);
         imageRecyclerView.setLayoutManager(l);
-        imageAdapter = new ImageAdapter(this);
+        imageAdapter = new ImageAdapter();
         imageRecyclerView.setAdapter(imageAdapter);
         for(Bitmap i: image){
             ViewingMarkerDescription.imageAdapter.setItems(i);
