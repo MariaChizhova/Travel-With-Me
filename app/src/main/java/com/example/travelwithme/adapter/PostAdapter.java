@@ -17,6 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.travelwithme.ProfileFragment;
@@ -38,12 +39,14 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public List<Post> postsList = new ArrayList<>();
 
-    ProfileFragment parent;
+    Fragment parent;
+    View parentView;
 
     private List<Post> postList = new ArrayList<>();
 
-    public PostAdapter(ProfileFragment profileFragment){
+    public PostAdapter(Fragment profileFragment, View view){
         parent = profileFragment;
+        parentView = view;
     }
 
     @Override
@@ -130,10 +133,10 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 
         public void bind(Post post) {
-            nameTextView.setText(post.getUser().getName());
-            nickTextView.setText(post.getUser().getNick());
+            nameTextView.setText(ProfileFragment.getUser().getName());
+            nickTextView.setText(ProfileFragment.getUser().getNick());
             contentTextView.setText(post.getText());
-            repostsTextView.setText(String.valueOf(post.getRepostCount()));
+            //repostsTextView.setText(String.valueOf(post.getRepostCount()));
             likesTextView.setText(String.valueOf(post.getFavouriteCount()));
             heartButton.setLiked(false);
             heartButton.setOnLikeListener(new OnLikeListener() {
@@ -154,7 +157,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             String creationDateFormatted = getFormattedDate(post.getCreationDate());
             creationDateTextView.setText(creationDateFormatted);
 
-            Picasso.get().load(post.getUser().getImageUrl()).into(userImageView);
+            Picasso.get().load(ProfileFragment.getUser().getImageUrl()).into(userImageView);
 
 //            String postPhotoUrl = post.getImageUrl();
 //            Picasso.get().load(postPhotoUrl).into(postImageView);
@@ -164,7 +167,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             postImageView.setImageBitmap(post.getImage());  // без сервера картинка делается из битов, потом нужно переделать Url
 
             postImageView.setOnClickListener(v -> {
-                Intent i = new Intent(parent.getLocalView().getContext(), ViewingMapActivity.class);
+                Intent i = new Intent(parentView.getContext(), ViewingMapActivity.class);
                 i.putExtra("mapData", post.getMapData());
                 parent.startActivity(i);
             });

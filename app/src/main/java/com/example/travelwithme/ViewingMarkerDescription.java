@@ -21,7 +21,8 @@ public class ViewingMarkerDescription extends AppCompatDialogFragment {
     View view;
     private RecyclerView imageRecyclerView;
     public static ImageAdapter imageAdapter;
-    public String text;
+    public String comments;
+    public String name;
     public List<Bitmap> image;
 
     @Override
@@ -32,11 +33,16 @@ public class ViewingMarkerDescription extends AppCompatDialogFragment {
         AlertDialog alertDialog = builder.create();
 
         Bundle bundle = getArguments();
-        text = bundle.getString("text");
+        comments = bundle.getString("text");
+        name = bundle.getString("name");
         image = bundle.getParcelableArrayList("image");
 
-        TextView textView = (TextView) view.findViewById(R.id.tv_comment);
-        textView.setText(text);
+        TextView textView = view.findViewById(R.id.tv_comment);
+        textView.setText(comments);
+
+        TextView nameView = view.findViewById(R.id.tv_place_name);
+        nameView.setText(name);
+
 
         imageRecyclerView = view.findViewById(R.id.list_image_v);
         LinearLayoutManager l = new LinearLayoutManager(view.getContext());

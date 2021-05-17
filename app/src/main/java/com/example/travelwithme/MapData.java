@@ -6,33 +6,34 @@ import android.os.Parcelable;
 
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MapData implements Parcelable {
-    private List<Marker> markers;
-    private List<LatLng> way;
+    private final List<Marker> markers;
 
     public MapData() {
         markers = new ArrayList<>();
-        way = new ArrayList<>();
     }
 
     private static class Marker implements Parcelable {
-        LatLng latLng;
-        public String text;
-        public List<Bitmap> images;
+        public String name;
+        public String description;
+        public LatLng latLng;
+        public List<Bitmap> photos;
 
         public Marker(LatLng latLng) {
             this.latLng = latLng;
-            images = new ArrayList<>();
+            photos = new ArrayList<>();
         }
 
         protected Marker(Parcel in) {
+            name = in.readString();
+            description = in.readString();
             latLng = in.readParcelable(LatLng.class.getClassLoader());
-            text = in.readString();
-            images = in.createTypedArrayList(Bitmap.CREATOR);
+            photos = in.createTypedArrayList(Bitmap.CREATOR);
         }
 
         public static final Creator<MapData.Marker> CREATOR = new Creator<MapData.Marker>() {
@@ -54,16 +55,22 @@ public class MapData implements Parcelable {
 
         @Override
         public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(name);
+            dest.writeString(description);
             dest.writeParcelable(latLng,flags);
-            dest.writeString(text);
-            dest.writeTypedList(images);
+            dest.writeTypedList(photos);
+        }
+
+        @Override
+        public String toString() {
+            final Gson gson = new Gson();
+            return gson.toJson(this);
         }
     }
 
 
     protected MapData(Parcel in) {
         markers = in.createTypedArrayList(MapData.Marker.CREATOR);
-        way = in.createTypedArrayList(LatLng.CREATOR);
     }
 
     public static final Creator<MapData> CREATOR = new Creator<MapData>() {
@@ -86,22 +93,18 @@ public class MapData implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeTypedList(markers);
-        dest.writeTypedList(way);
     }
 
     public void addToMarkers(LatLng latLng) {
         markers.add(new Marker(latLng));
     }
 
-    public void addToMarkersDescription(int ind, String s, List<Bitmap> list) {
-        markers.get(ind).text = s;
+    public void addToMarkersDescription(int ind, String name, String comments, List<Bitmap> list) {
+        markers.get(ind).description = comments;
+        markers.get(ind).name = name;
         for(Bitmap i : list) {
-            markers.get(ind).images.add(i);
+            markers.get(ind).photos.add(i);
         }
-    }
-
-    public void addToWay(LatLng latLng) {
-        way.add(latLng);
     }
 
     public int sizeMarkers() {
@@ -113,7 +116,7 @@ public class MapData implements Parcelable {
     }
 
     public ArrayList<Bitmap> getImages(int ind) {
-        return (ArrayList<Bitmap>) markers.get(ind).images;
+        return (ArrayList<Bitmap>) markers.get(ind).photos;
     }
 
     public int getIndexOfMarker(com.google.android.gms.maps.model.Marker marker) {
@@ -126,14 +129,16 @@ public class MapData implements Parcelable {
     }
 
     public String getText(int ind) {
-        return markers.get(ind).text;
+        return markers.get(ind).description;
     }
 
-    public int sizeWay() {
-        return way.size();
+    public String getName(int ind) {
+        return markers.get(ind).name;
     }
 
-    public LatLng getWay(int ind) {
-        return way.get(ind);
+    @Override
+    public String toString() {
+        final Gson gson = new Gson();
+        return gson.toJson(this);
     }
 }

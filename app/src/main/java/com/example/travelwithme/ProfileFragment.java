@@ -1,10 +1,13 @@
 package com.example.travelwithme;
 
 import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
 import androidx.fragment.app.FragmentTransaction;
@@ -26,7 +29,10 @@ import com.example.travelwithme.pojo.User;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Collection;
+import java.util.List;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -104,7 +110,7 @@ public class ProfileFragment extends Fragment {
         followersCountTextView = view.findViewById(R.id.followers_count_text_view);
         initRecyclerView();
         loadUserInfo();
-        //loadPosts();
+        loadPosts();
 
 
         final Button plus = view.findViewById(R.id.b_plus);
@@ -137,45 +143,50 @@ public class ProfileFragment extends Fragment {
         return view;
     }
 
-
-    public View getLocalView() {
-        return view;
-    }
-
-  /*  private void loadPosts() {
+    private void loadPosts() {
         Collection<Post> postsList = getPosts();
         postAdapter.setItems(postsList);
-    }*/
+    }
 
-  /*  private Collection<Post> getPosts() {
+    private Collection<Post> getPosts() {
         Collection<Post> lst = new ArrayList<>();
-        lst.add(new Post(getUser(), currentId, "Thu Apr 1 07:31:08 +0000 2021", "Описание поста",
-                10L, ++currentLike, "https://www.w3schools.com/w3css/img_fjords.jpg"));
-        lst.add(new Post(getUser(), ++currentId, "Thu Apr 1 07:31:08 +0000 2021", "Описание поста",
-                10L, ++currentLike, "https://www.w3schools.com/w3images/lights.jpg"));
-        lst.add(new Post(getUser(), ++currentId, "Thu Apr 1 07:31:08 +0000 2021", "Описание поста",
-                16L, ++currentLike, "https://www.w3schools.com/css/img_mountains.jpg"));
-        lst.add(new Post(getUser(), ++currentId, "Thu Apr 1 07:31:08 +0000 2021", "Описание поста",
-                26L, ++currentLike, "https://www.w3schools.com/w3css/img_corniglia.jpg"));
-        lst.add(new Post(getUser(), ++currentId, "Thu Apr 1 07:31:08 +0000 2021", "Описание поста",
-                25L, ++currentLike, "https://www.w3schools.com/w3css/img_riomaggiore.jpg"));
-        lst.add(new Post(getUser(), ++currentId, "Thu Apr 1 07:31:08 +0000 2021", "Описание поста",
-                10L, ++currentLike, "https://www.w3schools.com/w3images/lights.jpg"));
-        lst.add(new Post(getUser(), ++currentId, "Thu Apr 1 07:31:08 +0000 2021", "Описание поста",
-                16L, ++currentLike, "https://www.w3schools.com/css/img_mountains.jpg"));
-        lst.add(new Post(getUser(), ++currentId, "Thu Apr 1 07:31:08 +0000 2021", "Описание поста",
-                26L, ++currentLike, "https://www.w3schools.com/w3css/img_corniglia.jpg"));
-        lst.add(new Post(getUser(), ++currentId, "Thu Apr 1 07:31:08 +0000 2021", "Описание поста",
-                25L, ++currentLike, "https://www.w3schools.com/w3css/img_riomaggiore.jpg"));
-        lst.add(new Post(getUser(), ++currentId, "Thu Apr 1 07:31:08 +0000 2021", "Описание поста",
-                10L, ++currentLike, "https://www.w3schools.com/w3images/lights.jpg"));
+
+//        RestAdapter restAdapter = new RestAdapter.Builder()
+//                .setEndpoint("http://192.168.0.8:9090")
+//                .setLogLevel(RestAdapter.LogLevel.FULL)
+//                .build();
+//        GetPostsApi getPostsApi = restAdapter.create(GetPostsApi.class);
+//        getPostsApi.getPosts(1L, new retrofit2.Callback<List<GetPostResponse>>() {
+//            @RequiresApi(api = Build.VERSION_CODES.O)
+//            @Override
+//            public void onResponse(Call<List<GetPostResponse>> call, retrofit2.Response<List<GetPostResponse>> response) {
+//                if (response.isSuccessful()) {
+//                    for (GetPostResponse getPostResponse : response.body()) {
+//                        byte[] picture = Base64.getDecoder().decode(getPostResponse.getPicture());
+//                        lst.add(new Post(getPostResponse.getAuthorId(), getPostResponse.getPostId(),
+//                                getPostResponse.getDate(),
+//                                getPostResponse.getDescription(), getPostResponse.getNumberLikes(),
+//                                BitmapFactory.decodeByteArray(picture, 0, picture.length),
+//                                getPostResponse.getMarkers()));
+//                    }
+//                } else {
+//                    System.out.println(response.errorBody());
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<List<GetPostResponse>> call, Throwable t) {
+//                t.printStackTrace();
+//            }
+//        });
+
         return lst;
-    }*/
+    }
 
     private void initRecyclerView() {
         postsRecyclerView = view.findViewById(R.id.posts_recycler_view);
         postsRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        postAdapter = new PostAdapter(this);
+        postAdapter = new PostAdapter(this, view);
         postsRecyclerView.setAdapter(postAdapter);
     }
 
@@ -257,4 +268,5 @@ public class ProfileFragment extends Fragment {
                 142
         );
     }
+
 }
