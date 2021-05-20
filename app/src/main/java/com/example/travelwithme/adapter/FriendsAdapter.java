@@ -3,6 +3,7 @@ package com.example.travelwithme.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -55,6 +56,16 @@ public class FriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             userImageView = itemView.findViewById(R.id.profile_image_view);
             nameTextView = itemView.findViewById(R.id.user_name_text_view);
             nickTextView = itemView.findViewById(R.id.user_nick_text_view);
+            final Button isFollowingButton = itemView.findViewById(R.id.is_following_button);
+            isFollowingButton.setOnClickListener(v -> {
+                if (isFollowingButton.getText() == "UNFOLLOW") {
+                    isFollowingButton.setText("FOLLOW");
+                    isFollowingButton.setBackgroundResource(R.drawable.unfollow_shape);
+                } else {
+                    isFollowingButton.setText("UNFOLLOW");
+                    isFollowingButton.setBackgroundResource(R.drawable.follow_shape);
+                }
+            });
         }
 
         public void bind(User user) {

@@ -1,14 +1,17 @@
 package com.example.travelwithme.adapter;
 
+import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.travelwithme.R;
 import com.example.travelwithme.pojo.User;
 import com.squareup.picasso.Picasso;
@@ -61,11 +64,19 @@ public class UsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             nameTextView = itemView.findViewById(R.id.user_name_text_view);
             nickTextView = itemView.findViewById(R.id.user_nick_text_view);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    User user = usersList.get(getLayoutPosition());
-                    onUsersClickListener.onUserClick(user);
+            itemView.setOnClickListener(v -> {
+                User user = usersList.get(getLayoutPosition());
+                onUsersClickListener.onUserClick(user);
+            });
+
+            final Button isFollowingButton = itemView.findViewById(R.id.is_following_button);
+            isFollowingButton.setOnClickListener(v -> {
+                if (isFollowingButton.getText() == "UNFOLLOW") {
+                    isFollowingButton.setText("FOLLOW");
+                    isFollowingButton.setBackgroundResource(R.drawable.unfollow_shape);
+                } else {
+                    isFollowingButton.setText("UNFOLLOW");
+                    isFollowingButton.setBackgroundResource(R.drawable.follow_shape);
                 }
             });
         }
@@ -79,5 +90,10 @@ public class UsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     public interface OnUsersClickListener {
         void onUserClick(User user);
+    }
+
+    public void clearItems() {
+        usersList.clear();
+        notifyDataSetChanged();
     }
 }

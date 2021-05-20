@@ -32,7 +32,7 @@ public class Followers extends Fragment {
     }
 
     private void loadFollowers() {
-        followersList = getFollowing();
+        followersList = getFollowers();
         System.out.println(followersList.size());
         followersAdapter.setItems(followersList);
     }
@@ -44,7 +44,7 @@ public class Followers extends Fragment {
         followersRecyclerView.setAdapter(followersAdapter);
     }
 
-    private Collection<User> getFollowing() {
+    private Collection<User> getFollowers() {
         Collection<User> lst = new ArrayList<>();
         for (int i = 0; i < 25; i++) {
             lst.add(new User(
@@ -55,7 +55,8 @@ public class Followers extends Fragment {
                     "No description",
                     "Russia",
                     100,
-                    100
+                    100,
+                    1
             ));
         }
         return lst;

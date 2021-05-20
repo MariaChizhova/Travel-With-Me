@@ -1,15 +1,31 @@
 package com.example.travelwithme;
 
 import android.os.Bundle;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
+
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
 import com.example.travelwithme.adapter.ViewPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -18,7 +34,7 @@ import com.google.android.material.tabs.TabLayout;
  */
 public class SearchFragment extends Fragment {
 
-   // TODO: Rename parameter arguments, choose names that match
+    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -26,11 +42,7 @@ public class SearchFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private View view;
 
-    TabLayout tabLayout;
-    ViewPager viewPager;
-    ViewPagerAdapter viewPagerAdapter;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -64,14 +76,34 @@ public class SearchFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_search, container, false);
-        viewPager = view.findViewById(R.id.view_pager);
-        viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_search, container, false);
+
+        ViewPager viewPager = view.findViewById(R.id.view_pager);
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         viewPager.setAdapter(viewPagerAdapter);
-        tabLayout = view.findViewById(R.id.tabs);
+        TabLayout tabLayout = view.findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
+
+        Toolbar toolbar = view.findViewById(R.id.toolbar);
+        Button searchButton = toolbar.findViewById(R.id.search_button);
+        EditText searchEditText = toolbar.findViewById(R.id.search_edit_text);
+        searchButton.setOnClickListener(v -> {
+            viewPager.removeAllViews();
+            viewPagerAdapter.notifyDataSetChanged();
+            tabLayout.removeAllTabs();
+            List<Fragment> fragmentsList = getActivity().getSupportFragmentManager().getFragments();
+            for (int i = 1; i < fragmentsList.size(); i++) {
+                Fragment fragment = fragmentsList.get(i);
+                getActivity().getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+            }
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            String inputText = searchEditText.getText().toString();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            UsersSearchFragment usersSearchFragment = new UsersSearchFragment(inputText);
+            fragmentTransaction.add(R.id.relative_layout, usersSearchFragment);
+            fragmentTransaction.commit();
+        });
         return view;
     }
 }

@@ -55,7 +55,8 @@ public class Following extends Fragment {
                     "I love teorver",
                     "Russia",
                     100,
-                    100
+                    100,
+                    1
             ));
             lst.add(new User(
                     currentId,
@@ -65,7 +66,8 @@ public class Following extends Fragment {
                     "No description",
                     "Russia",
                     100,
-                    100
+                    100,
+                    1
             ));
         }
         return lst;
