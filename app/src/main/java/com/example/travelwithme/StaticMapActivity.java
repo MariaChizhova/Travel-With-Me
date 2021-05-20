@@ -30,8 +30,8 @@ public class StaticMapActivity extends AppCompatActivity {
 
         final Button post = findViewById(R.id.b_post);
         post.setOnClickListener(v -> {
-            ProfileFragment.postAdapter.setItems(Collections.singletonList(
-                    new Post(ProfileFragment.getUser(), 1L, "Thu Apr 1 07:31:08 +0000 2021", postDescriptipn.getText().toString(),
+            MainProfileFragment.postAdapter.setItems(Collections.singletonList(
+                    new Post(MainProfileFragment.getUser(), 1L, "Thu Apr 1 07:31:08 +0000 2021", postDescriptipn.getText().toString(),
                             0L, 0L, bmp, mapData)));
             finish();
         });

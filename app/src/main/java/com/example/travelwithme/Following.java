@@ -7,17 +7,18 @@ import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.travelwithme.adapter.FriendsAdapter;
+import com.example.travelwithme.adapter.UsersAdapter;
 import com.example.travelwithme.pojo.User;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
 public class Following extends Fragment {
-    private FriendsAdapter followingAdapter;
+    private UsersAdapter followingAdapter;
     private RecyclerView followingRecyclerView;
     Collection<User> followingList;
     private View view;
@@ -40,7 +41,14 @@ public class Following extends Fragment {
     private void initRecyclerView() {
         followingRecyclerView = view.findViewById(R.id.following_recycler_view);
         followingRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        followingAdapter = new FriendsAdapter();
+        UsersAdapter.OnUsersClickListener onUsersClickListener = user -> {
+            Fragment newFragment = new UsersProfileFragment(user);
+            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_container, newFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        };
+        followingAdapter = new UsersAdapter(onUsersClickListener);
         followingRecyclerView.setAdapter(followingAdapter);
     }
 

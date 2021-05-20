@@ -19,7 +19,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.travelwithme.ProfileFragment;
+import com.example.travelwithme.MainProfileFragment;
 import com.example.travelwithme.ViewingMapActivity;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
@@ -40,10 +40,10 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public List<Post> postsList = new ArrayList<>();
 
-    ProfileFragment parent;
+    MainProfileFragment parent;
 
-    public PostAdapter(ProfileFragment profileFragment){
-        parent = profileFragment;
+    public PostAdapter(MainProfileFragment mainProfileFragment){
+        parent = mainProfileFragment;
     }
 
     @Override

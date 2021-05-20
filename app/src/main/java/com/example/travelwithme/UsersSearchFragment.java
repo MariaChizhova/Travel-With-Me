@@ -1,13 +1,13 @@
 package com.example.travelwithme;
 
 import android.os.Bundle;
-import android.renderscript.ScriptIntrinsicYuvToRGB;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -122,7 +122,13 @@ public class UsersSearchFragment extends Fragment {
     private void initRecyclerView() {
         usersRecyclerView = view.findViewById(R.id.users_recycler_view);
         usersRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        UsersAdapter.OnUsersClickListener onUsersClickListener = user -> System.out.println("TO DO ON USER CLICK");
+        UsersAdapter.OnUsersClickListener onUsersClickListener = user -> {
+            Fragment newFragment = new UsersProfileFragment(user);
+            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_container, newFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        };
         usersAdapter = new UsersAdapter(onUsersClickListener);
         usersRecyclerView.setAdapter(usersAdapter);
     }
