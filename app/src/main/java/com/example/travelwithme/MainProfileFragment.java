@@ -145,50 +145,7 @@ public class MainProfileFragment extends Fragment {
     }
 
     private void loadPosts(long userId) {
-        Collection<Post> postsList = getPosts(userId);
-        postAdapter.setItems(postsList);
-    }
-
-    private Collection<Post> getPosts(long userID) {
-        Collection<Post> lst = new ArrayList<>();
-
-        Gson gson = new GsonBuilder()
-                .setLenient()
-                .create();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://84.252.137.106:9090")
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build();
-
-        GetPostsApi getPostsApi = retrofit.create(GetPostsApi.class);
-        Call<List<PostCreateRequest>> call = getPostsApi.getPosts(userID, 0L, 1000L);
-        call.enqueue(new Callback<List<PostCreateRequest>>() {
-
-            @RequiresApi(api = Build.VERSION_CODES.O)
-            @Override
-            public void onResponse(Call<List<PostCreateRequest>> call, Response<List<PostCreateRequest>> response) {
-                if (response.isSuccessful()) {
-                    if(response.body() != null) {
-                        for (PostCreateRequest postCreateRequest : response.body()) {
-                            lst.add(postCreateRequest.getPost());
-                        }
-                        postAdapter.setItems(lst);
-                    } else {
-                        Log.i("error", "response body is null");
-                    }
-                } else {
-                    Log.i("error", "error");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<PostCreateRequest>> call, Throwable t) {
-                t.printStackTrace();
-            }
-        });
-
-        return lst;
+        new Api().getPosts(userId, posts -> postAdapter.setItems(posts));
     }
 
     private void initRecyclerView() {

@@ -8,10 +8,10 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
-public interface GetFollowersApi {
-    @GET("/get_followers")
-    Call<List<User>> getFollowers(
-            @Query("userID") Long userId,
+public interface SearchUsersApi {
+    @GET("/search")
+    Call<List<User>> searchUsers(
+            @Query("message") String message,
             @Query("offset") Long offset,
             @Query("count") Long count
     );
