@@ -51,6 +51,7 @@
     <string name="update">UPDATE</string>
     <string name="search_query_hint">Enter user name</string>
     <string name="ion_search"></string>
+    <string name="place_name">Place Name</string>
 
-
+    <string name="search_hint">search</string>
 </resources>

@@ -10,11 +10,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.travelwithme.MarkerDescription;
 import com.example.travelwithme.R;
-import com.example.travelwithme.ViewingMarkerDescription;
-import com.example.travelwithme.pojo.Post;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHolder> {
@@ -22,18 +21,18 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
     MarkerDescription parent;
     boolean isViewing = false;
 
-    private List<Bitmap> list = new ArrayList<>();
+    private final List<Bitmap> list = new ArrayList<>();
 
     public ImageAdapter(MarkerDescription markerDescription){
         parent = markerDescription;
     }
 
-    public ImageAdapter(ViewingMarkerDescription viewingMarkerDescription){
+    public ImageAdapter(){
         isViewing = true;
     }
 
     @Override
-    public ImageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public @NotNull ImageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.image_item_view, parent, false);
         return new ImageViewHolder(view);
     }
@@ -55,8 +54,8 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
 
 
     class ImageViewHolder extends RecyclerView.ViewHolder {
-        private ImageView imageView;
-        private ImageView cross;
+        private final ImageView imageView;
+        private final ImageView cross;
 
         public ImageViewHolder(View itemView) {
             super(itemView);

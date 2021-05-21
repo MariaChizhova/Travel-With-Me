@@ -13,13 +13,14 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.RectF;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.Manifest;
 
+import com.example.travelwithme.api.RouteApi;
+import com.example.travelwithme.api.StaticApi;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -172,8 +173,8 @@ public class MapActivity extends AppCompatActivity implements
         });
     }
 
-    public void addDescriptionOnMarker(String text, List<Bitmap> image) {
-        mapData.addToMarkersDescription(currentDialog, text, image);
+    public void addDescriptionOnMarker(String comments, String name, List<Bitmap> image) {
+        mapData.addToMarkersDescription(currentDialog, name, comments, image);
         if (image.size() > 0) {
             Bitmap bmpWithBorder = Bitmap.createBitmap(image.get(0).getWidth() + 20, image.get(0).getHeight() + 30, image.get(0).getConfig());
             Canvas canvas = new Canvas(bmpWithBorder);
@@ -219,7 +220,6 @@ public class MapActivity extends AppCompatActivity implements
                     }
                     pathMarkers.append(mPoints.get(i).latitude).append(",").append(mPoints.get(i).longitude);
                     firstPathMarker = false;
-                    mapData.addToWay(mPoints.get(i));
                 }
                 Polyline polyline = map.addPolyline(line);
                 polyline.setStartCap(new RoundCap());

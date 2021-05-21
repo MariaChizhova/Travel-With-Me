@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -22,7 +21,6 @@ import com.example.travelwithme.adapter.ImageAdapter;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 public class MarkerDescription extends AppCompatDialogFragment {
@@ -31,7 +29,8 @@ public class MarkerDescription extends AppCompatDialogFragment {
     View view;
     private RecyclerView imageRecyclerView;
     public static ImageAdapter imageAdapter;
-    public String text;
+    public String comments;
+    public String name;
     public List<Bitmap> image;
 
     @Override
@@ -41,8 +40,11 @@ public class MarkerDescription extends AppCompatDialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         AlertDialog alertDialog = builder.create();
 
-        EditText editText = (EditText) view.findViewById(R.id.etComments);
-        editText.setText(text);
+        EditText placeName = view.findViewById(R.id.etPlaceName);
+        placeName.setText(name);
+
+        EditText editText = view.findViewById(R.id.etComments);
+        editText.setText(comments);
 
         final Button loadPicture = view.findViewById(R.id.b_document_attach);
         loadPicture.setOnClickListener(v -> {
@@ -68,9 +70,10 @@ public class MarkerDescription extends AppCompatDialogFragment {
 
         final Button ok = view.findViewById(R.id.b_ok);
         ok.setOnClickListener(v -> {
-            text = editText.getText().toString();
+            comments = editText.getText().toString();
+            name = placeName.getText().toString();
             MapActivity activity = (MapActivity) getActivity();
-            activity.addDescriptionOnMarker(text, image);
+            activity.addDescriptionOnMarker(comments, name, image);
             alertDialog.cancel();
         });
 

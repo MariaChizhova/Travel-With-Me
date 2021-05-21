@@ -17,9 +17,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.travelwithme.ProfileFragment;
+import com.example.travelwithme.MainProfileFragment;
 import com.example.travelwithme.ViewingMapActivity;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
@@ -28,9 +29,11 @@ import com.squareup.picasso.Picasso;
 import com.example.travelwithme.R;
 import com.example.travelwithme.pojo.Post;
 
+import org.jetbrains.annotations.NotNull;
+
 
 public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private static final String RESPONSE_FORMAT = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
+    private static final String RESPONSE_FORMAT = "EEE MMM dd HH:mm:ss zzz yyyy";
     private static final String MONTH_DAY_FORMAT = "MMM d";
     private final int VIEW_TYPE_ITEM = 0;
     private final int VIEW_TYPE_LOADING = 1;
@@ -38,16 +41,19 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public List<Post> postsList = new ArrayList<>();
 
-    ProfileFragment parent;
+
+    Fragment parent;
+    View parentView;
 
     private List<Post> postList = new ArrayList<>();
 
-    public PostAdapter(ProfileFragment profileFragment){
+    public PostAdapter(Fragment profileFragment, View view){
         parent = profileFragment;
+        parentView = view;
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.@NotNull ViewHolder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
         if (viewType == VIEW_TYPE_ITEM) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.post_item_view, parent, false);
             return new PostViewHolder(view);
@@ -90,11 +96,6 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         notifyDataSetChanged();
     }
 
-    public void clearItems() {
-        postsList.clear();
-        notifyDataSetChanged();
-    }
-
 
     private class LoadingViewHolder extends RecyclerView.ViewHolder {
         ProgressBar progressBar;
@@ -130,10 +131,10 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 
         public void bind(Post post) {
-            nameTextView.setText(post.getUser().getName());
-            nickTextView.setText(post.getUser().getNick());
+            nameTextView.setText(MainProfileFragment.getUser().getName());
+            nickTextView.setText(MainProfileFragment.getUser().getNick());
             contentTextView.setText(post.getText());
-            repostsTextView.setText(String.valueOf(post.getRepostCount()));
+            //repostsTextView.setText(String.valueOf(post.getRepostCount()));
             likesTextView.setText(String.valueOf(post.getFavouriteCount()));
             heartButton.setLiked(false);
             heartButton.setOnLikeListener(new OnLikeListener() {
@@ -154,7 +155,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             String creationDateFormatted = getFormattedDate(post.getCreationDate());
             creationDateTextView.setText(creationDateFormatted);
 
-            Picasso.get().load(post.getUser().getImageUrl()).into(userImageView);
+            Picasso.get().load(MainProfileFragment.getUser().getImageUrl()).into(userImageView);
 
 //            String postPhotoUrl = post.getImageUrl();
 //            Picasso.get().load(postPhotoUrl).into(postImageView);
@@ -164,14 +165,14 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             postImageView.setImageBitmap(post.getImage());  // без сервера картинка делается из битов, потом нужно переделать Url
 
             postImageView.setOnClickListener(v -> {
-                Intent i = new Intent(parent.getLocalView().getContext(), ViewingMapActivity.class);
+                Intent i = new Intent(parentView.getContext(), ViewingMapActivity.class);
                 i.putExtra("mapData", post.getMapData());
                 parent.startActivity(i);
             });
         }
 
         private String getFormattedDate(String rawDate) {
-            SimpleDateFormat utcFormat = new SimpleDateFormat(RESPONSE_FORMAT, Locale.ROOT);
+            SimpleDateFormat utcFormat = new SimpleDateFormat(RESPONSE_FORMAT, Locale.ENGLISH);
             SimpleDateFormat displayedFormat = new SimpleDateFormat(MONTH_DAY_FORMAT, Locale.getDefault());
             try {
                 Date date = utcFormat.parse(rawDate);
