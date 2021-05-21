@@ -64,7 +64,7 @@ public class FeedFragment extends Fragment {
                 .create();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.0.4:9090")
+                .baseUrl("http://84.252.137.106:9090")
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 

@@ -1,6 +1,8 @@
 package com.example.travelwithme;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -10,6 +12,7 @@ import androidx.fragment.app.Fragment;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
 import android.os.Handler;
 import android.util.Log;
@@ -123,6 +126,8 @@ public class MainProfileFragment extends Fragment {
 
         final Button followersButton = view.findViewById(R.id.followers_count_text_view);
         followersButton.setOnClickListener(v -> {
+            SharedPreferences mSettings = getActivity().getPreferences(Context.MODE_PRIVATE);
+            mSettings.edit().putInt("followers_index", 0).apply();
             getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                     new Followers()).commit();
             BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.navigation_view);
@@ -131,12 +136,14 @@ public class MainProfileFragment extends Fragment {
         // TODO: redirect to followings
         final Button followingButton = view.findViewById(R.id.following_count_text_view);
         followingButton.setOnClickListener(v -> {
+            SharedPreferences mSettings = getActivity().getPreferences(Context.MODE_PRIVATE);
+            mSettings.edit().putInt("followers_index", 1).apply();
             getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                     new Following()).commit();
             BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.navigation_view);
             bottomNavigationView.setSelectedItemId(R.id.navigation_search);
-        //    ViewPager viewPager = getActivity().findViewById(R.id.view_pager);
-          //  viewPager.setCurrentItem(1);
+            //ViewPager viewPager = getActivity().findViewById(R.id.view_pager);
+            //viewPager.setCurrentItem(1);
         });
         return view;
     }
@@ -154,7 +161,7 @@ public class MainProfileFragment extends Fragment {
                 .create();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.0.4:9090")
+                .baseUrl("http://84.252.137.106:9090")
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 
