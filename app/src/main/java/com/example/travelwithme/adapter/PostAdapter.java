@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.travelwithme.Api;
@@ -134,7 +135,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 
         public void bind(Post post) {
-            SharedPreferences preferences = parent.getActivity().getPreferences(Context.MODE_PRIVATE);
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(parent.getActivity());
             final String email = preferences.getString("user_email", "");
             new Api().getUser(email, user -> {
                 nameTextView.setText(user.getFirstName());

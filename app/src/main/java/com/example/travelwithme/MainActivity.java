@@ -2,6 +2,7 @@ package com.example.travelwithme;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 
 import android.content.Context;
 import android.content.Intent;
@@ -45,6 +46,12 @@ public class MainActivity extends AppCompatActivity {
             toLoginActivity();
         }
 
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String email = mAuth.getCurrentUser().getEmail();
+        preferences.edit().putString("user_email", email).apply();
+
+        String tmp = preferences.getString("user_email", "");
+        System.err.println(tmp);
         addUser(mAuth.getCurrentUser().getEmail());
 
         // set SearchFragment for opening application
@@ -75,8 +82,6 @@ public class MainActivity extends AppCompatActivity {
                         selectedFragment = new MessagesFragment();
                         break;
                     case R.id.navigation_profile:
-                        SharedPreferences preferences = getPreferences(Context.MODE_PRIVATE);
-                        preferences.edit().putString("user_email", mAuth.getCurrentUser().getEmail()).apply();
                         selectedFragment = new MainProfileFragment(mAuth.getCurrentUser().getEmail());
                         break;
                     case R.id.navigation_settings:

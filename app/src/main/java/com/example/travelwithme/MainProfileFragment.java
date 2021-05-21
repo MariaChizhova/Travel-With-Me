@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
@@ -123,7 +124,7 @@ public class MainProfileFragment extends Fragment {
 
         final Button followersButton = view.findViewById(R.id.followers_count_text_view);
         followersButton.setOnClickListener(v -> {
-            SharedPreferences mSettings = getActivity().getPreferences(Context.MODE_PRIVATE);
+            SharedPreferences mSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
             mSettings.edit().putInt("followers_index", 0).apply();
             getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                     new Followers()).commit();
@@ -133,7 +134,7 @@ public class MainProfileFragment extends Fragment {
         // TODO: redirect to followings
         final Button followingButton = view.findViewById(R.id.following_count_text_view);
         followingButton.setOnClickListener(v -> {
-            SharedPreferences mSettings = getActivity().getPreferences(Context.MODE_PRIVATE);
+            SharedPreferences mSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
             mSettings.edit().putInt("followers_index", 1).apply();
             getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                     new Following()).commit();

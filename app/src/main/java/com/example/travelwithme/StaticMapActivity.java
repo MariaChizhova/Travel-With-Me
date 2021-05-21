@@ -2,6 +2,7 @@ package com.example.travelwithme;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -52,7 +53,7 @@ public class StaticMapActivity extends AppCompatActivity {
         post.setOnClickListener(v -> {
             date = new Date();
 
-            SharedPreferences preferences = getPreferences(Context.MODE_PRIVATE);
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
             final String email = preferences.getString("user_email", "");
 
             new Api().getUser(email, user -> {
