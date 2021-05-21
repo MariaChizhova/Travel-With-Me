@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
 import com.example.travelwithme.adapter.UsersAdapter;
 import com.example.travelwithme.pojo.User;
@@ -30,6 +31,9 @@ public class Following extends Fragment {
         view = inflater.inflate(R.layout.following_fragment, container, false);
         initRecyclerView();
         loadFollowing();
+
+        //ViewPager viewPager = getActivity().findViewById(R.id.view_pager);
+        //viewPager.setCurrentItem(1);
         return view;
     }
 

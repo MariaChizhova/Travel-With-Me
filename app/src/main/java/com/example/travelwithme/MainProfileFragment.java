@@ -1,6 +1,8 @@
 package com.example.travelwithme;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -10,6 +12,7 @@ import androidx.fragment.app.Fragment;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
 import android.os.Handler;
 import android.util.Log;
@@ -120,6 +123,8 @@ public class MainProfileFragment extends Fragment {
 
         final Button followersButton = view.findViewById(R.id.followers_count_text_view);
         followersButton.setOnClickListener(v -> {
+            SharedPreferences mSettings = getActivity().getPreferences(Context.MODE_PRIVATE);
+            mSettings.edit().putInt("followers_index", 0).apply();
             getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                     new Followers()).commit();
             BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.navigation_view);
@@ -128,12 +133,12 @@ public class MainProfileFragment extends Fragment {
         // TODO: redirect to followings
         final Button followingButton = view.findViewById(R.id.following_count_text_view);
         followingButton.setOnClickListener(v -> {
+            SharedPreferences mSettings = getActivity().getPreferences(Context.MODE_PRIVATE);
+            mSettings.edit().putInt("followers_index", 1).apply();
             getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                     new Following()).commit();
             BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.navigation_view);
             bottomNavigationView.setSelectedItemId(R.id.navigation_search);
-        //    ViewPager viewPager = getActivity().findViewById(R.id.view_pager);
-          //  viewPager.setCurrentItem(1);
         });
         return view;
     }
@@ -156,7 +161,7 @@ public class MainProfileFragment extends Fragment {
                 .build();
 
         GetPostsApi getPostsApi = retrofit.create(GetPostsApi.class);
-        Call<List<PostCreateRequest>> call = getPostsApi.getPosts(userID);
+        Call<List<PostCreateRequest>> call = getPostsApi.getPosts(userID, 0L, 1000L);
         call.enqueue(new Callback<List<PostCreateRequest>>() {
 
             @RequiresApi(api = Build.VERSION_CODES.O)
@@ -167,6 +172,7 @@ public class MainProfileFragment extends Fragment {
                         for (PostCreateRequest postCreateRequest : response.body()) {
                             lst.add(postCreateRequest.getPost());
                         }
+                        postAdapter.setItems(lst);
                     } else {
                         Log.i("error", "response body is null");
                     }
