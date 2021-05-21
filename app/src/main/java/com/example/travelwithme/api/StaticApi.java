@@ -1,4 +1,4 @@
-package com.example.travelwithme;
+package com.example.travelwithme.api;
 
 import retrofit.Callback;
 import retrofit.client.Response;

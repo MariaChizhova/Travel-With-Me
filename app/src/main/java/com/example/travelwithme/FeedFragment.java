@@ -1,7 +1,5 @@
 package com.example.travelwithme;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -15,15 +13,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.travelwithme.adapter.PostAdapter;
+import com.example.travelwithme.api.GetPostApi;
 import com.example.travelwithme.pojo.Post;
 import com.example.travelwithme.requests.PostCreateRequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.Collection;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -104,7 +101,7 @@ public class FeedFragment extends Fragment {
                 .create();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.0.8:9090")
+                .baseUrl("http://192.168.0.4:9090")
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 

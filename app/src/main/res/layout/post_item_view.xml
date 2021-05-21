@@ -55,6 +55,7 @@
         android:layout_toEndOf="@id/profile_image_view"
         android:scaleType="centerCrop"
         android:src="@mipmap/ic_launcher"
+        app:backgroundTint="@null"
         android:layout_toRightOf="@id/profile_image_view"
         android:clickable="true"/>
 

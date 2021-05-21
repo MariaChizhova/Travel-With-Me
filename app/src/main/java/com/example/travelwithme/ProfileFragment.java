@@ -1,12 +1,9 @@
 package com.example.travelwithme;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 
-import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
@@ -25,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.travelwithme.adapter.PostAdapter;
+import com.example.travelwithme.api.GetPostsApi;
 import com.example.travelwithme.pojo.Post;
 import com.example.travelwithme.requests.PostCreateRequest;
 import com.google.gson.Gson;
@@ -33,8 +31,6 @@ import com.squareup.picasso.Picasso;
 import com.example.travelwithme.pojo.User;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Base64;
 import java.util.Collection;
 import java.util.List;
 
@@ -167,7 +163,7 @@ public class ProfileFragment extends Fragment {
                 .create();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.0.8:9090")
+                .baseUrl("http://192.168.0.4:9090")
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 

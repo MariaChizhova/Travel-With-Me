@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.example.travelwithme.api.AddPostApi;
 import com.example.travelwithme.pojo.Post;
 import com.example.travelwithme.requests.PostCreateRequest;
 import com.google.gson.Gson;
@@ -55,7 +56,7 @@ public class StaticMapActivity extends AppCompatActivity {
                     .setLenient()
                     .create();
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl("http://192.168.0.8:9090")
+                    .baseUrl("http://192.168.0.4:9090")
                     .addConverterFactory(GsonConverterFactory.create(gson))
                     .build();
             AddPostApi addPostApi = retrofit.create(AddPostApi.class);

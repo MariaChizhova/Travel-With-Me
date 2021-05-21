@@ -31,7 +31,7 @@ import com.example.travelwithme.pojo.Post;
 
 
 public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private static final String RESPONSE_FORMAT = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
+    private static final String RESPONSE_FORMAT = "EEE MMM dd HH:mm:ss zzz yyyy";
     private static final String MONTH_DAY_FORMAT = "MMM d";
     private final int VIEW_TYPE_ITEM = 0;
     private final int VIEW_TYPE_LOADING = 1;
@@ -174,7 +174,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
 
         private String getFormattedDate(String rawDate) {
-            SimpleDateFormat utcFormat = new SimpleDateFormat(RESPONSE_FORMAT, Locale.ROOT);
+            SimpleDateFormat utcFormat = new SimpleDateFormat(RESPONSE_FORMAT, Locale.ENGLISH);
             SimpleDateFormat displayedFormat = new SimpleDateFormat(MONTH_DAY_FORMAT, Locale.getDefault());
             try {
                 Date date = utcFormat.parse(rawDate);
