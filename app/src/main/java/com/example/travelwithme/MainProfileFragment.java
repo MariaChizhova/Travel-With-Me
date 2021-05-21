@@ -25,6 +25,7 @@ import android.widget.TextView;
 
 import com.example.travelwithme.adapter.PostAdapter;
 import com.example.travelwithme.api.GetPostsApi;
+import com.example.travelwithme.api.GetUserApi;
 import com.example.travelwithme.pojo.Post;
 import com.example.travelwithme.requests.PostCreateRequest;
 import com.google.gson.Gson;
@@ -35,6 +36,7 @@ import com.example.travelwithme.pojo.User;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Consumer;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -53,6 +55,7 @@ public class MainProfileFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static String email;
 
     private ImageView userImageView;
     private TextView nameTextView;
@@ -71,19 +74,14 @@ public class MainProfileFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public MainProfileFragment() {
-        // Required empty public constructor
+    public MainProfileFragment(String email) {
+        this.email = email;
+        System.out.println("EMAIL" + email);
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ProfileFragment.
-     */
-    // TODO: Rename and change types and number of parameters
+    public MainProfileFragment() {
+    }
+
     public static MainProfileFragment newInstance(String param1, String param2) {
         MainProfileFragment fragment = new MainProfileFragment();
         Bundle args = new Bundle();
@@ -115,7 +113,6 @@ public class MainProfileFragment extends Fragment {
         followersCountTextView = view.findViewById(R.id.followers_count_text_view);
         initRecyclerView();
         loadUserInfo();
-        loadPosts();
 
 
         final Button plus = view.findViewById(R.id.b_plus);
@@ -146,12 +143,12 @@ public class MainProfileFragment extends Fragment {
         return view;
     }
 
-    private void loadPosts() {
-        Collection<Post> postsList = getPosts();
+    private void loadPosts(long userId) {
+        Collection<Post> postsList = getPosts(userId);
         postAdapter.setItems(postsList);
     }
 
-    private Collection<Post> getPosts() {
+    private Collection<Post> getPosts(long userID) {
         Collection<Post> lst = new ArrayList<>();
 
         Gson gson = new GsonBuilder()
@@ -164,7 +161,7 @@ public class MainProfileFragment extends Fragment {
                 .build();
 
         GetPostsApi getPostsApi = retrofit.create(GetPostsApi.class);
-        Call<List<PostCreateRequest>> call = getPostsApi.getPosts(MainProfileFragment.getUser().getId(), 0L, 1000L);
+        Call<List<PostCreateRequest>> call = getPostsApi.getPosts(userID, 0L, 1000L);
         call.enqueue(new Callback<List<PostCreateRequest>>() {
 
             @RequiresApi(api = Build.VERSION_CODES.O)
@@ -247,37 +244,30 @@ public class MainProfileFragment extends Fragment {
 
 
     private void loadUserInfo() {
-        User user = getUser();
-        displayUserInfo(user);
+        new Api().getUser(email, user -> {
+            loadPosts(user.getUserID());
+            displayUserInfo(user);
+        });
     }
 
     private void displayUserInfo(User user) {
-        // Picasso.with(this).load(user.getImageUrl()).into(userImageView);
-        Picasso.get().load(user.getImageUrl()).into(userImageView);
-        nameTextView.setText(user.getName());
-        nickTextView.setText(user.getNick());
-        descriptionTextView.setText(user.getDescription());
-        locationTextView.setText(user.getLocation());
+        if(user.getAvatar() != null) {
+            Picasso.get().load(user.getAvatar()).into(userImageView);
+        } else {
+            Picasso.get().load("https://www.w3schools.com/w3images/streetart2.jpg").into(userImageView);
+        }
+        nameTextView.setText(user.getFirstName());
+        nickTextView.setText(user.getLastName());
+//        descriptionTextView.setText(user.getDescription());
+//        locationTextView.setText(user.getLocation());
 
-        String followingCount = String.valueOf(user.getFollowingCount());
+        String followingCount = String.valueOf(user.getFollowingsNumber());
         followingCountTextView.setText(followingCount);
 
-        String followersCount = String.valueOf(user.getFollowersCount());
+        String followersCount = String.valueOf(user.getFollowersNumber());
         followersCountTextView.setText(followersCount);
     }
 
-    public static User getUser() {
-        return new User(
-                1L,
-                "https://www.w3schools.com/w3images/streetart2.jpg",
-                "User name",
-                "User nick",
-                "Description",
-                "Location",
-                142,
-                142,
-                -1
-        );
-    }
+
 
 }

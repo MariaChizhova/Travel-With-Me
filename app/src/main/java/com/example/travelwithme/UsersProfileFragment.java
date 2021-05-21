@@ -73,16 +73,16 @@ public class UsersProfileFragment extends Fragment {
 
     private void displayUserInfo(User user) {
         // Picasso.with(this).load(user.getImageUrl()).into(userImageView);
-        Picasso.get().load(user.getImageUrl()).into(userImageView);
-        nameTextView.setText(user.getName());
-        nickTextView.setText(user.getNick());
-        descriptionTextView.setText(user.getDescription());
-        locationTextView.setText(user.getLocation());
+        Picasso.get().load(user.getAvatar()).into(userImageView);
+        nameTextView.setText(user.getFirstName());
+        nickTextView.setText(user.getLastName());
+//        descriptionTextView.setText(user.getDescription());
+//        locationTextView.setText(user.getLocation());
 
-        String followingCount = String.valueOf(user.getFollowingCount());
+        String followingCount = String.valueOf(user.getFollowingsNumber());
         followingCountTextView.setText(followingCount);
 
-        String followersCount = String.valueOf(user.getFollowersCount());
+        String followersCount = String.valueOf(user.getFollowersNumber());
         followersCountTextView.setText(followersCount);
     }
 }
