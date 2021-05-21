@@ -48,9 +48,9 @@ public class StaticMapActivity extends AppCompatActivity {
         final Button post = findViewById(R.id.b_post);
         post.setOnClickListener(v -> {
             date = new Date();
-            Post newPost = new Post(ProfileFragment.getUser().getId(), 1L, date.toString(), postDescriptipn.getText().toString(),
+            Post newPost = new Post(MainProfileFragment.getUser().getId(), 1L, date.toString(), postDescriptipn.getText().toString(),
                     0L, bmp, mapData);
-            ProfileFragment.postAdapter.setItems(Collections.singletonList(newPost));
+            MainProfileFragment.postAdapter.setItems(Collections.singletonList(newPost));
 
             Gson gson = new GsonBuilder()
                     .setLenient()
@@ -78,7 +78,6 @@ public class StaticMapActivity extends AppCompatActivity {
                     Log.i("eeeerrror", "error2");
                 }
             });
-
             finish();
         });
     }

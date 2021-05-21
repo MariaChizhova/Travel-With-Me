@@ -8,7 +8,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -41,14 +40,11 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ProfileFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 
-public class ProfileFragment extends Fragment {
+
+public class MainProfileFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -68,12 +64,11 @@ public class ProfileFragment extends Fragment {
     private long currentId = 1;
     boolean isLoading = false;
     private long currentLike = 0;
-    public static final String USER_ID = "userId";
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
-    public ProfileFragment() {
+    public MainProfileFragment() {
         // Required empty public constructor
     }
 
@@ -86,8 +81,8 @@ public class ProfileFragment extends Fragment {
      * @return A new instance of fragment ProfileFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static ProfileFragment newInstance(String param1, String param2) {
-        ProfileFragment fragment = new ProfileFragment();
+    public static MainProfileFragment newInstance(String param1, String param2) {
+        MainProfileFragment fragment = new MainProfileFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -107,7 +102,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_profile, container, false);
+        view = inflater.inflate(R.layout.fragment_profile_main, container, false);
         userImageView = view.findViewById(R.id.user_image_view);
         nameTextView = view.findViewById(R.id.user_name_text_view);
         nickTextView = view.findViewById(R.id.user_nick_text_view);
@@ -121,31 +116,27 @@ public class ProfileFragment extends Fragment {
 
 
         final Button plus = view.findViewById(R.id.b_plus);
-        plus.setOnClickListener(v -> {
-            startActivity(new Intent(view.getContext(), MapActivity.class));
-        });
+        plus.setOnClickListener(v -> startActivity(new Intent(view.getContext(), MapActivity.class)));
 
         final Button settings = view.findViewById(R.id.edit_profile);
-        settings.setOnClickListener(v -> {
-            startActivity(new Intent(view.getContext(), SettingsProfileActivity.class));
-        });
-// TO DO: ЭТО НЕ РАБОТАЕТ
+        settings.setOnClickListener(v -> startActivity(new Intent(view.getContext(), SettingsProfileActivity.class)));
+
         final Button followersButton = view.findViewById(R.id.followers_count_text_view);
         followersButton.setOnClickListener(v -> {
-            SearchFragment  someFragment = new SearchFragment();
-            FragmentTransaction transaction = getFragmentManager().beginTransaction();
-            transaction.replace(R.id.search_id, someFragment);
-            transaction.addToBackStack(null);
-            transaction.commit();
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                    new Followers()).commit();
+            BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.navigation_view);
+            bottomNavigationView.setSelectedItemId(R.id.navigation_search);
         });
-
+        // TODO: redirect to followings
         final Button followingButton = view.findViewById(R.id.following_count_text_view);
         followingButton.setOnClickListener(v -> {
-            Fragment someFragment = new Following();
-            FragmentTransaction transaction = getFragmentManager().beginTransaction();
-            transaction.replace(R.id.following_id, someFragment);
-            transaction.addToBackStack(null);
-            transaction.commit();
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                    new Following()).commit();
+            BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.navigation_view);
+            bottomNavigationView.setSelectedItemId(R.id.navigation_search);
+        //    ViewPager viewPager = getActivity().findViewById(R.id.view_pager);
+          //  viewPager.setCurrentItem(1);
         });
         return view;
     }
@@ -168,7 +159,7 @@ public class ProfileFragment extends Fragment {
                 .build();
 
         GetPostsApi getPostsApi = retrofit.create(GetPostsApi.class);
-        Call<List<PostCreateRequest>> call = getPostsApi.getPosts(ProfileFragment.getUser().getId());
+        Call<List<PostCreateRequest>> call = getPostsApi.getPosts(MainProfileFragment.getUser().getId());
         call.enqueue(new Callback<List<PostCreateRequest>>() {
 
             @RequiresApi(api = Build.VERSION_CODES.O)
@@ -278,7 +269,8 @@ public class ProfileFragment extends Fragment {
                 "Description",
                 "Location",
                 142,
-                142
+                142,
+                -1
         );
     }
 

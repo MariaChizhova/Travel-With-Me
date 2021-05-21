@@ -20,7 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.travelwithme.ProfileFragment;
+import com.example.travelwithme.MainProfileFragment;
 import com.example.travelwithme.ViewingMapActivity;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
@@ -28,6 +28,8 @@ import com.squareup.picasso.Picasso;
 
 import com.example.travelwithme.R;
 import com.example.travelwithme.pojo.Post;
+
+import org.jetbrains.annotations.NotNull;
 
 
 public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -38,6 +40,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 
     public List<Post> postsList = new ArrayList<>();
+
 
     Fragment parent;
     View parentView;
@@ -50,7 +53,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.@NotNull ViewHolder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
         if (viewType == VIEW_TYPE_ITEM) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.post_item_view, parent, false);
             return new PostViewHolder(view);
@@ -93,11 +96,6 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         notifyDataSetChanged();
     }
 
-    public void clearItems() {
-        postsList.clear();
-        notifyDataSetChanged();
-    }
-
 
     private class LoadingViewHolder extends RecyclerView.ViewHolder {
         ProgressBar progressBar;
@@ -133,8 +131,8 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 
         public void bind(Post post) {
-            nameTextView.setText(ProfileFragment.getUser().getName());
-            nickTextView.setText(ProfileFragment.getUser().getNick());
+            nameTextView.setText(MainProfileFragment.getUser().getName());
+            nickTextView.setText(MainProfileFragment.getUser().getNick());
             contentTextView.setText(post.getText());
             //repostsTextView.setText(String.valueOf(post.getRepostCount()));
             likesTextView.setText(String.valueOf(post.getFavouriteCount()));
@@ -157,7 +155,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             String creationDateFormatted = getFormattedDate(post.getCreationDate());
             creationDateTextView.setText(creationDateFormatted);
 
-            Picasso.get().load(ProfileFragment.getUser().getImageUrl()).into(userImageView);
+            Picasso.get().load(MainProfileFragment.getUser().getImageUrl()).into(userImageView);
 
 //            String postPhotoUrl = post.getImageUrl();
 //            Picasso.get().load(postPhotoUrl).into(postImageView);

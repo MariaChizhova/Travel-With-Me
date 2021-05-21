@@ -18,6 +18,7 @@
         android:id="@+id/followers_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="110dp"/>
+        android:layout_below="@id/tabs"
+        android:paddingTop="50dp"/>
 
 </FrameLayout>

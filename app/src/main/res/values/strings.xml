@@ -53,5 +53,5 @@
     <string name="ion_search"></string>
     <string name="place_name">Place Name</string>
 
-
+    <string name="search_hint">search</string>
 </resources>

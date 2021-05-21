@@ -9,8 +9,9 @@ public class User {
     private String location;
     private int followingCount;
     private int followersCount;
+    private int isFollowing; // True = 1, False = 0, you = -1
 
-    public User(long id, String imageUrl, String name, String nick, String description, String location, int followingCount, int followersCount) {
+    public User(long id, String imageUrl, String name, String nick, String description, String location, int followingCount, int followersCount, int isFollowing) {
         this.id = id;
         this.imageUrl = imageUrl;
         this.name = name;
@@ -19,6 +20,7 @@ public class User {
         this.location = location;
         this.followingCount = followingCount;
         this.followersCount = followersCount;
+        this.isFollowing = isFollowing;
     }
 
     public long getId() {
@@ -53,6 +55,10 @@ public class User {
         return followersCount;
     }
 
+    public int isFollowing() {
+        return isFollowing;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -63,6 +69,7 @@ public class User {
         if (id != user.id) return false;
         if (followingCount != user.followingCount) return false;
         if (followersCount != user.followersCount) return false;
+        if (isFollowing != user.isFollowing) return false;
         if (imageUrl != null ? !imageUrl.equals(user.imageUrl) : user.imageUrl != null)
             return false;
         if (!name.equals(user.name)) return false;
@@ -83,6 +90,7 @@ public class User {
         result = 31 * result + (location != null ? location.hashCode() : 0);
         result = 31 * result + followingCount;
         result = 31 * result + followersCount;
+        result = 31 * result + isFollowing;
         return result;
     }
 }
