@@ -6,12 +6,14 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
-import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface GetPostsApi {
-    @GET("/get_posts/{authorId}")
-    Call<List<PostCreateRequest>> getPosts(@Path("authorId") Long authorId);
-
-
+    @GET("/get_posts")
+    Call<List<PostCreateRequest>> getPosts(
+            @Query("authorID") Long authorId,
+            @Query("offset") Long offset,
+            @Query("count") Long count
+    );
 }
 

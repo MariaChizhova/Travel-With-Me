@@ -142,8 +142,6 @@ public class MainProfileFragment extends Fragment {
                     new Following()).commit();
             BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.navigation_view);
             bottomNavigationView.setSelectedItemId(R.id.navigation_search);
-            //ViewPager viewPager = getActivity().findViewById(R.id.view_pager);
-            //viewPager.setCurrentItem(1);
         });
         return view;
     }
@@ -166,7 +164,7 @@ public class MainProfileFragment extends Fragment {
                 .build();
 
         GetPostsApi getPostsApi = retrofit.create(GetPostsApi.class);
-        Call<List<PostCreateRequest>> call = getPostsApi.getPosts(MainProfileFragment.getUser().getId());
+        Call<List<PostCreateRequest>> call = getPostsApi.getPosts(MainProfileFragment.getUser().getId(), 0L, 1000L);
         call.enqueue(new Callback<List<PostCreateRequest>>() {
 
             @RequiresApi(api = Build.VERSION_CODES.O)
@@ -177,6 +175,7 @@ public class MainProfileFragment extends Fragment {
                         for (PostCreateRequest postCreateRequest : response.body()) {
                             lst.add(postCreateRequest.getPost());
                         }
+                        postAdapter.setItems(lst);
                     } else {
                         Log.i("error", "response body is null");
                     }
