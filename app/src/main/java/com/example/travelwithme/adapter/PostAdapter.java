@@ -8,7 +8,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +22,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.travelwithme.Api;
 import com.example.travelwithme.MainProfileFragment;
 import com.example.travelwithme.ViewingMapActivity;
 import com.like.LikeButton;
@@ -131,8 +134,15 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 
         public void bind(Post post) {
-            nameTextView.setText(MainProfileFragment.getUser().getName());
-            nickTextView.setText(MainProfileFragment.getUser().getNick());
+            SharedPreferences preferences = parent.getActivity().getPreferences(Context.MODE_PRIVATE);
+            final String email = preferences.getString("user_email", "");
+            new Api().getUser(email, user -> {
+                nameTextView.setText(user.getFirstName());
+                nickTextView.setText(user.getLastName());
+                Picasso.get().load(user.getAvatar()).into(userImageView);
+            });
+
+
             contentTextView.setText(post.getText());
             //repostsTextView.setText(String.valueOf(post.getRepostCount()));
             likesTextView.setText(String.valueOf(post.getFavouriteCount()));
@@ -154,8 +164,6 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
             String creationDateFormatted = getFormattedDate(post.getCreationDate());
             creationDateTextView.setText(creationDateFormatted);
-
-            Picasso.get().load(MainProfileFragment.getUser().getImageUrl()).into(userImageView);
 
 //            String postPhotoUrl = post.getImageUrl();
 //            Picasso.get().load(postPhotoUrl).into(postImageView);

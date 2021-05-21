@@ -3,11 +3,27 @@ package com.example.travelwithme;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 
+import com.example.travelwithme.api.AddPostApi;
+import com.example.travelwithme.api.AddUserApi;
+import com.example.travelwithme.requests.PostCreateRequest;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import org.jetbrains.annotations.NotNull;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
         if (mAuth.getCurrentUser() == null) {
             toLoginActivity();
         }
+
+        addUser(mAuth.getCurrentUser().getEmail());
 
         // set SearchFragment for opening application
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
@@ -57,7 +75,9 @@ public class MainActivity extends AppCompatActivity {
                         selectedFragment = new MessagesFragment();
                         break;
                     case R.id.navigation_profile:
-                        selectedFragment = new MainProfileFragment();
+                        SharedPreferences preferences = getPreferences(Context.MODE_PRIVATE);
+                        preferences.edit().putString("user_email", mAuth.getCurrentUser().getEmail()).apply();
+                        selectedFragment = new MainProfileFragment(mAuth.getCurrentUser().getEmail());
                         break;
                     case R.id.navigation_settings:
                         selectedFragment = new SettingsFragment();
@@ -75,5 +95,33 @@ public class MainActivity extends AppCompatActivity {
         mAuth.signOut();
         startActivity(new Intent(getApplicationContext(), LoginActivity.class));
         finish();
+    }
+
+    private void addUser(@NotNull String email){
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://84.252.137.106:9090")
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+        AddUserApi addUserApi = retrofit.create(AddUserApi.class);
+        Call<Void> call = addUserApi.addUser(email);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    Log.i("sucsess", "sucsess");
+                } else {
+                    Log.i("eeeerrror", "error1");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                t.printStackTrace();
+                Log.i("eeeerrror", "error2");
+            }
+        });
     }
 }

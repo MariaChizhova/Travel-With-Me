@@ -3,6 +3,8 @@ package com.example.travelwithme;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
@@ -17,6 +19,7 @@ import com.example.travelwithme.pojo.Post;
 import com.example.travelwithme.requests.PostCreateRequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.squareup.picasso.Picasso;
 
 import java.util.Collections;
 import java.util.Date;
@@ -48,37 +51,44 @@ public class StaticMapActivity extends AppCompatActivity {
         final Button post = findViewById(R.id.b_post);
         post.setOnClickListener(v -> {
             date = new Date();
-            Post newPost = new Post(MainProfileFragment.getUser().getId(), 1L, date.toString(), postDescriptipn.getText().toString(),
-                    0L, bmp, mapData);
-            MainProfileFragment.postAdapter.setItems(Collections.singletonList(newPost));
 
-            Gson gson = new GsonBuilder()
-                    .setLenient()
-                    .create();
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl("http://192.168.0.4:9090")
-                    .addConverterFactory(GsonConverterFactory.create(gson))
-                    .build();
-            AddPostApi addPostApi = retrofit.create(AddPostApi.class);
-            PostCreateRequest postCreateRequest = new PostCreateRequest(newPost);
-            Call<Void> call = addPostApi.addPost(postCreateRequest);
-            call.enqueue(new Callback<Void>() {
-                @Override
-                public void onResponse(Call<Void> call, Response<Void> response) {
-                    if (response.isSuccessful()) {
-                        Log.i("sucsess", "sucsess");
-                    } else {
-                        Log.i("eeeerrror", "error1");
+            SharedPreferences preferences = getPreferences(Context.MODE_PRIVATE);
+            final String email = preferences.getString("user_email", "");
+
+            new Api().getUser(email, user -> {
+                Post newPost = new Post(user.getUserID(), 1L, date.toString(), postDescriptipn.getText().toString(),
+                        0L, bmp, mapData);
+                MainProfileFragment.postAdapter.setItems(Collections.singletonList(newPost));
+
+                Gson gson = new GsonBuilder()
+                        .setLenient()
+                        .create();
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl("http://84.252.137.106:9090")
+                        .addConverterFactory(GsonConverterFactory.create(gson))
+                        .build();
+                AddPostApi addPostApi = retrofit.create(AddPostApi.class);
+                PostCreateRequest postCreateRequest = new PostCreateRequest(newPost);
+                Call<Void> call = addPostApi.addPost(postCreateRequest);
+                call.enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        if (response.isSuccessful()) {
+                            Log.i("sucsess", "sucsess");
+                        } else {
+                            Log.i("eeeerrror", "error1");
+                        }
                     }
-                }
 
-                @Override
-                public void onFailure(Call<Void> call, Throwable t) {
-                    t.printStackTrace();
-                    Log.i("eeeerrror", "error2");
-                }
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        t.printStackTrace();
+                        Log.i("eeeerrror", "error2");
+                    }
+                });
+                finish();
             });
-            finish();
+
         });
     }
 }

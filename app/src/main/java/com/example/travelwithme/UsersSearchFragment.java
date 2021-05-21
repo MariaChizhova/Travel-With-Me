@@ -40,7 +40,7 @@ public class UsersSearchFragment extends Fragment {
         Collection<User> allUsers = getUsers();
         Collection<User> users = new ArrayList<>();
         for (User user: allUsers) {
-            if (user.getName().equals(inputText)){
+            if (user.getFirstName().equals(inputText)){
                 users.add(user);
             }
         }
@@ -50,72 +50,72 @@ public class UsersSearchFragment extends Fragment {
 
     private Collection<User> getUsers() {
         Collection<User> allUsers = new ArrayList<>();
-        allUsers.add(new User(
-                1L,
-                "https://www.w3schools.com/w3images/streetart2.jpg",
-                "Andrew",
-                "@andrew",
-                "No description",
-                "Russia",
-                100,
-                100,
-                0
-        ));
-        allUsers.add(new User(
-                2L,
-                "https://sun9-6.userapi.com/impf/c845217/v845217483/8560e/LRcTo6l9VBE.jpg?size=1864x2048&quality=96&sign=b2f39df96c4d2fe3e6f16f6df6f528c5&type=album",
-                "Anna",
-                "@anchouls",
-                "I love teorver",
-                "Russia",
-                100,
-                100,
-                0
-        ));
-        allUsers.add(new User(
-                1L,
-                "https://www.w3schools.com/w3images/streetart2.jpg",
-                "Andrew",
-                "@andrew2",
-                "No description",
-                "Russia",
-                100,
-                100,
-                0
-        ));
-        allUsers.add(new User(
-                2L,
-                "https://sun9-6.userapi.com/impf/c845217/v845217483/8560e/LRcTo6l9VBE.jpg?size=1864x2048&quality=96&sign=b2f39df96c4d2fe3e6f16f6df6f528c5&type=album",
-                "Masha",
-                "@masha",
-                "I love teorver",
-                "Russia",
-                100,
-                100,
-                0
-        ));
-        allUsers.add(new User(
-                1L,
-                "https://www.w3schools.com/w3images/streetart2.jpg",
-                "Dasha",
-                "@dasha",
-                "No description",
-                "Russia",
-                100,
-                100,
-                0
-        ));
-        allUsers.add(new User(
-                2L,
-                "https://sun9-6.userapi.com/impf/c845217/v845217483/8560e/LRcTo6l9VBE.jpg?size=1864x2048&quality=96&sign=b2f39df96c4d2fe3e6f16f6df6f528c5&type=album",
-                "Katya",
-                "@katya",
-                "I love teorver",
-                "Russia",
-                100,
-                100,
-                0
-        ));
+//        allUsers.add(new User(
+//                1L,
+//                "https://www.w3schools.com/w3images/streetart2.jpg",
+//                "Andrew",
+//                "@andrew",
+//                "No description",
+//                "Russia",
+//                100,
+//                100,
+//                0
+//        ));
+//        allUsers.add(new User(
+//                2L,
+//                "https://sun9-6.userapi.com/impf/c845217/v845217483/8560e/LRcTo6l9VBE.jpg?size=1864x2048&quality=96&sign=b2f39df96c4d2fe3e6f16f6df6f528c5&type=album",
+//                "Anna",
+//                "@anchouls",
+//                "I love teorver",
+//                "Russia",
+//                100,
+//                100,
+//                0
+//        ));
+//        allUsers.add(new User(
+//                1L,
+//                "https://www.w3schools.com/w3images/streetart2.jpg",
+//                "Andrew",
+//                "@andrew2",
+//                "No description",
+//                "Russia",
+//                100,
+//                100,
+//                0
+//        ));
+//        allUsers.add(new User(
+//                2L,
+//                "https://sun9-6.userapi.com/impf/c845217/v845217483/8560e/LRcTo6l9VBE.jpg?size=1864x2048&quality=96&sign=b2f39df96c4d2fe3e6f16f6df6f528c5&type=album",
+//                "Masha",
+//                "@masha",
+//                "I love teorver",
+//                "Russia",
+//                100,
+//                100,
+//                0
+//        ));
+//        allUsers.add(new User(
+//                1L,
+//                "https://www.w3schools.com/w3images/streetart2.jpg",
+//                "Dasha",
+//                "@dasha",
+//                "No description",
+//                "Russia",
+//                100,
+//                100,
+//                0
+//        ));
+//        allUsers.add(new User(
+//                2L,
+//                "https://sun9-6.userapi.com/impf/c845217/v845217483/8560e/LRcTo6l9VBE.jpg?size=1864x2048&quality=96&sign=b2f39df96c4d2fe3e6f16f6df6f528c5&type=album",
+//                "Katya",
+//                "@katya",
+//                "I love teorver",
+//                "Russia",
+//                100,
+//                100,
+//                0
+//        ));
         return allUsers;
     }
 

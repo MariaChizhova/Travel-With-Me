@@ -79,9 +79,9 @@ public class UsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         }
 
         public void bind(User user) {
-            nameTextView.setText(user.getName());
-            nickTextView.setText(user.getNick());
-            Picasso.get().load(user.getImageUrl()).into(userImageView);
+            nameTextView.setText(user.getFirstName());
+            nickTextView.setText(user.getLastName());
+            Picasso.get().load(user.getAvatar()).into(userImageView);
         }
     }
 

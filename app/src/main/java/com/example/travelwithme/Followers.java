@@ -55,17 +55,17 @@ public class Followers extends Fragment {
     private Collection<User> getFollowers() {
         Collection<User> lst = new ArrayList<>();
         for (int i = 0; i < 25; i++) {
-            lst.add(new User(
-                    currentId++,
-                    "https://www.w3schools.com/w3images/streetart2.jpg",
-                    "Andrew",
-                    "@andrew",
-                    "No description",
-                    "Russia",
-                    100,
-                    100,
-                    1
-            ));
+//            lst.add(new User(
+//                    currentId++,
+//                    "https://www.w3schools.com/w3images/streetart2.jpg",
+//                    "Andrew",
+//                    "@andrew",
+//                    "No description",
+//                    "Russia",
+//                    100,
+//                    100,
+//                    1
+//            ));
         }
         return lst;
     }
