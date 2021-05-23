@@ -1,61 +1,80 @@
 package com.example.travelwithme;
 
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+
+import com.example.travelwithme.api.EditUserApi;
+import com.example.travelwithme.requests.UserEditRequest;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class SettingsProfileActivity extends AppCompatActivity {
 
-    private static final int RESULT_LOAD_IMAGE = 1;
-    ImageView profilePhoto;
+    private EditText firstName;
+    private EditText lastName;
+    private EditText description;
+    private EditText location;
+    private String email;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings_activity);
-        profilePhoto = (ImageView) findViewById(R.id.profile_photo);
-        EditText name = findViewById(R.id.name);
-        EditText username = findViewById(R.id.username);
-        EditText description = findViewById(R.id.description);
-        EditText location = findViewById(R.id.location);
+        firstName = findViewById(R.id.firstName);
+        lastName = findViewById(R.id.lastName);
+        description = findViewById(R.id.description);
+        location = findViewById(R.id.location);
+        email = getIntent().getExtras().getString("email");
 
-    }
-
-    public void editPhoto(View view) {
-        Intent i = new Intent(
-                Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(i, RESULT_LOAD_IMAGE);
     }
 
     public void updateProfile(View view) {
+        new Api().getUser(email, user -> {
+            Gson gson = new GsonBuilder()
+                    .setLenient()
+                    .create();
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl("http://84.252.137.106:9090")
+                    .addConverterFactory(GsonConverterFactory.create(gson))
+                    .build();
+            EditUserApi editUserApi = retrofit.create(EditUserApi.class);
+            UserEditRequest userEditRequest = new UserEditRequest();
+            userEditRequest.setFirstName(firstName.getText().toString());
+            userEditRequest.setLastName(lastName.getText().toString());
+            userEditRequest.setUserId(user.getUserID());
+            Call<Void> call = editUserApi.editUser(userEditRequest);
+            call.enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    if (response.isSuccessful()) {
+                        Log.i("sucsess", "sucsess edit user");
+                    } else {
+                        Log.i("eeeerrror", "error1");
+                    }
+                }
 
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+                    t.printStackTrace();
+                    Log.i("eeeerrror", "error2");
+                }
+            });
+            finish();
+        });
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == RESULT_LOAD_IMAGE && null != data) {
-            Uri imageUri = data.getData();
-            try {
-                InputStream inputStream = getContentResolver().openInputStream(imageUri);
-                Bitmap chosenImage = BitmapFactory.decodeStream(inputStream);
-                chosenImage = Bitmap.createScaledBitmap(chosenImage, 400, 400, false);
-                profilePhoto.setImageBitmap(chosenImage);
-
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 }

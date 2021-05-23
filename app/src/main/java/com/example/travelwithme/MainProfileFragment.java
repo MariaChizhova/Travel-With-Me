@@ -1,8 +1,10 @@
 package com.example.travelwithme;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -13,7 +15,6 @@ import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.ViewPager;
 
 import android.os.Handler;
 import android.util.Log;
@@ -25,29 +26,25 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.travelwithme.adapter.PostAdapter;
-import com.example.travelwithme.api.GetPostsApi;
-import com.example.travelwithme.api.GetUserApi;
-import com.example.travelwithme.pojo.Post;
-import com.example.travelwithme.requests.PostCreateRequest;
+import com.example.travelwithme.api.EditAvatarApi;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.squareup.picasso.Picasso;
 import com.example.travelwithme.pojo.User;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.function.Consumer;
+
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.util.Base64;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-
-
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-
 
 
 public class MainProfileFragment extends Fragment {
@@ -57,10 +54,12 @@ public class MainProfileFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private static String email;
+    private static final int RESULT_LOAD_IMAGE = 1;
+    private static final int RESULT_EDIT_USER = 2;
 
     private ImageView userImageView;
     private TextView nameTextView;
-    private TextView nickTextView;
+    private TextView lastNameTextView;
     private TextView descriptionTextView;
     private TextView locationTextView;
     private TextView followingCountTextView;
@@ -101,13 +100,14 @@ public class MainProfileFragment extends Fragment {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_profile_main, container, false);
         userImageView = view.findViewById(R.id.user_image_view);
         nameTextView = view.findViewById(R.id.user_name_text_view);
-        nickTextView = view.findViewById(R.id.user_nick_text_view);
+        lastNameTextView = view.findViewById(R.id.user_nick_text_view);
         descriptionTextView = view.findViewById(R.id.user_description_text_view);
         locationTextView = view.findViewById(R.id.user_location_text_view);
         followingCountTextView = view.findViewById(R.id.following_count_text_view);
@@ -115,12 +115,23 @@ public class MainProfileFragment extends Fragment {
         initRecyclerView();
         loadUserInfo();
 
+        userImageView.setOnClickListener(v -> {
+            Log.i("Click", "avatar");
+            Intent i = new Intent(
+                    Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(i, RESULT_LOAD_IMAGE);
+        });
+
 
         final Button plus = view.findViewById(R.id.b_plus);
         plus.setOnClickListener(v -> startActivity(new Intent(view.getContext(), MapActivity.class)));
 
         final Button settings = view.findViewById(R.id.edit_profile);
-        settings.setOnClickListener(v -> startActivity(new Intent(view.getContext(), SettingsProfileActivity.class)));
+        settings.setOnClickListener(v -> {
+            Intent i = new Intent(view.getContext(), SettingsProfileActivity.class);
+            i.putExtra("email", email);
+            startActivityForResult(i, RESULT_EDIT_USER);
+        });
 
         final Button followersButton = view.findViewById(R.id.followers_count_text_view);
         followersButton.setOnClickListener(v -> {
@@ -201,6 +212,7 @@ public class MainProfileFragment extends Fragment {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void loadUserInfo() {
         new Api().getUser(email, user -> {
             loadPosts(user.getUserID());
@@ -208,12 +220,78 @@ public class MainProfileFragment extends Fragment {
         });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == RESULT_EDIT_USER) {
+            loadUserInfo(); //TODO: not updated
+        }
+
+        if (requestCode == RESULT_LOAD_IMAGE && data != null) {
+            Uri imageUri = data.getData();
+            try {
+                InputStream inputStream = getContext().getContentResolver().openInputStream(imageUri);
+                Bitmap chosenImage = BitmapFactory.decodeStream(inputStream);
+                chosenImage = Bitmap.createScaledBitmap(chosenImage, 400, 400, false);
+                userImageView.setImageBitmap(chosenImage);
+
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                chosenImage.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                byte[] bytes = stream.toByteArray();
+
+                final Api api = new Api();
+                api.getUser(email, user -> {
+
+                    Gson gson = new GsonBuilder()
+                            .setLenient()
+                            .create();
+
+                    Retrofit retrofit = new Retrofit.Builder()
+                            .baseUrl("http://84.252.137.106:9090")
+                            .addConverterFactory(GsonConverterFactory.create(gson))
+                            .build();
+
+                    EditAvatarApi editAvatarApi = retrofit.create(EditAvatarApi.class);
+                    Call<Void> call = editAvatarApi.editAvatar(user.getUserID(), Base64.getEncoder().encodeToString(bytes));
+                    call.enqueue(new Callback<Void>() {
+
+                        @RequiresApi(api = Build.VERSION_CODES.O)
+                        @Override
+                        public void onResponse(Call<Void> call, Response<Void> response) {
+                            if (response.isSuccessful()) {
+                                Log.i("succsess", "sucses to edit avavtar");
+                            } else {
+                                Log.i("error", response.errorBody().toString()); //TODO: not worked
+                                Log.i("error", user.getUserID().toString());
+                                Log.i("error", Base64.getEncoder().encodeToString(bytes));
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<Void> call, Throwable t) {
+                            Log.i("error", "error to edit avavtar 2");
+                            t.printStackTrace();
+                        }
+                    });
+                });
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void displayUserInfo(User user) {
         if(user.getAvatar() != null) {
-            Picasso.get().load(user.getAvatar()).into(userImageView);
+            byte[] image = Base64.getDecoder().decode(user.getAvatar());
+            userImageView.setImageBitmap(BitmapFactory.decodeByteArray(image, 0, image.length));
         }
+        Log.i("AAAAAAAAAA", user.getFirstName());
         nameTextView.setText(user.getFirstName());
-        nickTextView.setText(user.getLastName());
+        lastNameTextView.setText(user.getLastName());
 //        descriptionTextView.setText(user.getDescription());
 //        locationTextView.setText(user.getLocation());
 

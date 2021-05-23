@@ -5,6 +5,7 @@ import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
+import com.example.travelwithme.api.EditAvatarApi;
 import com.example.travelwithme.api.GetFollowersApi;
 import com.example.travelwithme.api.GetFollowingsApi;
 import com.example.travelwithme.api.GetPostsApi;
@@ -26,6 +27,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.Query;
 
 public class Api {
     public void getUser(String email, Consumer<User> onUserLoaded) {
@@ -43,7 +45,7 @@ public class Api {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.isSuccessful()) {
-                    Log.i("sucsess", "sucsess");
+                    //Log.i("sucsess", "sucsess");
                     User user = response.body();
                     onUserLoaded.accept(user);
                 } else {
@@ -212,6 +214,37 @@ public class Api {
 
             @Override
             public void onFailure(Call<List<User>> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
+
+    public void editAvatar(Long userID, String newAvatar) {
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://84.252.137.106:9090")
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+
+        EditAvatarApi editAvatarApi = retrofit.create(EditAvatarApi.class);
+        Call<Void> call = editAvatarApi.editAvatar(userID, newAvatar);
+        call.enqueue(new Callback<Void>() {
+
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    Log.i("succsess", "sucses to edit avavtar");
+                } else {
+                    Log.i("error", "error");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
                 t.printStackTrace();
             }
         });

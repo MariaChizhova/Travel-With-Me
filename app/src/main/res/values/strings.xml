@@ -44,8 +44,8 @@
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="title_activity_settings_profile">SettingsProfileActivity</string>
-    <string name="name">Name</string>
-    <string name="username">Username</string>
+    <string name="name">First Name</string>
+    <string name="username">Last Name</string>
     <string name="description">Description</string>
     <string name="location">Location</string>
     <string name="update">UPDATE</string>
