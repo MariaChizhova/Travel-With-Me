@@ -1,5 +1,6 @@
 package com.example.travelwithme;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
@@ -21,7 +23,6 @@ import java.util.Collection;
 public class Following extends Fragment {
     private UsersAdapter followingAdapter;
     private RecyclerView followingRecyclerView;
-    Collection<User> followingList;
     private View view;
     private long currentId = 1;
 
@@ -38,8 +39,15 @@ public class Following extends Fragment {
     }
 
     private void loadFollowing() {
-        followingList = getFollowing();
-        followingAdapter.setItems(followingList);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        final String email = preferences.getString("user_email", "");
+        final Api api = new Api();
+
+        api.getUser(email, user -> {
+            api.getFollowing(user.getUserID(), followersList -> {
+                followingAdapter.setItems(followersList);
+            });
+        });
     }
 
     private void initRecyclerView() {
@@ -54,34 +62,5 @@ public class Following extends Fragment {
         };
         followingAdapter = new UsersAdapter(onUsersClickListener);
         followingRecyclerView.setAdapter(followingAdapter);
-    }
-
-    private Collection<User> getFollowing() {
-        Collection<User> lst = new ArrayList<>();
-        for (int i = 0; i < 15; i++) {
-//            lst.add(new User(
-//                    currentId,
-//                    "https://sun9-6.userapi.com/impf/c845217/v845217483/8560e/LRcTo6l9VBE.jpg?size=1864x2048&quality=96&sign=b2f39df96c4d2fe3e6f16f6df6f528c5&type=album",
-//                    "Anna",
-//                    "@anchouls",
-//                    "I love teorver",
-//                    "Russia",
-//                    100,
-//                    100,
-//                    1
-//            ));
-//            lst.add(new User(
-//                    currentId,
-//                    "https://www.w3schools.com/w3images/streetart2.jpg",
-//                    "Andrew",
-//                    "@andrew",
-//                    "No description",
-//                    "Russia",
-//                    100,
-//                    100,
-//                    1
-//            ));
-        }
-        return lst;
     }
 }

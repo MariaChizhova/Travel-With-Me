@@ -53,6 +53,7 @@ public class SearchFragment extends Fragment {
             viewPagerAdapter.notifyDataSetChanged();
             tabLayout.removeAllTabs();
 
+            //TODO: check bug @hotckiss
             String inputText = searchEditText.getText().toString();
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
