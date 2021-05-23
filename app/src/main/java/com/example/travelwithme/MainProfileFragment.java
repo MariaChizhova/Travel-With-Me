@@ -254,8 +254,6 @@ public class MainProfileFragment extends Fragment {
     private void displayUserInfo(User user) {
         if(user.getAvatar() != null) {
             Picasso.get().load(user.getAvatar()).into(userImageView);
-        } else {
-            Picasso.get().load("https://www.w3schools.com/w3images/streetart2.jpg").into(userImageView);
         }
         nameTextView.setText(user.getFirstName());
         nickTextView.setText(user.getLastName());
