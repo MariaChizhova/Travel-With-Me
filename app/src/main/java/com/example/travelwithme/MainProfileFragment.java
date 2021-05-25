@@ -34,7 +34,6 @@ import com.google.gson.GsonBuilder;
 import com.example.travelwithme.pojo.User;
 
 
-
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.io.ByteArrayOutputStream;
@@ -77,9 +76,6 @@ public class MainProfileFragment extends Fragment {
     private String mParam2;
     ProgressDialog progressDialog;
 
-    public MainProfileFragment(String email) {
-        MainProfileFragment.email = email;
-    }
 
     public MainProfileFragment() {
     }
@@ -101,6 +97,8 @@ public class MainProfileFragment extends Fragment {
 //            mParam1 = getArguments().getString(ARG_PARAM1);
 //            mParam2 = getArguments().getString(ARG_PARAM2);
 //        }
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        email = preferences.getString("user_email", "");
         if (savedInstanceState == null) {
             progressDialog = ProgressDialog.show(getActivity(), "", "Loading...");
             loadUserInfo(); //TODO: load one time!!!
@@ -111,6 +109,7 @@ public class MainProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.i("email", email);
         view = inflater.inflate(R.layout.fragment_profile_main, container, false);
         userImageView = view.findViewById(R.id.user_image_view);
         nameTextView = view.findViewById(R.id.user_name_text_view);
@@ -206,9 +205,9 @@ public class MainProfileFragment extends Fragment {
                 int currentSize = scrollPosition;
                 int nextLimit = currentSize + 10;
                 while (currentSize - 1 < nextLimit) {
-               //     Post p = new Post(getUser(), ++currentId, "Thu Apr 1 07:31:08 +0000 2021", "Описание поста",
-                 //           1L, ++currentLike, "https://www.w3schools.com/w3css/img_manarola.jpg");
-                   // postAdapter.postsList.add(p);
+                    //     Post p = new Post(getUser(), ++currentId, "Thu Apr 1 07:31:08 +0000 2021", "Описание поста",
+                    //           1L, ++currentLike, "https://www.w3schools.com/w3css/img_manarola.jpg");
+                    // postAdapter.postsList.add(p);
                     currentSize++;
                 }
                 postAdapter.notifyDataSetChanged();
@@ -233,7 +232,7 @@ public class MainProfileFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == RESULT_EDIT_USER) {
+        if (requestCode == RESULT_EDIT_USER) {
             loadUserInfo();
         }
 
@@ -274,9 +273,7 @@ public class MainProfileFragment extends Fragment {
                             if (response.isSuccessful()) {
                                 Log.i("succsess", "sucses to edit avavtar");
                             } else {
-                                Log.i("error", response.errorBody().toString()); //TODO: not worked
-                                Log.i("error", user.getUserID().toString());
-                                Log.i("error", Base64.getEncoder().encodeToString(bytes));
+                                Log.i("error", response.errorBody().toString());
                             }
                         }
 
@@ -296,15 +293,15 @@ public class MainProfileFragment extends Fragment {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void displayUserInfo(User user) {
-        if(user.getAvatar() != null) {
+        if (user.getAvatar() != null) {
             byte[] image = Base64.getDecoder().decode(user.getAvatar());
             Log.i("avatar", user.getAvatar());
             userImageView.setImageBitmap(BitmapFactory.decodeByteArray(image, 0, image.length));
         }
-        if(user.getFirstName() != null) {
+        if (user.getFirstName() != null) {
             nameTextView.setText(user.getFirstName());
         }
-        if(user.getLastName() != null) {
+        if (user.getLastName() != null) {
             lastNameTextView.setText(user.getLastName());
         }
 //        descriptionTextView.setText(user.getDescription());
@@ -316,7 +313,6 @@ public class MainProfileFragment extends Fragment {
         String followersCount = String.valueOf(user.getFollowersNumber());
         followersCountTextView.setText(followersCount);
     }
-
 
 
 }

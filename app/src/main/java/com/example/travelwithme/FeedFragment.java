@@ -1,11 +1,13 @@
 package com.example.travelwithme;
 
 import android.app.ProgressDialog;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,16 +26,15 @@ public class FeedFragment extends Fragment {
     private static String email;
     ProgressDialog progressDialog;
 
-    public FeedFragment() { }
-
-    public FeedFragment(String email) {
-        FeedFragment.email = email;
+    public FeedFragment() {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        email = preferences.getString("user_email", "");
         if (savedInstanceState == null) {
             progressDialog = ProgressDialog.show(getActivity(), "", "Loading...");
             loadUserInfo(); //TODO: load one time!!!

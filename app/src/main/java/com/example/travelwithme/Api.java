@@ -5,6 +5,9 @@ import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
+import com.example.travelwithme.api.AddSubscribeApi;
+import com.example.travelwithme.api.DeleteSubscribeApi;
+import com.example.travelwithme.api.ExistingSubscribeApi;
 import com.example.travelwithme.api.GetFollowersApi;
 import com.example.travelwithme.api.GetFollowingsApi;
 import com.example.travelwithme.api.GetFollowingsPostsApi;
@@ -55,6 +58,95 @@ public class Api {
             @Override
             public void onFailure(Call<User> call, Throwable t) {
                 Log.i("eeeerrror", "error2");
+                t.printStackTrace();
+            }
+        });
+    }
+
+    public void existingSubscribe(long followingID, long followerID, Consumer<Boolean> onUserLoaded) {
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://84.252.137.106:9090")
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+        ExistingSubscribeApi existingSubscribeApi = retrofit.create(ExistingSubscribeApi.class);
+        Call<Boolean> call = existingSubscribeApi.existingSubscribe(followingID, followerID);
+        call.enqueue(new Callback<Boolean>() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                if (response.isSuccessful()) {
+                    Log.i("sucsess", "sucsess existing subscribe");
+                    Boolean isFollowing = response.body();
+                    onUserLoaded.accept(isFollowing);
+                } else {
+                    Log.i("eeeerrror", "error existing subscribe");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Boolean> call, Throwable t) {
+                Log.i("eeeerrror", "error existing subscribe");
+                t.printStackTrace();
+            }
+        });
+    }
+
+    public void addSubscribe(long followingID, long followerID) {
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://84.252.137.106:9090")
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+        AddSubscribeApi addSubscribeApi = retrofit.create(AddSubscribeApi.class);
+        Call<Void> call = addSubscribeApi.addSubscribe(followingID, followerID);
+        call.enqueue(new Callback<Void>() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    Log.i("sucsess", "sucsess add subscribe");
+                } else {
+                    Log.i("eeeerrror", "error add subscribe");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.i("eeeerrror", "error add subscribe");
+                t.printStackTrace();
+            }
+        });
+    }
+
+    public void deleteSubscribe(long followingID, long followerID) {
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://84.252.137.106:9090")
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+        DeleteSubscribeApi deleteSubscribeApi = retrofit.create(DeleteSubscribeApi.class);
+        Call<Void> call = deleteSubscribeApi.deleteSubscribe(followingID, followerID);
+        call.enqueue(new Callback<Void>() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    Log.i("sucsess", "sucsess delete subscribe");
+                } else {
+                    Log.i("eeeerrror", "error delete subscribe");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.i("eeeerrror", "error delete subscribe");
                 t.printStackTrace();
             }
         });

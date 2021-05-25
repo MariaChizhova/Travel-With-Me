@@ -1,5 +1,6 @@
 package com.example.travelwithme.adapter;
 
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,7 +9,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.travelwithme.Api;
 import com.example.travelwithme.R;
 import com.example.travelwithme.pojo.User;
 import com.squareup.picasso.Picasso;
@@ -24,9 +29,13 @@ public class UsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     private List<User> usersList = new ArrayList<>();
     private OnUsersClickListener onUsersClickListener;
+    private final Fragment parent;
+    private static final String FOLLOW = "FOLLOW";
+    private static final String UNFOLLOW = "UNFOLLOW";
 
-    public UsersAdapter(OnUsersClickListener onUserClickListener) {
+    public UsersAdapter(OnUsersClickListener onUserClickListener, Fragment parent) {
         this.onUsersClickListener = onUserClickListener;
+        this.parent = parent;
     }
 
     @Override
@@ -54,6 +63,7 @@ public class UsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         private ImageView userImageView;
         private TextView nameTextView;
         private TextView nickTextView;
+        private long userId;
 
         public FriendViewHolder(View itemView) {
             super(itemView);
@@ -66,13 +76,36 @@ public class UsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 onUsersClickListener.onUserClick(user);
             });
 
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(parent.getActivity());
+            final String email = preferences.getString("user_email", "");
+
             final Button isFollowingButton = itemView.findViewById(R.id.is_following_button);
+
+            Api api = new Api();
+            api.getUser(email, user -> {
+                new Api().existingSubscribe(userId, user.getUserID(), isFollowing -> {
+                    if (isFollowing) {
+                        isFollowingButton.setText(UNFOLLOW);
+                        isFollowingButton.setBackgroundResource(R.drawable.follow_shape);
+                    } else {
+                        isFollowingButton.setText(FOLLOW);
+                        isFollowingButton.setBackgroundResource(R.drawable.unfollow_shape);
+                    }
+                });
+            });
+
             isFollowingButton.setOnClickListener(v -> {
-                if (isFollowingButton.getText() == "UNFOLLOW") {
-                    isFollowingButton.setText("FOLLOW");
+                if (isFollowingButton.getText() == UNFOLLOW) {
+                    api.getUser(email, user -> {
+                        new Api().deleteSubscribe(userId, user.getUserID());
+                    });
+                    isFollowingButton.setText(FOLLOW);
                     isFollowingButton.setBackgroundResource(R.drawable.unfollow_shape);
                 } else {
-                    isFollowingButton.setText("UNFOLLOW");
+                    api.getUser(email, user -> {
+                        new Api().addSubscribe(userId, user.getUserID());
+                    });
+                    isFollowingButton.setText(UNFOLLOW);
                     isFollowingButton.setBackgroundResource(R.drawable.follow_shape);
                 }
             });
@@ -82,6 +115,7 @@ public class UsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             nameTextView.setText(user.getFirstName());
             nickTextView.setText(user.getLastName());
             Picasso.get().load(user.getAvatar()).into(userImageView);
+            userId = user.getUserID();
         }
     }
 

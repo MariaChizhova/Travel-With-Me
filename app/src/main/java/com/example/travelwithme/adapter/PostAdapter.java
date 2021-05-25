@@ -50,8 +50,8 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public List<Post> postsList = new ArrayList<>();
 
 
-    Fragment parent;
-    View parentView;
+    private final Fragment parent;
+    private final View parentView;
 
     private List<Post> postList = new ArrayList<>();
 

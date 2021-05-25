@@ -50,7 +50,7 @@ public class UsersSearchFragment extends Fragment {
             transaction.addToBackStack(null);
             transaction.commit();
         };
-        usersAdapter = new UsersAdapter(onUsersClickListener);
+        usersAdapter = new UsersAdapter(onUsersClickListener, this);
         usersRecyclerView.setAdapter(usersAdapter);
     }
 }

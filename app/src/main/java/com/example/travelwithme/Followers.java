@@ -56,7 +56,7 @@ public class Followers extends Fragment {
             transaction.addToBackStack(null);
             transaction.commit();
         };
-        followersAdapter = new UsersAdapter(onUsersClickListener);
+        followersAdapter = new UsersAdapter(onUsersClickListener, this);
         followersRecyclerView.setAdapter(followersAdapter);
     }
 }

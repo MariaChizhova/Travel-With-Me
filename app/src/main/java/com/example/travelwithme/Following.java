@@ -60,7 +60,7 @@ public class Following extends Fragment {
             transaction.addToBackStack(null);
             transaction.commit();
         };
-        followingAdapter = new UsersAdapter(onUsersClickListener);
+        followingAdapter = new UsersAdapter(onUsersClickListener, this);
         followingRecyclerView.setAdapter(followingAdapter);
     }
 }
