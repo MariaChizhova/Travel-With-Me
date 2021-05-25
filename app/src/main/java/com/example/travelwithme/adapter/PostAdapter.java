@@ -55,7 +55,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<Post> postList = new ArrayList<>();
 
-    public PostAdapter(Fragment profileFragment, View view){
+    public PostAdapter(Fragment profileFragment, View view) {
         parent = profileFragment;
         parentView = view;
     }
@@ -81,7 +81,8 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
-    private void showLoadingView(LoadingViewHolder viewHolder, int position) { }
+    private void showLoadingView(LoadingViewHolder viewHolder, int position) {
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void populateItemRows(PostViewHolder holder, int position) {
@@ -100,7 +101,6 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
 
-
     public void setItems(Collection<Post> posts) {
         postsList.addAll(posts);
         notifyDataSetChanged();
@@ -109,6 +109,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private class LoadingViewHolder extends RecyclerView.ViewHolder {
         ProgressBar progressBar;
+
         public LoadingViewHolder(@NonNull View itemView) {
             super(itemView);
             progressBar = itemView.findViewById(R.id.progressBar);
@@ -147,9 +148,10 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             new Api().getUser(email, user -> {
                 nameTextView.setText(user.getFirstName());
                 nickTextView.setText(user.getLastName());
-                byte[] image = Base64.getDecoder().decode(user.getAvatar());
-                userImageView.setImageBitmap(BitmapFactory.decodeByteArray(image, 0, image.length));
-                //Picasso.get().load(user.getAvatar()).into(userImageView);
+                if (user.getAvatar() != null) {
+                    byte[] image = Base64.getDecoder().decode(user.getAvatar());
+                    userImageView.setImageBitmap(BitmapFactory.decodeByteArray(image, 0, image.length));
+                }
             });
 
 
