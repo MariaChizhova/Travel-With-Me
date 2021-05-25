@@ -1,5 +1,6 @@
 package com.example.travelwithme;
 
+import android.app.ProgressDialog;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -14,32 +15,30 @@ import android.view.ViewGroup;
 
 
 import com.example.travelwithme.adapter.PostAdapter;
-import com.example.travelwithme.api.GetPostApi;
-import com.example.travelwithme.pojo.Post;
-import com.example.travelwithme.requests.PostCreateRequest;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import java.util.ArrayList;
-import java.util.Collection;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class FeedFragment extends Fragment {
     private View view;
     private RecyclerView postsRecyclerView;
     public static PostAdapter postAdapter;
+    private static String email;
+    ProgressDialog progressDialog;
 
     public FeedFragment() { }
 
+    public FeedFragment(String email) {
+        FeedFragment.email = email;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState == null) {
+            getActivity().setTitle("Loading...");
+            progressDialog = ProgressDialog.show(getActivity(), "", "Loading...");
+            loadUserInfo(); //TODO: load one time!!!
+        }
     }
 
     @Override
@@ -47,47 +46,22 @@ public class FeedFragment extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_feed, container, false);
         initRecyclerView();
-        loadPosts();
         return view;
     }
 
-    private void loadPosts() {
-        Collection<Post> postsList = getPosts();
-        postAdapter.setItems(postsList);
-    }
-
-    private Collection<Post> getPosts() {
-        Collection<Post> lst = new ArrayList<>();
-
-        Gson gson = new GsonBuilder()
-                .setLenient()
-                .create();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://84.252.137.106:9090")
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build();
-
-        GetPostApi getPostApi = retrofit.create(GetPostApi.class);
-        Call<PostCreateRequest> call = getPostApi.getPost((long) 5);
-        call.enqueue(new Callback<PostCreateRequest>() {
-            @RequiresApi(api = Build.VERSION_CODES.O)
-            @Override
-            public void onResponse(Call<PostCreateRequest> call, Response<PostCreateRequest> response) {
-                PostCreateRequest postCreateRequest = response.body();
-                if(postCreateRequest != null) {
-                    lst.add(postCreateRequest.getPost());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<PostCreateRequest> call, Throwable t) {
-                t.printStackTrace();
-            }
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void loadUserInfo() {
+        new Api().getUser(email, user -> {
+            loadPosts(user.getUserID());
+            progressDialog.dismiss();
+            view.setVisibility(View.VISIBLE);
         });
-
-        return lst;
     }
+
+    private void loadPosts(long userId) {
+        new Api().getPosts(userId, posts -> postAdapter.setItems(posts));
+    }
+
 
     private void initRecyclerView() {
         postsRecyclerView = view.findViewById(R.id.posts_recycler_view_feed);

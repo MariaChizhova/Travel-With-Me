@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FeedFragment">
+    tools:context=".FeedFragment"
+    android:visibility="gone">
 
 
     <androidx.appcompat.widget.Toolbar
@@ -35,8 +36,10 @@
 
 
     <androidx.recyclerview.widget.RecyclerView
+        android:layout_below="@id/toolbar_feed"
         android:id="@+id/posts_recycler_view_feed"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
 </RelativeLayout>
+

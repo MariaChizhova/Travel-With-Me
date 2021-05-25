@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
                         selectedFragment = new SearchFragment();
                         break;
                     case R.id.navigation_feed:
-                        selectedFragment = new FeedFragment();
+                        selectedFragment = new FeedFragment(mAuth.getCurrentUser().getEmail());
                         break;
                     case R.id.navigation_messages:
                         selectedFragment = new MessagesFragment();

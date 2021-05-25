@@ -1,5 +1,6 @@
 package com.example.travelwithme;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -27,6 +28,7 @@ import android.widget.TextView;
 
 import com.example.travelwithme.adapter.PostAdapter;
 import com.example.travelwithme.api.EditAvatarApi;
+import com.example.travelwithme.requests.AvatarEditRequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.example.travelwithme.pojo.User;
@@ -73,10 +75,10 @@ public class MainProfileFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    ProgressDialog progressDialog;
 
     public MainProfileFragment(String email) {
-        this.email = email;
-        System.out.println("EMAIL" + email);
+        MainProfileFragment.email = email;
     }
 
     public MainProfileFragment() {
@@ -91,12 +93,18 @@ public class MainProfileFragment extends Fragment {
         return fragment;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+//        if (getArguments() != null) {
+//            mParam1 = getArguments().getString(ARG_PARAM1);
+//            mParam2 = getArguments().getString(ARG_PARAM2);
+//        }
+        if (savedInstanceState == null) {
+            getActivity().setTitle("Loading...");
+            progressDialog = ProgressDialog.show(getActivity(), "", "Loading...");
+            loadUserInfo(); //TODO: load one time!!!
         }
     }
 
@@ -113,7 +121,7 @@ public class MainProfileFragment extends Fragment {
         followingCountTextView = view.findViewById(R.id.following_count_text_view);
         followersCountTextView = view.findViewById(R.id.followers_count_text_view);
         initRecyclerView();
-        loadUserInfo();
+        //loadUserInfo();
 
         userImageView.setOnClickListener(v -> {
             Log.i("Click", "avatar");
@@ -213,10 +221,12 @@ public class MainProfileFragment extends Fragment {
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void loadUserInfo() {
+    public void loadUserInfo() {
         new Api().getUser(email, user -> {
             loadPosts(user.getUserID());
             displayUserInfo(user);
+            progressDialog.dismiss();
+            view.setVisibility(View.VISIBLE);
         });
     }
 
@@ -254,7 +264,10 @@ public class MainProfileFragment extends Fragment {
                             .build();
 
                     EditAvatarApi editAvatarApi = retrofit.create(EditAvatarApi.class);
-                    Call<Void> call = editAvatarApi.editAvatar(user.getUserID(), Base64.getEncoder().encodeToString(bytes));
+                    AvatarEditRequest avatarEditRequest = new AvatarEditRequest();
+                    avatarEditRequest.setUserId(user.getUserID());
+                    avatarEditRequest.setAvatar(Base64.getEncoder().encodeToString(bytes));
+                    Call<Void> call = editAvatarApi.editAvatar(avatarEditRequest);
                     call.enqueue(new Callback<Void>() {
 
                         @RequiresApi(api = Build.VERSION_CODES.O)
@@ -285,10 +298,9 @@ public class MainProfileFragment extends Fragment {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void displayUserInfo(User user) {
-        if(user.getAvatar() != null) {
-            byte[] image = Base64.getDecoder().decode(user.getAvatar());
-            userImageView.setImageBitmap(BitmapFactory.decodeByteArray(image, 0, image.length));
-        }
+        byte[] image = Base64.getDecoder().decode(user.getAvatar());
+        Log.i("avatar", user.getAvatar());
+        userImageView.setImageBitmap(BitmapFactory.decodeByteArray(image, 0, image.length));
         Log.i("AAAAAAAAAA", user.getFirstName());
         nameTextView.setText(user.getFirstName());
         lastNameTextView.setText(user.getLastName());
