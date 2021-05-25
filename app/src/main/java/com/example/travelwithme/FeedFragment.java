@@ -35,7 +35,6 @@ public class FeedFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState == null) {
-            getActivity().setTitle("Loading...");
             progressDialog = ProgressDialog.show(getActivity(), "", "Loading...");
             loadUserInfo(); //TODO: load one time!!!
         }
@@ -59,7 +58,7 @@ public class FeedFragment extends Fragment {
     }
 
     private void loadPosts(long userId) {
-        new Api().getPosts(userId, posts -> postAdapter.setItems(posts));
+        new Api().getFollowingsPosts(userId, posts -> postAdapter.setItems(posts));
     }
 
 

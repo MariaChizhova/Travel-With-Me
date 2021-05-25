@@ -12,11 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.travelwithme.adapter.UsersAdapter;
-import com.example.travelwithme.pojo.User;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.function.Consumer;
 
 public class UsersSearchFragment extends Fragment {
     private RecyclerView usersRecyclerView;
@@ -38,7 +34,7 @@ public class UsersSearchFragment extends Fragment {
     }
 
     private void searchUsers() {
-        new Api().searchUsers(inputText, users -> {
+        new Api().searchUsers(52, inputText, users -> {
             usersAdapter.clearItems();
             usersAdapter.setItems(users);
         });

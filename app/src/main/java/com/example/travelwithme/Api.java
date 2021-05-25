@@ -7,6 +7,7 @@ import androidx.annotation.RequiresApi;
 
 import com.example.travelwithme.api.GetFollowersApi;
 import com.example.travelwithme.api.GetFollowingsApi;
+import com.example.travelwithme.api.GetFollowingsPostsApi;
 import com.example.travelwithme.api.GetPostsApi;
 import com.example.travelwithme.api.GetUserApi;
 import com.example.travelwithme.api.SearchUsersApi;
@@ -74,6 +75,47 @@ public class Api {
 
         GetPostsApi getPostsApi = retrofit.create(GetPostsApi.class);
         Call<List<PostCreateRequest>> call = getPostsApi.getPosts(userID, 0L, 1000L);
+        call.enqueue(new Callback<List<PostCreateRequest>>() {
+
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onResponse(Call<List<PostCreateRequest>> call, Response<List<PostCreateRequest>> response) {
+                if (response.isSuccessful()) {
+                    if(response.body() != null) {
+                        for (PostCreateRequest postCreateRequest : response.body()) {
+                            lst.add(postCreateRequest.getPost());
+                        }
+                        onUserLoaded.accept(lst);
+                    } else {
+                        Log.i("error", "response body is null");
+                    }
+                } else {
+                    Log.i("error", "error");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<PostCreateRequest>> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
+
+    //TODO: add offset and count params
+    public void getFollowingsPosts(long userID, Consumer<Collection<Post>> onUserLoaded) {
+        Collection<Post> lst = new ArrayList<>();
+
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://84.252.137.106:9090")
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+
+        GetFollowingsPostsApi getFollowingsPostsApi = retrofit.create(GetFollowingsPostsApi.class);
+        Call<List<PostCreateRequest>> call = getFollowingsPostsApi.getFollowingsPosts(userID, 0L, 1000L);
         call.enqueue(new Callback<List<PostCreateRequest>>() {
 
             @RequiresApi(api = Build.VERSION_CODES.O)
@@ -179,7 +221,7 @@ public class Api {
     }
 
     //TODO: add offset and count params
-    public void searchUsers(String inputText, Consumer<Collection<User>> onSearchResultsLoaded) {
+    public void searchUsers(long myID, String inputText, Consumer<Collection<User>> onSearchResultsLoaded) {
         Collection<User> lst = new ArrayList<>();
 
         Gson gson = new GsonBuilder()
@@ -192,7 +234,7 @@ public class Api {
                 .build();
 
         SearchUsersApi searchUsersApi = retrofit.create(SearchUsersApi.class);
-        Call<List<User>> call = searchUsersApi.searchUsers(inputText, 0L, 1000L);
+        Call<List<User>> call = searchUsersApi.searchUsers(myID, inputText, 0L, 1000L);
         call.enqueue(new Callback<List<User>>() {
 
             @RequiresApi(api = Build.VERSION_CODES.O)

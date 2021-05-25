@@ -102,7 +102,6 @@ public class MainProfileFragment extends Fragment {
 //            mParam2 = getArguments().getString(ARG_PARAM2);
 //        }
         if (savedInstanceState == null) {
-            getActivity().setTitle("Loading...");
             progressDialog = ProgressDialog.show(getActivity(), "", "Loading...");
             loadUserInfo(); //TODO: load one time!!!
         }
@@ -121,7 +120,6 @@ public class MainProfileFragment extends Fragment {
         followingCountTextView = view.findViewById(R.id.following_count_text_view);
         followersCountTextView = view.findViewById(R.id.followers_count_text_view);
         initRecyclerView();
-        //loadUserInfo();
 
         userImageView.setOnClickListener(v -> {
             Log.i("Click", "avatar");
@@ -236,7 +234,7 @@ public class MainProfileFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         if(requestCode == RESULT_EDIT_USER) {
-            loadUserInfo(); //TODO: not updated
+            loadUserInfo();
         }
 
         if (requestCode == RESULT_LOAD_IMAGE && data != null) {
@@ -298,12 +296,17 @@ public class MainProfileFragment extends Fragment {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void displayUserInfo(User user) {
-        byte[] image = Base64.getDecoder().decode(user.getAvatar());
-        Log.i("avatar", user.getAvatar());
-        userImageView.setImageBitmap(BitmapFactory.decodeByteArray(image, 0, image.length));
-        Log.i("AAAAAAAAAA", user.getFirstName());
-        nameTextView.setText(user.getFirstName());
-        lastNameTextView.setText(user.getLastName());
+        if(user.getAvatar() != null) {
+            byte[] image = Base64.getDecoder().decode(user.getAvatar());
+            Log.i("avatar", user.getAvatar());
+            userImageView.setImageBitmap(BitmapFactory.decodeByteArray(image, 0, image.length));
+        }
+        if(user.getFirstName() != null) {
+            nameTextView.setText(user.getFirstName());
+        }
+        if(user.getLastName() != null) {
+            lastNameTextView.setText(user.getLastName());
+        }
 //        descriptionTextView.setText(user.getDescription());
 //        locationTextView.setText(user.getLocation());
 
