@@ -49,17 +49,17 @@ public class Api {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.isSuccessful()) {
-                    //Log.i("sucsess", "sucsess");
+                    Log.i("sucsess", "sucsess");
                     User user = response.body();
                     onUserLoaded.accept(user);
                 } else {
-                    Log.i("eeeerrror", "error1");
+                    Log.i("error", "error1 to load user");
                 }
             }
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
-                Log.i("eeeerrror", "error2");
+                Log.i("error", "error2 to load user");
                 t.printStackTrace();
             }
         });
@@ -240,12 +240,13 @@ public class Api {
                         Log.i("error", "response body is null");
                     }
                 } else {
-                    Log.i("error", "error");
+                    Log.i("error", "error load posts1");
                 }
             }
 
             @Override
             public void onFailure(Call<List<PostCreateRequest>> call, Throwable t) {
+                Log.i("error", "error load posts2");
                 t.printStackTrace();
             }
         });

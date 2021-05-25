@@ -35,8 +35,8 @@ public class Marker implements Parcelable {
         latLng = new LatLng(m.getLatitude(), m.getLongitude());
         photos = new ArrayList<>();
         if (m.getPhotos() != null) {
-            for (PhotoCreateRequest p : m.getPhotos()) {
-                byte[] image = Base64.getDecoder().decode(p.getPhoto());
+            for (String p : m.getPhotos()) {
+                byte[] image = Base64.getDecoder().decode(p);
                 photos.add(BitmapFactory.decodeByteArray(image, 0, image.length));
             }
         }

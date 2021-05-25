@@ -109,7 +109,6 @@ public class MainProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.i("email", email);
         view = inflater.inflate(R.layout.fragment_profile_main, container, false);
         userImageView = view.findViewById(R.id.user_image_view);
         nameTextView = view.findViewById(R.id.user_name_text_view);

@@ -112,6 +112,15 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         notifyDataSetChanged();
     }
 
+    public void del() {
+        for(Post post : postsList){
+            new Api().deletePost(post.getId());
+            delItem(post);
+        }
+        postsList.clear();
+        notifyDataSetChanged();
+    }
+
 
     private class LoadingViewHolder extends RecyclerView.ViewHolder {
         ProgressBar progressBar;
@@ -185,7 +194,6 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
             delete.setOnClickListener(v -> {
                 if (fromProfile) {
-                    Log.i("idPost", post.getId().toString());
                     new Api().deletePost(post.getId());
                     delItem(post);
                 }
