@@ -9,14 +9,15 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.os.Build;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -52,12 +53,12 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private final Fragment parent;
     private final View parentView;
+    private final boolean fromProfile;
 
-    private List<Post> postList = new ArrayList<>();
-
-    public PostAdapter(Fragment profileFragment, View view) {
-        parent = profileFragment;
+    public PostAdapter(Fragment parent, View view, boolean fromProfile) {
+        this.parent = parent;
         parentView = view;
+        this.fromProfile = fromProfile;
     }
 
     @Override
@@ -106,6 +107,11 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         notifyDataSetChanged();
     }
 
+    public void delItem(Post post) {
+        postsList.remove(post);
+        notifyDataSetChanged();
+    }
+
 
     private class LoadingViewHolder extends RecyclerView.ViewHolder {
         ProgressBar progressBar;
@@ -117,15 +123,16 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     class PostViewHolder extends RecyclerView.ViewHolder {
-        private ImageView userImageView;
-        private TextView nameTextView;
-        private TextView nickTextView;
-        private TextView creationDateTextView;
-        private TextView contentTextView;
-        private ImageView postImageView;
-        private TextView repostsTextView;
-        private TextView likesTextView;
-        private LikeButton heartButton;
+        private final ImageView userImageView;
+        private final TextView nameTextView;
+        private final TextView nickTextView;
+        private final TextView creationDateTextView;
+        private final TextView contentTextView;
+        private final ImageView postImageView;
+        private final TextView repostsTextView;
+        private final TextView likesTextView;
+        private final LikeButton heartButton;
+        private final ImageButton delete;
 
         public PostViewHolder(View itemView) {
             super(itemView);
@@ -138,14 +145,13 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             repostsTextView = itemView.findViewById(R.id.reposts_text_view);
             likesTextView = itemView.findViewById(R.id.likes_text_view);
             heartButton = itemView.findViewById(R.id.heart_button);
+            delete = itemView.findViewById(R.id.cross);
         }
 
 
         @RequiresApi(api = Build.VERSION_CODES.O)
         public void bind(Post post) {
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(parent.getActivity());
-            final String email = preferences.getString("user_email", "");
-            new Api().getUser(email, user -> {
+            new Api().getUserByID(post.getUser(), user -> {
                 nameTextView.setText(user.getFirstName());
                 nickTextView.setText(user.getLastName());
                 if (user.getAvatar() != null) {
@@ -170,6 +176,18 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     long count = Long.parseLong(likesTextView.getText().toString());
                     String text = Long.toString(count - 1);
                     likesTextView.setText(text);
+                }
+            });
+
+            if (fromProfile) {
+                delete.setVisibility(View.VISIBLE);
+            }
+
+            delete.setOnClickListener(v -> {
+                if (fromProfile) {
+                    Log.i("idPost", post.getId().toString());
+                    new Api().deletePost(post.getId());
+                    delItem(post);
                 }
             });
 

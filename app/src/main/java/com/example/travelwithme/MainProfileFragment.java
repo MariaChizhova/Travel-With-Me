@@ -161,13 +161,17 @@ public class MainProfileFragment extends Fragment {
     }
 
     private void loadPosts(long userId) {
-        new Api().getPosts(userId, posts -> postAdapter.setItems(posts));
+        new Api().getPosts(userId, posts -> {
+            postAdapter.setItems(posts);
+            progressDialog.dismiss();
+            view.setVisibility(View.VISIBLE);
+        });
     }
 
     private void initRecyclerView() {
         postsRecyclerView = view.findViewById(R.id.posts_recycler_view);
         postsRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        postAdapter = new PostAdapter(this, view);
+        postAdapter = new PostAdapter(this, view, true);
         postsRecyclerView.setAdapter(postAdapter);
     }
 
@@ -222,8 +226,6 @@ public class MainProfileFragment extends Fragment {
         new Api().getUser(email, user -> {
             loadPosts(user.getUserID());
             displayUserInfo(user);
-            progressDialog.dismiss();
-            view.setVisibility(View.VISIBLE);
         });
     }
 
@@ -233,7 +235,7 @@ public class MainProfileFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == RESULT_EDIT_USER) {
-            loadUserInfo();
+            new Api().getUser(email, this::displayUserInfo);
         }
 
         if (requestCode == RESULT_LOAD_IMAGE && data != null) {

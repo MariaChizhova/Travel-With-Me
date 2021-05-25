@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                            selectedFragment).commit();
+                        selectedFragment).commit();
 
                 return true;
             };
@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
 
-    private void addUser(@NotNull String email){
+    private void addUser(@NotNull String email) {
         Gson gson = new GsonBuilder()
                 .setLenient()
                 .create();

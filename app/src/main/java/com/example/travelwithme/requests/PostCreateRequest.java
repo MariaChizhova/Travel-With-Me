@@ -17,19 +17,22 @@ import java.util.List;
 
 public class PostCreateRequest {
 
+    private final Long postId;
     private final Long authorId;
     private final String date;
     private final String description;
     private final String picture;
+    private final Long numberLikes;
 
     private final List<MarkerCreateRequest> markers;
 
-
     @RequiresApi(api = Build.VERSION_CODES.O)
     public PostCreateRequest(Post post) {
+        this.postId = post.getId();
         this.authorId = post.getUser();
         this.date = post.getCreationDate();
         this.description = post.getText();
+        this.numberLikes = post.getFavouriteCount();
 
         Bitmap image = post.getImage();
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -46,11 +49,15 @@ public class PostCreateRequest {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public Post getPost(){
+    public Post getPost() {
         MapData mapData = new MapData(markers);
         byte[] image = Base64.getDecoder().decode(picture);
-        return new Post(authorId, 1L, date, description, 1L,
+        return new Post(authorId, postId, date, description, numberLikes,
                 BitmapFactory.decodeByteArray(image, 0, image.length), mapData);
+    }
+
+    public Long getPostId() {
+        return postId;
     }
 
     public Long getAuthorId() {
@@ -67,6 +74,10 @@ public class PostCreateRequest {
 
     public String getPicture() {
         return picture;
+    }
+
+    public Long getNumberLikes() {
+        return numberLikes;
     }
 
     public List<MarkerCreateRequest> getMarkers() {

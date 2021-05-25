@@ -34,7 +34,7 @@ public class Marker implements Parcelable {
         description = m.getDescription();
         latLng = new LatLng(m.getLatitude(), m.getLongitude());
         photos = new ArrayList<>();
-        if(m.getPhotos() != null) {
+        if (m.getPhotos() != null) {
             for (PhotoCreateRequest p : m.getPhotos()) {
                 byte[] image = Base64.getDecoder().decode(p.getPhoto());
                 photos.add(BitmapFactory.decodeByteArray(image, 0, image.length));
@@ -70,7 +70,7 @@ public class Marker implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(name);
         dest.writeString(description);
-        dest.writeParcelable(latLng,flags);
+        dest.writeParcelable(latLng, flags);
         dest.writeTypedList(photos);
     }
 

@@ -66,7 +66,7 @@ public class FeedFragment extends Fragment {
     private void initRecyclerView() {
         postsRecyclerView = view.findViewById(R.id.posts_recycler_view_feed);
         postsRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        postAdapter = new PostAdapter(this, view);
+        postAdapter = new PostAdapter(this, view, false);
         postsRecyclerView.setAdapter(postAdapter);
     }
 }

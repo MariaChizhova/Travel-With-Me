@@ -188,7 +188,7 @@ public class MapActivity extends AppCompatActivity implements
             paint.setStyle(Paint.Style.STROKE);
             Path path = new Path();
             path.moveTo(10, image.get(0).getHeight() + 10);
-            path.lineTo(((float) image.get(0).getWidth() + 20)/2, image.get(0).getHeight() + 25);
+            path.lineTo(((float) image.get(0).getWidth() + 20) / 2, image.get(0).getHeight() + 25);
             path.lineTo(image.get(0).getWidth() + 10, image.get(0).getHeight() + 10);
             path.close();
             canvas.drawPath(path, paint);

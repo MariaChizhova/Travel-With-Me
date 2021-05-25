@@ -35,7 +35,7 @@ public class ViewingMapActivity extends AppCompatActivity implements OnMapReadyC
 
     private GoogleMap map;
     MapData mapData;
-    Map<Integer,ViewingMarkerDescription> description;
+    Map<Integer, ViewingMarkerDescription> description;
     LatLngBounds.Builder latLngBuilder;
 
     private static final int COLOR_BLACK_ARGB = 0xff0066ff;
@@ -106,7 +106,7 @@ public class ViewingMapActivity extends AppCompatActivity implements OnMapReadyC
         map.setOnMarkerClickListener(marker -> {
             Log.i("Click", "test");
             if (!description.containsKey(marker.hashCode())) {
-                description.put(marker.hashCode(),new ViewingMarkerDescription());
+                description.put(marker.hashCode(), new ViewingMarkerDescription());
             }
             Bundle bundle = new Bundle();
             int ind = mapData.getIndexOfMarker(marker);

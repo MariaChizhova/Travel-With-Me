@@ -64,7 +64,7 @@ public class MarkerDescription extends AppCompatDialogFragment {
             for (Bitmap i : image) {
                 MarkerDescription.imageAdapter.setItems(i);
             }
-        }else {
+        } else {
             image = new ArrayList<>();
         }
 

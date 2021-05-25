@@ -80,7 +80,7 @@ public class Post {
         result = 31 * result + id.hashCode();
         result = 31 * result + creationDate.hashCode();
         result = 31 * result + text.hashCode();
-       // result = 31 * result + repostCount.hashCode();
+        // result = 31 * result + repostCount.hashCode();
         result = 31 * result + likedCount.hashCode();
         result = 31 * result + (image != null ? image.hashCode() : 0);
         return result;

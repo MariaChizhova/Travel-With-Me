@@ -6,15 +6,6 @@
     android:padding="16dp">
 
 
-<!--    <ImageButton-->
-<!--        android:id="@+id/upload_profile_photo"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_gravity="bottom|end"-->
-<!--        android:background="@android:color/transparent"-->
-<!--        android:src="@drawable/ic_edit"-->
-<!--        android:onClick="editPhoto" />-->
-
     <EditText
         android:id="@+id/firstName"
         android:layout_width="match_parent"

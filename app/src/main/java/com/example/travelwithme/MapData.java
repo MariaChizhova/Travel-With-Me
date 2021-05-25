@@ -25,7 +25,7 @@ public class MapData implements Parcelable {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public MapData(List<MarkerCreateRequest> markers) {
         this.markers = new ArrayList<>();
-        if(markers != null) {
+        if (markers != null) {
             for (MarkerCreateRequest m : markers) {
                 Marker marker = new Marker(m);
                 this.markers.add(marker);
@@ -66,7 +66,7 @@ public class MapData implements Parcelable {
     public void addToMarkersDescription(int ind, String name, String comments, List<Bitmap> list) {
         markers.get(ind).description = comments;
         markers.get(ind).name = name;
-        for(Bitmap i : list) {
+        for (Bitmap i : list) {
             markers.get(ind).photos.add(i);
         }
     }

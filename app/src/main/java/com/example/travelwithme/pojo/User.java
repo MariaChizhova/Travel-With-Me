@@ -6,7 +6,7 @@ public class User {
     private final String lastName;
     private final String email;
     private final String avatar;
-//    private final String description;
+    //    private final String description;
 //    private final String location;
     private final int followersNumber;
     private final int followingsNumber;

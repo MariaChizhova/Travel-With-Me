@@ -6,6 +6,7 @@ import android.util.Log;
 import androidx.annotation.RequiresApi;
 
 import com.example.travelwithme.api.AddSubscribeApi;
+import com.example.travelwithme.api.DeletePostApi;
 import com.example.travelwithme.api.DeleteSubscribeApi;
 import com.example.travelwithme.api.ExistingSubscribeApi;
 import com.example.travelwithme.api.GetFollowersApi;
@@ -13,6 +14,7 @@ import com.example.travelwithme.api.GetFollowingsApi;
 import com.example.travelwithme.api.GetFollowingsPostsApi;
 import com.example.travelwithme.api.GetPostsApi;
 import com.example.travelwithme.api.GetUserApi;
+import com.example.travelwithme.api.GetUserByIDApi;
 import com.example.travelwithme.api.SearchUsersApi;
 import com.example.travelwithme.pojo.Post;
 import com.example.travelwithme.pojo.User;
@@ -48,6 +50,37 @@ public class Api {
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.isSuccessful()) {
                     //Log.i("sucsess", "sucsess");
+                    User user = response.body();
+                    onUserLoaded.accept(user);
+                } else {
+                    Log.i("eeeerrror", "error1");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                Log.i("eeeerrror", "error2");
+                t.printStackTrace();
+            }
+        });
+    }
+
+    public void getUserByID(long userID, Consumer<User> onUserLoaded) {
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://84.252.137.106:9090")
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+        GetUserByIDApi getUserApi = retrofit.create(GetUserByIDApi.class);
+        Call<User> call = getUserApi.getUser(userID);
+        call.enqueue(new Callback<User>() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.isSuccessful()) {
+                    Log.i("sucsess", "sucsess to load user by id");
                     User user = response.body();
                     onUserLoaded.accept(user);
                 } else {
@@ -152,6 +185,31 @@ public class Api {
         });
     }
 
+    public void deletePost(long postID) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://84.252.137.106:9090")
+                .build();
+        DeletePostApi deletePostApi = retrofit.create(DeletePostApi.class);
+        Call<Void> call = deletePostApi.deletePost(postID);
+        call.enqueue(new Callback<Void>() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    Log.i("sucsess", "sucsess delete post");
+                } else {
+                    Log.i("eeeerrror1", "error delete post");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.i("eeeerrror2", "error delete post");
+                t.printStackTrace();
+            }
+        });
+    }
+
     //TODO: add offset and count params
     public void getPosts(long userID, Consumer<Collection<Post>> onUserLoaded) {
         Collection<Post> lst = new ArrayList<>();
@@ -173,7 +231,7 @@ public class Api {
             @Override
             public void onResponse(Call<List<PostCreateRequest>> call, Response<List<PostCreateRequest>> response) {
                 if (response.isSuccessful()) {
-                    if(response.body() != null) {
+                    if (response.body() != null) {
                         for (PostCreateRequest postCreateRequest : response.body()) {
                             lst.add(postCreateRequest.getPost());
                         }
@@ -214,7 +272,7 @@ public class Api {
             @Override
             public void onResponse(Call<List<PostCreateRequest>> call, Response<List<PostCreateRequest>> response) {
                 if (response.isSuccessful()) {
-                    if(response.body() != null) {
+                    if (response.body() != null) {
                         for (PostCreateRequest postCreateRequest : response.body()) {
                             lst.add(postCreateRequest.getPost());
                         }
@@ -255,7 +313,7 @@ public class Api {
             @Override
             public void onResponse(Call<List<User>> call, Response<List<User>> response) {
                 if (response.isSuccessful()) {
-                    if(response.body() != null) {
+                    if (response.body() != null) {
                         lst.addAll(response.body());
                         onFollowersLoaded.accept(lst);
                     } else {
@@ -294,7 +352,7 @@ public class Api {
             @Override
             public void onResponse(Call<List<User>> call, Response<List<User>> response) {
                 if (response.isSuccessful()) {
-                    if(response.body() != null) {
+                    if (response.body() != null) {
                         lst.addAll(response.body());
                         onFollowingLoaded.accept(lst);
                     } else {
@@ -333,7 +391,7 @@ public class Api {
             @Override
             public void onResponse(Call<List<User>> call, Response<List<User>> response) {
                 if (response.isSuccessful()) {
-                    if(response.body() != null) {
+                    if (response.body() != null) {
                         lst.addAll(response.body());
                         onSearchResultsLoaded.accept(lst);
                     } else {

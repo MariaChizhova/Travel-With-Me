@@ -41,7 +41,7 @@ public class StaticMapActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_static_map);
         byte[] data = getIntent().getExtras().getByteArray("data");
-        Bitmap bmp = BitmapFactory.decodeByteArray(data,0,data.length);
+        Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
         ImageView image = findViewById(R.id.imageView);
         image.setImageBitmap(bmp);
 
