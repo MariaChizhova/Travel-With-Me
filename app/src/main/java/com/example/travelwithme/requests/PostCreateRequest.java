@@ -7,7 +7,7 @@ import android.os.Build;
 import androidx.annotation.RequiresApi;
 
 import com.example.travelwithme.MapData;
-import com.example.travelwithme.Marker;
+import com.example.travelwithme.MyMarker;
 import com.example.travelwithme.pojo.Post;
 
 import java.io.ByteArrayOutputStream;
@@ -38,12 +38,9 @@ public class PostCreateRequest {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         image.compress(Bitmap.CompressFormat.PNG, 100, stream);
         byte[] bytes = stream.toByteArray();
-//        if (!image.isRecycled()) {
-//            image.recycle();
-//        }
         this.picture = Base64.getEncoder().encodeToString(bytes);
         this.markers = new ArrayList<>();
-        for (Marker marker : post.getMapData().getMarkers()) {
+        for (MyMarker marker : post.getMapData().getMarkers()) {
             markers.add(new MarkerCreateRequest(marker));
         }
     }

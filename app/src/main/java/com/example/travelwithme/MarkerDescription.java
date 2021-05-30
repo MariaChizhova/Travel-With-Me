@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -95,7 +96,7 @@ public class MarkerDescription extends AppCompatDialogFragment {
             try {
                 InputStream inputStream = getContext().getContentResolver().openInputStream(imageUri);
                 Bitmap chosenImage = BitmapFactory.decodeStream(inputStream);
-                chosenImage = Bitmap.createScaledBitmap(chosenImage, 120, 120, false);
+                chosenImage = cropToSquare(Bitmap.createScaledBitmap(chosenImage, 120, 120, false));
                 image.add(chosenImage);
                 MarkerDescription.imageAdapter.setItems(chosenImage);
 
@@ -103,6 +104,19 @@ public class MarkerDescription extends AppCompatDialogFragment {
                 e.printStackTrace();
             }
         }
+    }
+
+
+    public static Bitmap cropToSquare(Bitmap bitmap){
+        int width  = bitmap.getWidth();
+        int height = bitmap.getHeight();
+        int newWidth = Math.min(height, width);
+        int newHeight = (height > width)? height - ( height - width) : height;
+        int cropW = (width - height) / 2;
+        cropW = Math.max(cropW, 0);
+        int cropH = (height - width) / 2;
+        cropH = Math.max(cropH, 0);
+        return Bitmap.createBitmap(bitmap, cropW, cropH, newWidth, newHeight);
     }
 
 }

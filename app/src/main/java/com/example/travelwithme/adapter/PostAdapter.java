@@ -103,7 +103,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 
     public void setItems(Collection<Post> posts) {
-        postsList.addAll(posts);
+        postsList.addAll(0, posts);
         notifyDataSetChanged();
     }
 
@@ -142,6 +142,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         private final TextView likesTextView;
         private final LikeButton heartButton;
         private final ImageButton delete;
+        private long postId;
 
         public PostViewHolder(View itemView) {
             super(itemView);
@@ -167,6 +168,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     byte[] image = Base64.getDecoder().decode(user.getAvatar());
                     userImageView.setImageBitmap(BitmapFactory.decodeByteArray(image, 0, image.length));
                 }
+                postId = post.getId();
             });
 
 
@@ -179,12 +181,16 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     long count = Long.parseLong(likesTextView.getText().toString());
                     String text = Long.toString(count + 1);
                     likesTextView.setText(text);
+
+                    new Api().incNumberLikes(postId);
                 }
 
                 public void unLiked(LikeButton heartButton) {
                     long count = Long.parseLong(likesTextView.getText().toString());
                     String text = Long.toString(count - 1);
                     likesTextView.setText(text);
+
+                    new Api().decNumberLikes(postId);
                 }
             });
 

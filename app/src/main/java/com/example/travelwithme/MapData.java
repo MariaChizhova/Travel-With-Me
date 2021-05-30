@@ -10,13 +10,12 @@ import androidx.annotation.RequiresApi;
 
 import com.example.travelwithme.requests.MarkerCreateRequest;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MapData implements Parcelable {
-    private final List<Marker> markers;
+    private final List<MyMarker> markers;
 
     public MapData() {
         markers = new ArrayList<>();
@@ -27,14 +26,14 @@ public class MapData implements Parcelable {
         this.markers = new ArrayList<>();
         if (markers != null) {
             for (MarkerCreateRequest m : markers) {
-                Marker marker = new Marker(m);
+                MyMarker marker = new MyMarker(m);
                 this.markers.add(marker);
             }
         }
     }
 
     protected MapData(Parcel in) {
-        markers = in.createTypedArrayList(Marker.CREATOR);
+        markers = in.createTypedArrayList(MyMarker.CREATOR);
     }
 
     public static final Creator<MapData> CREATOR = new Creator<MapData>() {
@@ -60,7 +59,7 @@ public class MapData implements Parcelable {
     }
 
     public void addToMarkers(LatLng latLng) {
-        markers.add(new Marker(latLng));
+        markers.add(new MyMarker(latLng));
     }
 
     public void addToMarkersDescription(int ind, String name, String comments, List<Bitmap> list) {
@@ -100,7 +99,7 @@ public class MapData implements Parcelable {
         return markers.get(ind).name;
     }
 
-    public List<Marker> getMarkers() {
+    public List<MyMarker> getMarkers() {
         return markers;
     }
 }

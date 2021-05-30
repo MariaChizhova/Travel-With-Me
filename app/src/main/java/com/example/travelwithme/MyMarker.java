@@ -9,27 +9,25 @@ import android.os.Parcelable;
 import androidx.annotation.RequiresApi;
 
 import com.example.travelwithme.requests.MarkerCreateRequest;
-import com.example.travelwithme.requests.PhotoCreateRequest;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
-public class Marker implements Parcelable {
+public class MyMarker implements Parcelable {
     public String name;
     public String description;
     public LatLng latLng;
     public List<Bitmap> photos;
 
-    public Marker(LatLng latLng) {
+    public MyMarker(LatLng latLng) {
         this.latLng = latLng;
         photos = new ArrayList<>();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public Marker(MarkerCreateRequest m) {
+    public MyMarker(MarkerCreateRequest m) {
         name = m.getName();
         description = m.getDescription();
         latLng = new LatLng(m.getLatitude(), m.getLongitude());
@@ -42,22 +40,22 @@ public class Marker implements Parcelable {
         }
     }
 
-    protected Marker(Parcel in) {
+    protected MyMarker(Parcel in) {
         name = in.readString();
         description = in.readString();
         latLng = in.readParcelable(LatLng.class.getClassLoader());
         photos = in.createTypedArrayList(Bitmap.CREATOR);
     }
 
-    public static final Creator<Marker> CREATOR = new Creator<Marker>() {
+    public static final Creator<MyMarker> CREATOR = new Creator<MyMarker>() {
         @Override
-        public Marker createFromParcel(Parcel in) {
-            return new Marker(in);
+        public MyMarker createFromParcel(Parcel in) {
+            return new MyMarker(in);
         }
 
         @Override
-        public Marker[] newArray(int size) {
-            return new Marker[size];
+        public MyMarker[] newArray(int size) {
+            return new MyMarker[size];
         }
     };
 

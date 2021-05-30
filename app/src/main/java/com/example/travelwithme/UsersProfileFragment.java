@@ -87,8 +87,8 @@ public class UsersProfileFragment extends Fragment {
                 isFollowingButton.setText(FOLLOW);
                 isFollowingButton.setBackgroundResource(R.drawable.unfollow_shape);
             } else {
-                api.getUser(email, user -> {
-                    new Api().addSubscribe(user.getUserID(), user.getUserID());
+                api.getUser(email, u -> {
+                    new Api().addSubscribe(user.getUserID(), u.getUserID());
                 });
                 isFollowingButton.setText(UNFOLLOW);
                 isFollowingButton.setBackgroundResource(R.drawable.follow_shape);

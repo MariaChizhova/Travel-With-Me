@@ -18,7 +18,6 @@ public class PhotoCreateRequest {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         image.compress(Bitmap.CompressFormat.JPEG, 100, stream);
         byte[] bytes = stream.toByteArray();
-        image.recycle();
         this.photo = Base64.getEncoder().encodeToString(bytes);
     }
 

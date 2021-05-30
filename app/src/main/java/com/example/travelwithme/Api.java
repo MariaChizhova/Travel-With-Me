@@ -6,6 +6,7 @@ import android.util.Log;
 import androidx.annotation.RequiresApi;
 
 import com.example.travelwithme.api.AddSubscribeApi;
+import com.example.travelwithme.api.DecPostNumberLikes;
 import com.example.travelwithme.api.DeletePostApi;
 import com.example.travelwithme.api.DeleteSubscribeApi;
 import com.example.travelwithme.api.ExistingSubscribeApi;
@@ -15,6 +16,7 @@ import com.example.travelwithme.api.GetFollowingsPostsApi;
 import com.example.travelwithme.api.GetPostsApi;
 import com.example.travelwithme.api.GetUserApi;
 import com.example.travelwithme.api.GetUserByIDApi;
+import com.example.travelwithme.api.IncPostNumberLikesApi;
 import com.example.travelwithme.api.SearchUsersApi;
 import com.example.travelwithme.pojo.Post;
 import com.example.travelwithme.pojo.User;
@@ -122,6 +124,56 @@ public class Api {
             @Override
             public void onFailure(Call<Boolean> call, Throwable t) {
                 Log.i("eeeerrror", "error existing subscribe");
+                t.printStackTrace();
+            }
+        });
+    }
+
+    public void incNumberLikes(long postID) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://84.252.137.106:9090")
+                .build();
+        IncPostNumberLikesApi incPostNumberLikesApi = retrofit.create(IncPostNumberLikesApi.class);
+        Call<Void> call = incPostNumberLikesApi.incNumberLikes(postID);
+        call.enqueue(new Callback<Void>() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    Log.i("sucsess", "sucsess inc number likes");
+                } else {
+                    Log.i("eeeerrror", "error inc number likes");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.i("eeeerrror", "error inc number likes");
+                t.printStackTrace();
+            }
+        });
+    }
+
+    public void decNumberLikes(long postID) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://84.252.137.106:9090")
+                .build();
+        DecPostNumberLikes decPostNumberLikes = retrofit.create(DecPostNumberLikes.class);
+        Call<Void> call = decPostNumberLikes.decNumberLikes(postID);
+        call.enqueue(new Callback<Void>() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    Log.i("sucsess", "sucsess dec number likes");
+                } else {
+                    Log.i("eeeerrror", "error dec number likes");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.i("eeeerrror", "error dec number likes");
                 t.printStackTrace();
             }
         });

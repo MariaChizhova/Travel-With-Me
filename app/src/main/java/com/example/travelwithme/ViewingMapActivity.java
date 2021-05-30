@@ -4,6 +4,11 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Path;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -14,9 +19,11 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.JointType;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -80,24 +87,15 @@ public class ViewingMapActivity extends AppCompatActivity implements OnMapReadyC
             MarkerOptions markerOptions = new MarkerOptions();
             markerOptions.position(mapData.getMarker(i));
             //markerOptions.title(mapData.getText(i));
-            map.addMarker(markerOptions);
+            Marker m = map.addMarker(markerOptions);
             latLngBuilder.include(mapData.getMarker(i));
+            addImageMarker(m, mapData.getImages(i));
         }
 
         for (int i = 0; i < mapData.sizeMarkers() - 1; i++) {
             showRoute(mapData.getMarker(i), mapData.getMarker(i + 1));
         }
 
-//        PolylineOptions line = new PolylineOptions();
-//        for (int i = 0; i < mapData.sizeWay(); i++) {
-//            line.add(mapData.getWay(i));
-//        }
-//        Polyline polyline = map.addPolyline(line);
-//        polyline.setStartCap(new RoundCap());
-//        polyline.setEndCap(new RoundCap());
-//        polyline.setWidth(POLYLINE_STROKE_WIDTH_PX);
-//        polyline.setColor(COLOR_BLACK_ARGB);
-//        polyline.setJointType(JointType.ROUND);
         int size = getResources().getDisplayMetrics().widthPixels;
         LatLngBounds latLngBounds = latLngBuilder.build();
         CameraUpdate track = CameraUpdateFactory.newLatLngBounds(latLngBounds, size, size, 25);
@@ -118,6 +116,28 @@ public class ViewingMapActivity extends AppCompatActivity implements OnMapReadyC
             return true;
         });
 
+    }
+
+    public void addImageMarker(Marker marker, List<Bitmap> images) {
+        if (images.size() > 0) {
+            Bitmap bmpWithBorder = Bitmap.createBitmap(images.get(0).getWidth() + 20, images.get(0).getHeight() + 30, images.get(0).getConfig());
+            Canvas canvas = new Canvas(bmpWithBorder);
+            canvas.drawBitmap(images.get(0), 10, 10, null);
+
+            Paint paint = new Paint();
+            paint.setAntiAlias(true);
+            paint.setColor(Color.BLACK);
+            paint.setStrokeWidth(5);
+            paint.setStyle(Paint.Style.STROKE);
+            Path path = new Path();
+            path.moveTo(10, images.get(0).getHeight() + 10);
+            path.lineTo(((float) images.get(0).getWidth() + 20) / 2, images.get(0).getHeight() + 25);
+            path.lineTo(images.get(0).getWidth() + 10, images.get(0).getHeight() + 10);
+            path.close();
+            canvas.drawPath(path, paint);
+
+            marker.setIcon(BitmapDescriptorFactory.fromBitmap(bmpWithBorder));
+        }
     }
 
 

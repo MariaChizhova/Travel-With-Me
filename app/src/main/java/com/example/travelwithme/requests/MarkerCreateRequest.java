@@ -6,7 +6,7 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
-import com.example.travelwithme.Marker;
+import com.example.travelwithme.MyMarker;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +23,7 @@ public class MarkerCreateRequest {
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public MarkerCreateRequest(Marker marker) {
+    public MarkerCreateRequest(MyMarker marker) {
         this.name = marker.getName();
         this.description = marker.getText();
         this.latitude = marker.getLatLng().latitude;

@@ -83,7 +83,7 @@ public class UsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
             Api api = new Api();
             api.getUser(email, user -> {
-                api.existingSubscribe(user.getUserID(), userId, isFollowing -> {
+                api.existingSubscribe(userId, user.getUserID(), isFollowing -> {
                     if (isFollowing) {
                         isFollowingButton.setText(UNFOLLOW);
                         isFollowingButton.setBackgroundResource(R.drawable.follow_shape);
@@ -97,13 +97,13 @@ public class UsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             isFollowingButton.setOnClickListener(v -> {
                 if (isFollowingButton.getText() == UNFOLLOW) {
                     api.getUser(email, user -> {
-                        new Api().deleteSubscribe(user.getUserID(), userId);
+                        new Api().deleteSubscribe(userId, user.getUserID());
                     });
                     isFollowingButton.setText(FOLLOW);
                     isFollowingButton.setBackgroundResource(R.drawable.unfollow_shape);
                 } else {
                     api.getUser(email, user -> {
-                        new Api().addSubscribe(user.getUserID(), userId);
+                        new Api().addSubscribe(userId, user.getUserID());
                     });
                     isFollowingButton.setText(UNFOLLOW);
                     isFollowingButton.setBackgroundResource(R.drawable.follow_shape);
