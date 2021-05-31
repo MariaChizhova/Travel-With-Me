@@ -20,7 +20,6 @@
         android:id="@+id/following_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/tabs"
-        android:paddingTop="50dp"/>
+        android:layout_below="@id/tabs" />
 
 </FrameLayout>

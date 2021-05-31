@@ -146,11 +146,10 @@ public class MainProfileFragment extends Fragment {
             BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.navigation_view);
             bottomNavigationView.setSelectedItemId(R.id.navigation_search);
         });
-        // TODO: redirect to followings
         final Button followingButton = view.findViewById(R.id.following_count_text_view);
         followingButton.setOnClickListener(v -> {
             SharedPreferences mSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            mSettings.edit().putInt("followers_index", 1).apply();
+            mSettings.edit().putInt("following_index", 1).apply();
             getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                     new Following()).commit();
             BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.navigation_view);
