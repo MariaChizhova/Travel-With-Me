@@ -70,7 +70,6 @@ public class MainProfileFragment extends Fragment {
     private View view;
     private long currentId = 1;
     boolean isLoading = false;
-    private long currentLike = 0;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
