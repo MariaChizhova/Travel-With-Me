@@ -45,6 +45,22 @@ public class SearchFragment extends Fragment {
         TabLayout tabLayout = view.findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
+        });
+
         Toolbar toolbar = view.findViewById(R.id.toolbar);
         Button searchButton = toolbar.findViewById(R.id.search_button);
         EditText searchEditText = toolbar.findViewById(R.id.search_edit_text);
@@ -72,6 +88,7 @@ public class SearchFragment extends Fragment {
         });
         return view;
     }
+
 
 }
 

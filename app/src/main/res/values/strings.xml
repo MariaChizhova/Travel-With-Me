@@ -54,4 +54,6 @@
     <string name="place_name">Place Name</string>
 
     <string name="search_hint">search</string>
+    <string name="search">Search</string>
+    <string name="input_name">Input name</string>
 </resources>

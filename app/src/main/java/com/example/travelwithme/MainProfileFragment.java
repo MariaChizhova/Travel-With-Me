@@ -70,7 +70,6 @@ public class MainProfileFragment extends Fragment {
     private View view;
     private long currentId = 1;
     boolean isLoading = false;
-    private long currentLike = 0;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -93,10 +92,6 @@ public class MainProfileFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        if (getArguments() != null) {
-//            mParam1 = getArguments().getString(ARG_PARAM1);
-//            mParam2 = getArguments().getString(ARG_PARAM2);
-//        }
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         email = preferences.getString("user_email", "");
         if (savedInstanceState == null) {
@@ -146,7 +141,6 @@ public class MainProfileFragment extends Fragment {
             BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.navigation_view);
             bottomNavigationView.setSelectedItemId(R.id.navigation_search);
         });
-        // TODO: redirect to followings
         final Button followingButton = view.findViewById(R.id.following_count_text_view);
         followingButton.setOnClickListener(v -> {
             SharedPreferences mSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());

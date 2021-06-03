@@ -1,11 +1,13 @@
 package com.example.travelwithme;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.travelwithme.api.EditUserApi;
@@ -38,6 +40,11 @@ public class SettingsProfileActivity extends AppCompatActivity {
         description = findViewById(R.id.description);
         location = findViewById(R.id.location);
         email = getIntent().getExtras().getString("email");
+        new Api().getUser(email, user -> {
+            firstName.setText(user.getFirstName());
+            lastName.setText(user.getLastName());
+            // TODO: add description and email
+        });
 
     }
 
