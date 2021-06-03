@@ -1,5 +1,6 @@
 package com.example.travelwithme;
 
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,11 +31,14 @@ public class MessagesFragment extends Fragment {
     private ChatsAdapter chatsAdapter;
     private View view;
     Collection<User> chatsList;
+    private static String email;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_messages, container, false);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        email = preferences.getString("user_email", "");
         initRecyclerView();
         loadChats();
         return view;
@@ -74,11 +79,20 @@ public class MessagesFragment extends Fragment {
         RecyclerView chatsRecyclerView = view.findViewById(R.id.chats_recycler_view);
         chatsRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         ChatsAdapter.OnChatClickListener onChatClickListener = user -> {
-            Fragment newFragment = new ChatFragment(user);
-            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_container, newFragment);
-            transaction.addToBackStack(null);
-            transaction.commit();
+            new Api().getUser(email, currentUser -> {
+                Long id1 = user.getUserID();
+                Long id2 = currentUser.getUserID();
+                if (id1 > id2) {
+                    Long tmp = id2;
+                    id1 = id2;
+                    id2 = tmp;
+                }
+                Fragment newFragment = new ChatFragment(id1.toString(), id2.toString());
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, newFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            });
         };
 
         SwipeController swipeController;
