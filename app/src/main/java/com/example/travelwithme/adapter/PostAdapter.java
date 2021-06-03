@@ -26,9 +26,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.travelwithme.Api;
+import com.example.travelwithme.MainProfileFragment;
 import com.example.travelwithme.UsersProfileFragment;
 import com.example.travelwithme.ViewingMapActivity;
 import com.like.LikeButton;
@@ -177,23 +179,31 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             contentTextView.setText(post.getText());
             //repostsTextView.setText(String.valueOf(post.getRepostCount()));
             likesTextView.setText(String.valueOf(post.getFavouriteCount()));
-            heartButton.setLiked(false);
-            heartButton.setOnLikeListener(new OnLikeListener() {
-                public void liked(LikeButton heartButton) {
-                    long count = Long.parseLong(likesTextView.getText().toString());
-                    String text = Long.toString(count + 1);
-                    likesTextView.setText(text);
 
-                    new Api().incNumberLikes(postId);
-                }
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(parent.getActivity());
+            final String email = preferences.getString("user_email", "");
 
-                public void unLiked(LikeButton heartButton) {
-                    long count = Long.parseLong(likesTextView.getText().toString());
-                    String text = Long.toString(count - 1);
-                    likesTextView.setText(text);
+            Api api = new Api();
+            api.getUser(email, user -> {
+                api.likeExists(postId, user.getUserID(), heartButton::setLiked);
 
-                    new Api().decNumberLikes(postId);
-                }
+                heartButton.setOnLikeListener(new OnLikeListener() {
+                    public void liked(LikeButton heartButton) {
+                        long count = Long.parseLong(likesTextView.getText().toString());
+                        String text = Long.toString(count + 1);
+                        likesTextView.setText(text);
+
+                        new Api().incNumberLikes(postId, user.getUserID());
+                    }
+
+                    public void unLiked(LikeButton heartButton) {
+                        long count = Long.parseLong(likesTextView.getText().toString());
+                        String text = Long.toString(count - 1);
+                        likesTextView.setText(text);
+
+                        new Api().decNumberLikes(postId, user.getUserID());
+                    }
+                });
             });
 
             if (fromProfile) {

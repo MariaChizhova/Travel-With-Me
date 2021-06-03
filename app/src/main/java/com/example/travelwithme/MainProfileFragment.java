@@ -1,6 +1,7 @@
 package com.example.travelwithme;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -73,12 +74,15 @@ public class MainProfileFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    ProgressDialog progressDialog;
+    private ProgressDialog progressDialog;
+    private User currentUser;
 
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public MainProfileFragment() {
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public static MainProfileFragment newInstance(String param1, String param2) {
         MainProfileFragment fragment = new MainProfileFragment();
         Bundle args = new Bundle();
@@ -94,9 +98,12 @@ public class MainProfileFragment extends Fragment {
         super.onCreate(savedInstanceState);
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         email = preferences.getString("user_email", "");
-        if (savedInstanceState == null) {
-            progressDialog = ProgressDialog.show(getActivity(), "", "Loading...");
-            loadUserInfo(); //TODO: load one time!!!
+
+        Gson gson = new Gson();
+        String json = preferences.getString("user", "");
+        User user = gson.fromJson(json, User.class);
+        if (user != null) {
+            currentUser = user;
         }
     }
 
@@ -150,13 +157,21 @@ public class MainProfileFragment extends Fragment {
             BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.navigation_view);
             bottomNavigationView.setSelectedItemId(R.id.navigation_search);
         });
+
+        if (currentUser != null) {
+            loadPosts(currentUser.getUserID());
+            displayUserInfo(currentUser);
+        } else {
+            progressDialog = ProgressDialog.show(getActivity(), "", "Loading...");
+            loadUserInfo();
+        }
+
         return view;
     }
 
     private void loadPosts(long userId) {
         new Api().getPosts(userId, posts -> {
             postAdapter.setItems(posts);
-            progressDialog.dismiss();
             view.setVisibility(View.VISIBLE);
         });
     }
@@ -216,9 +231,19 @@ public class MainProfileFragment extends Fragment {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void loadUserInfo() {
-        new Api().getUser(email, user -> {
-            loadPosts(user.getUserID());
-            displayUserInfo(user);
+        new Api().getUser(email, u -> {
+
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+            Gson gson = new Gson();
+            String json = gson.toJson(u);
+            preferences.edit().putString("user", json).apply();
+
+            if (progressDialog != null) {
+                progressDialog.dismiss();
+            }
+
+            loadPosts(u.getUserID());
+            displayUserInfo(u);
         });
     }
 

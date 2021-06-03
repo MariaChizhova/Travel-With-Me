@@ -17,6 +17,7 @@ import com.example.travelwithme.api.GetPostsApi;
 import com.example.travelwithme.api.GetUserApi;
 import com.example.travelwithme.api.GetUserByIDApi;
 import com.example.travelwithme.api.IncPostNumberLikesApi;
+import com.example.travelwithme.api.LikeExistsApi;
 import com.example.travelwithme.api.SearchUsersApi;
 import com.example.travelwithme.pojo.Post;
 import com.example.travelwithme.pojo.User;
@@ -129,12 +130,12 @@ public class Api {
         });
     }
 
-    public void incNumberLikes(long postID) {
+    public void incNumberLikes(long postID, long userID) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://84.252.137.106:9090")
                 .build();
         IncPostNumberLikesApi incPostNumberLikesApi = retrofit.create(IncPostNumberLikesApi.class);
-        Call<Void> call = incPostNumberLikesApi.incNumberLikes(postID);
+        Call<Void> call = incPostNumberLikesApi.incNumberLikes(postID, userID);
         call.enqueue(new Callback<Void>() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
@@ -154,12 +155,12 @@ public class Api {
         });
     }
 
-    public void decNumberLikes(long postID) {
+    public void decNumberLikes(long postID, long userID) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://84.252.137.106:9090")
                 .build();
         DecPostNumberLikes decPostNumberLikes = retrofit.create(DecPostNumberLikes.class);
-        Call<Void> call = decPostNumberLikes.decNumberLikes(postID);
+        Call<Void> call = decPostNumberLikes.decNumberLikes(postID, userID);
         call.enqueue(new Callback<Void>() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
@@ -174,6 +175,38 @@ public class Api {
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 Log.i("eeeerrror", "error dec number likes");
+                t.printStackTrace();
+            }
+        });
+    }
+
+    public void likeExists(long postID, long userID, Consumer<Boolean> onUserLoaded) {
+
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://84.252.137.106:9090")
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+
+        LikeExistsApi likeExistsApi = retrofit.create(LikeExistsApi.class);
+        Call<Boolean> call = likeExistsApi.likeExists(postID, userID);
+        call.enqueue(new Callback<Boolean>() {
+
+            @Override
+            public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                if (response.isSuccessful()) {
+                    onUserLoaded.accept(response.body());
+                } else {
+                    Log.i("error", "error likeExists");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Boolean> call, Throwable t) {
+                Log.i("error", "error likeExists");
                 t.printStackTrace();
             }
         });
