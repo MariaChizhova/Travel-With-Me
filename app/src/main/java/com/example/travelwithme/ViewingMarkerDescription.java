@@ -18,7 +18,7 @@ import java.util.List;
 
 public class ViewingMarkerDescription extends AppCompatDialogFragment {
 
-    View view;
+    private View view;
     private RecyclerView imageRecyclerView;
     public static ImageAdapter imageAdapter;
     public String comments;
