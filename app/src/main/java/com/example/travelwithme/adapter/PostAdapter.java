@@ -25,11 +25,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
-import androidx.preference.PreferenceManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.travelwithme.Api;
-import com.example.travelwithme.MainProfileFragment;
+import com.example.travelwithme.UsersProfileFragment;
 import com.example.travelwithme.ViewingMapActivity;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
@@ -39,6 +39,8 @@ import com.example.travelwithme.R;
 import com.example.travelwithme.pojo.Post;
 
 import org.jetbrains.annotations.NotNull;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -113,7 +115,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     public void del() {
-        for(Post post : postsList){
+        for (Post post : postsList) {
             new Api().deletePost(post.getId());
             delItem(post);
         }
@@ -216,6 +218,16 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 i.putExtra("mapData", post.getMapData());
                 parent.startActivity(i);
             });
+
+
+            CircleImageView circleImageView = (CircleImageView) itemView.findViewById(R.id.profile_image_view);
+            circleImageView.setOnClickListener(v -> new Api().getUserByID(post.getUser(), user -> {
+                Fragment newFragment = new UsersProfileFragment(user);
+                FragmentTransaction transaction = parent.getActivity().getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, newFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }));
         }
 
         private String getFormattedDate(String rawDate) {
