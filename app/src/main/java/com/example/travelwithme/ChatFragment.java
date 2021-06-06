@@ -76,7 +76,7 @@ public class ChatFragment extends Fragment {
         DatabaseReference ref2 = ref.child(DIALOGS_CHILD);
         DatabaseReference ref3 = ref2.child(userId1 + "_" + userId2);
 
-        DatabaseReference messagesRef = mDatabase.getReference().child(DIALOGS_CHILD).child("tmp").child(userId1 + "_" + userId2);
+        DatabaseReference messagesRef = mDatabase.getReference().child(DIALOGS_CHILD).child(userId1 + "_" + userId2);
         FirebaseRecyclerOptions<Message> options = new FirebaseRecyclerOptions.Builder<Message>().setQuery(messagesRef, Message.class).build();
         mFirebaseAdapter = new FirebaseRecyclerAdapter<Message, MessageViewHolder>(options) {
             @Override
@@ -102,7 +102,7 @@ public class ChatFragment extends Fragment {
         mBinding.messageEditText.addTextChangedListener(new MyButtonObserver(mBinding.sendButton));
 
         mBinding.sendButton.setOnClickListener(view -> {
-            onMessage(mBinding.messageEditText.getText().toString(), null, message -> mDatabase.getReference().child(DIALOGS_CHILD).child("tmp").child(userId1 + "_" + userId2).push().setValue(message));
+            onMessage(mBinding.messageEditText.getText().toString(), null, message -> mDatabase.getReference().child(DIALOGS_CHILD).child(userId1 + "_" + userId2).push().setValue(message));
             mBinding.messageEditText.setText("");
         });
         mBinding.addMessageImageView.setOnClickListener(view -> {
@@ -140,7 +140,7 @@ public class ChatFragment extends Fragment {
                 final Uri uri = data.getData();
                 Log.d(TAG, "Uri: " + uri.toString());
                 final FirebaseUser user = mFirebaseAuth.getCurrentUser();
-                onMessage(null, uri.toString(), tempMessage -> mDatabase.getReference().child(DIALOGS_CHILD).child("tmp").child(userId1 + "_" + userId2).push()
+                onMessage(null, uri.toString(), tempMessage -> mDatabase.getReference().child(DIALOGS_CHILD).child(userId1 + "_" + userId2).push()
                     .setValue(tempMessage, (databaseError, databaseReference) -> {
                         if (databaseError != null) {
                             Log.w(TAG, "Unable to write message to database.", databaseError.toException());
@@ -159,7 +159,7 @@ public class ChatFragment extends Fragment {
                 .putFile(uri)
                 .addOnSuccessListener((Activity) view.getContext(), taskSnapshot -> taskSnapshot.getMetadata().getReference().getDownloadUrl()
                         .addOnSuccessListener(uri1 -> {
-                            onMessage(null, uri1.toString(), message -> mDatabase.getReference().child(DIALOGS_CHILD).child("tmp").child(userId1 + "_" + userId2).child(key).setValue(message));
+                            onMessage(null, uri1.toString(), message -> mDatabase.getReference().child(DIALOGS_CHILD).child(userId1 + "_" + userId2).child(key).setValue(message));
 
                         }))
                 .addOnFailureListener((Activity) view.getContext(), e -> Log.w(TAG, "Image upload task was not successful.", e));
