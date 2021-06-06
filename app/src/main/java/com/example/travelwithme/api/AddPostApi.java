@@ -8,6 +8,6 @@ import retrofit2.Call;
 
 public interface AddPostApi {
     @POST("/add_post")
-    Call<Void> addPost(@Body PostCreateRequest body);
+    Call<Long> addPost(@Body PostCreateRequest body);
 }
 

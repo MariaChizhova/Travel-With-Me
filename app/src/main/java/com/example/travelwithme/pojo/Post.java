@@ -34,6 +34,10 @@ public class Post {
         return id;
     }
 
+    public void setId(Long newId) {
+        id = newId;
+    }
+
     public String getCreationDate() {
         return creationDate;
     }

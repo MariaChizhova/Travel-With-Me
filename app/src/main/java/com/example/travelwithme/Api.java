@@ -5,6 +5,7 @@ import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
+import com.example.travelwithme.api.AddPostApi;
 import com.example.travelwithme.api.AddSubscribeApi;
 import com.example.travelwithme.api.DecPostNumberLikes;
 import com.example.travelwithme.api.DeletePostApi;
@@ -37,6 +38,39 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Api {
+
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void addPost(Post newPost, Consumer<Long> onPostLoaded) {
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://84.252.137.106:9090")
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+        AddPostApi addPostApi = retrofit.create(AddPostApi.class);
+        PostCreateRequest postCreateRequest = new PostCreateRequest(newPost);
+        Call<Long> call = addPostApi.addPost(postCreateRequest);
+        call.enqueue(new Callback<Long>() {
+            @Override
+            public void onResponse(Call<Long> call, Response<Long> response) {
+                if (response.isSuccessful()) {
+                    Log.i("success", "sucsess");
+                    onPostLoaded.accept(response.body());
+                } else {
+                    Log.i("eeeerrror", "error1");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Long> call, Throwable t) {
+                t.printStackTrace();
+                Log.i("eeeerrror", "error2");
+            }
+        });
+    }
+
     public void getUser(String email, Consumer<User> onUserLoaded) {
         Gson gson = new GsonBuilder()
                 .setLenient()
