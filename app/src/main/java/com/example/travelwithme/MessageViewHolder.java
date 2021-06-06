@@ -1,18 +1,19 @@
 package com.example.travelwithme;
 
-import android.net.Uri;
+import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import androidx.annotation.NonNull;
+
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
+import java.util.Base64;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -32,6 +33,7 @@ public class MessageViewHolder extends RecyclerView.ViewHolder {
         messengerImageView = (CircleImageView) itemView.findViewById(R.id.messengerImageView);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void bindMessage(Message message) {
         if (message.getText() != null) {
             messageTextView.setText(message.getText());
@@ -42,27 +44,24 @@ public class MessageViewHolder extends RecyclerView.ViewHolder {
             if (imageUrl.startsWith("gs://")) {
                 StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(imageUrl);
                 storageReference.getDownloadUrl()
-                        .addOnSuccessListener(new OnSuccessListener<Uri>() {
-                            @Override
-                            public void onSuccess(Uri uri) {
-                                String downloadUrl = uri.toString();
-                                Glide
-                                        .with(messageImageView.getContext())
-                                        .load(downloadUrl)
-                                        .into(messageImageView);
-                            }
+                        .addOnSuccessListener(uri -> {
+                            String downloadUrl = uri.toString();
+                            Glide
+                                    .with(messageImageView.getContext())
+                                    .load(downloadUrl)
+                                    .into(messageImageView);
                         })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.w(TAG, "Getting download url was not successful.", e);
-                            }
-                        });
+                        .addOnFailureListener(e -> Log.w(TAG, "Getting download url was not successful.", e));
             } else {
                 Glide.with(messageImageView.getContext()).load(message.getImageUrl()).into(messageImageView);
             }
             messageImageView.setVisibility(ImageView.VISIBLE);
             messageTextView.setVisibility(TextView.GONE);
+        }
+
+        if (message.getPhotoUrl() != null) {
+            byte[] image = Base64.getDecoder().decode(message.getPhotoUrl());
+            messengerImageView.setImageBitmap(BitmapFactory.decodeByteArray(image, 0, image.length));
         }
     }
 }

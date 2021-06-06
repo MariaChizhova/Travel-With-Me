@@ -3,17 +3,18 @@ package com.example.travelwithme;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import androidx.annotation.Nullable;
+
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.example.travelwithme.pojo.User;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,6 +27,8 @@ import com.example.travelwithme.databinding.FragmentChatsBinding;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.function.Consumer;
+
 import static android.app.Activity.RESULT_OK;
 
 public class ChatFragment extends Fragment {
@@ -35,19 +38,20 @@ public class ChatFragment extends Fragment {
     private FirebaseAuth mFirebaseAuth;
     private FirebaseRecyclerAdapter<Message, MessageViewHolder> mFirebaseAdapter;
     private View view;
-    private User user;
+    private String userId1 = "";
+    private String userId2 = "";
 
     private static final String TAG = "MainActivity";
-    public static final String MESSAGES_CHILD = "messages";
     public static final String ANONYMOUS = "anonymous";
     private static final int REQUEST_IMAGE = 2;
+    private String DIALOGS_CHILD = "dialogs";
 
+    public ChatFragment(String userId1, String userId2) {
+        this.userId1 = userId1;
+        this.userId2 = userId2;
+        System.out.println("ID1 " + userId1);
+        System.out.println("ID2 " + userId2);
 
-    public ChatFragment(User user) {
-        this.user = user;
-    }
-
-    public ChatFragment() {
         // Required empty public constructor
     }
 
@@ -59,24 +63,30 @@ public class ChatFragment extends Fragment {
             startActivity(new Intent(view.getContext(), SignUpActivity.class));
             getActivity().finish();
         }
-
     }
 
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         mBinding = FragmentChatsBinding.inflate(inflater, container, false);
         view = mBinding.getRoot();
         mDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference messagesRef = mDatabase.getReference().child(MESSAGES_CHILD);
+        DatabaseReference ref = mDatabase.getReference();
+        DatabaseReference ref2 = ref.child(DIALOGS_CHILD);
+        DatabaseReference ref3 = ref2.child(userId1 + "_" + userId2);
+
+        DatabaseReference messagesRef = mDatabase.getReference().child(DIALOGS_CHILD).child(userId1 + "_" + userId2);
         FirebaseRecyclerOptions<Message> options = new FirebaseRecyclerOptions.Builder<Message>().setQuery(messagesRef, Message.class).build();
         mFirebaseAdapter = new FirebaseRecyclerAdapter<Message, MessageViewHolder>(options) {
             @Override
             public @NotNull MessageViewHolder onCreateViewHolder(@NotNull ViewGroup viewGroup, int i) {
                 LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
+                System.err.println(111);
                 return new MessageViewHolder(inflater.inflate(R.layout.item_message, viewGroup, false));
             }
 
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             protected void onBindViewHolder(@NotNull MessageViewHolder viewHolder, int position, @NotNull Message message) {
                 mBinding.progressBar.setVisibility(ProgressBar.INVISIBLE);
@@ -90,9 +100,9 @@ public class ChatFragment extends Fragment {
         mBinding.messageRecyclerView.setAdapter(mFirebaseAdapter);
         mFirebaseAdapter.registerAdapterDataObserver(new MyScrollToBottomObserver(mBinding.messageRecyclerView, mFirebaseAdapter, mLinearLayoutManager));
         mBinding.messageEditText.addTextChangedListener(new MyButtonObserver(mBinding.sendButton));
+
         mBinding.sendButton.setOnClickListener(view -> {
-            Message message = new Message(mBinding.messageEditText.getText().toString(), getUserName(), getUserPhotoUrl(), null);
-            mDatabase.getReference().child(MESSAGES_CHILD).push().setValue(message);
+            onMessage(mBinding.messageEditText.getText().toString(), null, message -> mDatabase.getReference().child(DIALOGS_CHILD).child(userId1 + "_" + userId2).push().setValue(message));
             mBinding.messageEditText.setText("");
         });
         mBinding.addMessageImageView.setOnClickListener(view -> {
@@ -130,17 +140,16 @@ public class ChatFragment extends Fragment {
                 final Uri uri = data.getData();
                 Log.d(TAG, "Uri: " + uri.toString());
                 final FirebaseUser user = mFirebaseAuth.getCurrentUser();
-                Message tempMessage = new Message(null, getUserName(), getUserPhotoUrl(), uri.toString());
-                mDatabase.getReference().child(MESSAGES_CHILD).push()
-                        .setValue(tempMessage, (databaseError, databaseReference) -> {
-                            if (databaseError != null) {
-                                Log.w(TAG, "Unable to write message to database.", databaseError.toException());
-                                return;
-                            }
-                            String key = databaseReference.getKey();
-                            StorageReference storageReference = FirebaseStorage.getInstance().getReference(user.getUid()).child(key).child(uri.getLastPathSegment());
-                            putImageInStorage(storageReference, uri, key);
-                        });
+                onMessage(null, uri.toString(), tempMessage -> mDatabase.getReference().child(DIALOGS_CHILD).child(userId1 + "_" + userId2).push()
+                    .setValue(tempMessage, (databaseError, databaseReference) -> {
+                        if (databaseError != null) {
+                            Log.w(TAG, "Unable to write message to database.", databaseError.toException());
+                            return;
+                        }
+                        String key = databaseReference.getKey();
+                        StorageReference storageReference = FirebaseStorage.getInstance().getReference(user.getUid()).child(key).child(uri.getLastPathSegment());
+                        putImageInStorage(storageReference, uri, key);
+                    }));
             }
         }
     }
@@ -150,27 +159,27 @@ public class ChatFragment extends Fragment {
                 .putFile(uri)
                 .addOnSuccessListener((Activity) view.getContext(), taskSnapshot -> taskSnapshot.getMetadata().getReference().getDownloadUrl()
                         .addOnSuccessListener(uri1 -> {
-                            Message message = new Message(null, getUserName(), getUserPhotoUrl(), uri1.toString());
-                            mDatabase.getReference().child(MESSAGES_CHILD).child(key).setValue(message);
+                            onMessage(null, uri1.toString(), message -> mDatabase.getReference().child(DIALOGS_CHILD).child(userId1 + "_" + userId2).child(key).setValue(message));
+
                         }))
                 .addOnFailureListener((Activity) view.getContext(), e -> Log.w(TAG, "Image upload task was not successful.", e));
     }
 
-    @Nullable
-    private String getUserPhotoUrl() {
-        FirebaseUser user = mFirebaseAuth.getCurrentUser();
-        if (user != null && user.getPhotoUrl() != null) {
-            return user.getPhotoUrl().toString();
-        }
-        return null;
-    }
+    private void onMessage(String messageText, String imageUrl, Consumer<Message> onReceived) {
+        FirebaseUser currentUser = mFirebaseAuth.getCurrentUser();
 
-    private String getUserName() {
-        FirebaseUser user = mFirebaseAuth.getCurrentUser();
-        if (user != null) {
-            return user.getDisplayName();
-        }
-        return ANONYMOUS;
-    }
+        if (currentUser != null) {
+            new Api().getUser(currentUser.getEmail(), user -> {
+                String name = user.getFirstName();
+                String photo = user.getAvatar();
 
+                Message message = new Message(messageText, name, photo, imageUrl);
+                onReceived.accept(message);
+
+            });
+        } else {
+            Message message = new Message(messageText, null, null, imageUrl);
+            onReceived.accept(message);
+        }
+    }
 }
