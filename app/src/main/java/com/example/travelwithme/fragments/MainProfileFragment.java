@@ -1,4 +1,4 @@
-package com.example.travelwithme;
+package com.example.travelwithme.fragments;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -26,6 +26,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.travelwithme.Api;
+import com.example.travelwithme.Followers;
+import com.example.travelwithme.Following;
+import com.example.travelwithme.MapActivity;
+import com.example.travelwithme.R;
+import com.example.travelwithme.SettingsProfileActivity;
 import com.example.travelwithme.adapter.PostAdapter;
 import com.example.travelwithme.api.EditAvatarApi;
 import com.example.travelwithme.requests.AvatarEditRequest;

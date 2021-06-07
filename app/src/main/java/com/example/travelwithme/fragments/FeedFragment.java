@@ -1,4 +1,4 @@
-package com.example.travelwithme;
+package com.example.travelwithme.fragments;
 
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
@@ -16,6 +16,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
+import com.example.travelwithme.Api;
+import com.example.travelwithme.R;
 import com.example.travelwithme.adapter.PostAdapter;
 
 

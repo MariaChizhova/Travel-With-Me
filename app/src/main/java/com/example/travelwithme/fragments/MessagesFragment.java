@@ -1,4 +1,4 @@
-package com.example.travelwithme;
+package com.example.travelwithme.fragments;
 
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
@@ -15,13 +15,24 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.travelwithme.Api;
+import com.example.travelwithme.ChatFragment;
+import com.example.travelwithme.R;
+import com.example.travelwithme.SwipeController;
+import com.example.travelwithme.SwipeControllerActions;
 import com.example.travelwithme.adapter.ChatsAdapter;
 import com.example.travelwithme.pojo.User;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.concurrent.TimeUnit;
 
 public class MessagesFragment extends Fragment {
 
@@ -44,56 +55,54 @@ public class MessagesFragment extends Fragment {
         return view;
     }
 
-    private void loadChats() {
+   private void loadChats() {
         chatsList = getChats();
         chatsAdapter.setItems(chatsList);
+        //TODO:
     }
 
     private Collection<User> getChats() {
         Collection<User> lst = new ArrayList<>();
-        lst.add(new User(1L,
-                "https://www.w3schools.com/w3images/streetart2.jpg",
-                "Maria",
-                "@maria",
-                "maria@gmail.com",
-                100,
-                100));
-        lst.add(new User(2L,
-                "https://www.w3schools.com/w3images/streetart.jpg",
-                "Anna",
-                "@anna",
-                "anna@gmail.com",
-                110,
-                110));
-        lst.add(new User(3L,
-                "https://www.w3schools.com/w3images/streetart3.jpg",
-                "Katya",
-                "@katya",
-                "akatya@gmail.com",
-                10,
-                10));
+        new Api().getUser(email, user -> {
+            String userId = user.getUserID().toString();
+            FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
+            DatabaseReference messagesRef = mDatabase.getReference().child("dialogs");
+            messagesRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NotNull DataSnapshot snapshot) {
+                    for (DataSnapshot child : snapshot.getChildren()) {
+                        String result = child.getKey().replace(userId, "").replace("_", "");
+                        new Api().getUserByID(Long.parseLong(result), user1 -> {
+                            lst.add(user1);
+                            System.out.println(user1.getFirstName());
+                        });
+                    }
+                }
+                @Override
+                public void onCancelled(@NotNull DatabaseError error) {
+                }
+            });
+        });
         return lst;
     }
 
     private void initRecyclerView() {
         RecyclerView chatsRecyclerView = view.findViewById(R.id.chats_recycler_view);
         chatsRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        ChatsAdapter.OnChatClickListener onChatClickListener = user -> {
-            new Api().getUser(email, currentUser -> {
-                Long id1 = user.getUserID();
-                Long id2 = currentUser.getUserID();
-                if (id1 > id2) {
-                    Long tmp = id2;
-                    id1 = id2;
-                    id2 = tmp;
-                }
-                Fragment newFragment = new ChatFragment(id1.toString(), id2.toString());
-                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container, newFragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
-            });
-        };
+        ChatsAdapter.OnChatClickListener onChatClickListener = user -> new Api().getUser(email, currentUser -> {
+            Long id1 = user.getUserID();
+            Long id2 = currentUser.getUserID();
+            if (id1 > id2) {
+                Long tmp = id2;
+                id1 = id2;
+                id2 = tmp;
+            }
+            Fragment newFragment = new ChatFragment(id1.toString(), id2.toString());
+            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_container, newFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        });
 
         SwipeController swipeController;
         swipeController = new SwipeController(new SwipeControllerActions() {

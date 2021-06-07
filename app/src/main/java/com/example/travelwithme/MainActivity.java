@@ -5,15 +5,17 @@ import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.example.travelwithme.api.AddPostApi;
 import com.example.travelwithme.api.AddUserApi;
-import com.example.travelwithme.requests.PostCreateRequest;
+import com.example.travelwithme.fragments.FeedFragment;
+import com.example.travelwithme.fragments.MainProfileFragment;
+import com.example.travelwithme.fragments.MessagesFragment;
+import com.example.travelwithme.fragments.SearchFragment;
+import com.example.travelwithme.fragments.SettingsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;

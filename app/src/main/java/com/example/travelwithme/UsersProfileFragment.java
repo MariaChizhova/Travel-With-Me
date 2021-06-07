@@ -22,9 +22,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.travelwithme.adapter.PostAdapter;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.squareup.picasso.Picasso;
+import com.example.travelwithme.fragments.MainProfileFragment;
 import com.example.travelwithme.pojo.User;
 
 import java.util.Base64;

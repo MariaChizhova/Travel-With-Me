@@ -10,7 +10,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:id="@+id/messages_id"
-    tools:context="com.example.travelwithme.MessagesFragment">
+    tools:context="com.example.travelwithme.fragments.MessagesFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/messageRecyclerView"
