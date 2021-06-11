@@ -12,13 +12,9 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.ViewPager;
 
 import com.example.travelwithme.adapter.UsersAdapter;
-import com.example.travelwithme.pojo.User;
 
-import java.util.ArrayList;
-import java.util.Collection;
 
 public class Following extends Fragment {
     private UsersAdapter followingAdapter;

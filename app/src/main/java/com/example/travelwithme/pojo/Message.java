@@ -1,4 +1,4 @@
-package com.example.travelwithme;
+package com.example.travelwithme.pojo;
 
 public class Message {
 

@@ -18,7 +18,7 @@ enum ButtonsState {
     RIGHT_VISIBLE
 }
 
-class SwipeController extends Callback {
+public class SwipeController extends Callback {
 
     private boolean swipeBack = false;
     private ButtonsState buttonShowedState = ButtonsState.GONE;

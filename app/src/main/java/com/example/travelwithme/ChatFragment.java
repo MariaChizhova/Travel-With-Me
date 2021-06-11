@@ -15,6 +15,7 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.travelwithme.pojo.Message;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -38,13 +39,13 @@ public class ChatFragment extends Fragment {
     private FirebaseAuth mFirebaseAuth;
     private FirebaseRecyclerAdapter<Message, MessageViewHolder> mFirebaseAdapter;
     private View view;
-    private String userId1 = "";
-    private String userId2 = "";
+    private final String userId1;
+    private final String userId2;
 
     private static final String TAG = "MainActivity";
     public static final String ANONYMOUS = "anonymous";
     private static final int REQUEST_IMAGE = 2;
-    private String DIALOGS_CHILD = "dialogs";
+    private final String DIALOGS_CHILD = "dialogs";
 
     public ChatFragment(String userId1, String userId2) {
         this.userId1 = userId1;
@@ -72,10 +73,6 @@ public class ChatFragment extends Fragment {
         mBinding = FragmentChatsBinding.inflate(inflater, container, false);
         view = mBinding.getRoot();
         mDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference ref = mDatabase.getReference();
-        DatabaseReference ref2 = ref.child(DIALOGS_CHILD);
-        DatabaseReference ref3 = ref2.child(userId1 + "_" + userId2);
-
         DatabaseReference messagesRef = mDatabase.getReference().child(DIALOGS_CHILD).child(userId1 + "_" + userId2);
         FirebaseRecyclerOptions<Message> options = new FirebaseRecyclerOptions.Builder<Message>().setQuery(messagesRef, Message.class).build();
         mFirebaseAdapter = new FirebaseRecyclerAdapter<Message, MessageViewHolder>(options) {
@@ -158,10 +155,7 @@ public class ChatFragment extends Fragment {
         storageReference
                 .putFile(uri)
                 .addOnSuccessListener((Activity) view.getContext(), taskSnapshot -> taskSnapshot.getMetadata().getReference().getDownloadUrl()
-                        .addOnSuccessListener(uri1 -> {
-                            onMessage(null, uri1.toString(), message -> mDatabase.getReference().child(DIALOGS_CHILD).child(userId1 + "_" + userId2).child(key).setValue(message));
-
-                        }))
+                        .addOnSuccessListener(uri1 -> onMessage(null, uri1.toString(), message -> mDatabase.getReference().child(DIALOGS_CHILD).child(userId1 + "_" + userId2).child(key).setValue(message))))
                 .addOnFailureListener((Activity) view.getContext(), e -> Log.w(TAG, "Image upload task was not successful.", e));
     }
 
