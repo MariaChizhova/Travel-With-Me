@@ -14,11 +14,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.travelwithme.adapter.UsersAdapter;
-import com.example.travelwithme.pojo.User;
-import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
-import java.util.Collection;
 
 public class Followers extends Fragment {
     private UsersAdapter followersAdapter;

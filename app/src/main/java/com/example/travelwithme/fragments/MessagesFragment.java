@@ -21,19 +21,7 @@ import com.example.travelwithme.R;
 import com.example.travelwithme.SwipeController;
 import com.example.travelwithme.SwipeControllerActions;
 import com.example.travelwithme.adapter.ChatsAdapter;
-import com.example.travelwithme.pojo.User;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
 import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class MessagesFragment extends Fragment {
 
