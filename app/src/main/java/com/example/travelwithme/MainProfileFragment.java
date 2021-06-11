@@ -101,10 +101,7 @@ public class MainProfileFragment extends Fragment {
 
         Gson gson = new Gson();
         String json = preferences.getString("user", "");
-        User user = gson.fromJson(json, User.class);
-        if (user != null) {
-            currentUser = user;
-        }
+        currentUser = gson.fromJson(json, User.class);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
