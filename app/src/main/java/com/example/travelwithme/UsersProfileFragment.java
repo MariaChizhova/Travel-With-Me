@@ -112,13 +112,14 @@ public class UsersProfileFragment extends Fragment {
         writeMessage.setOnClickListener(v -> api.getUser(email, u -> {
             Long id1 = u.getUserID();
             Long id2 = user.getUserID();
-            System.out.println(id1);
-            System.out.println(id2);
+            System.out.println(u.getEmail() + " " + id1);
+            System.out.println(user.getEmail() + " " + id2);
             if (id1 > id2) {
-                Long tmp = id2;
+                Long tmp = id1;
                 id1 = id2;
                 id2 = tmp;
             }
+            api.addChat(id1, id2);
             Fragment newFragment = new ChatFragment(id1.toString(), id2.toString());
             FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.fragment_container, newFragment);

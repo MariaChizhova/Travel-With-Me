@@ -5,11 +5,13 @@ import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
+import com.example.travelwithme.api.AddChatApi;
 import com.example.travelwithme.api.AddSubscribeApi;
 import com.example.travelwithme.api.DecPostNumberLikes;
 import com.example.travelwithme.api.DeletePostApi;
 import com.example.travelwithme.api.DeleteSubscribeApi;
 import com.example.travelwithme.api.ExistingSubscribeApi;
+import com.example.travelwithme.api.GetChatsApi;
 import com.example.travelwithme.api.GetFollowersApi;
 import com.example.travelwithme.api.GetFollowingsApi;
 import com.example.travelwithme.api.GetFollowingsPostsApi;
@@ -179,6 +181,35 @@ public class Api {
         });
     }
 
+    public void addChat(long firstID, long secondID) {
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://84.252.137.106:9090")
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+        AddChatApi addChatApi = retrofit.create(AddChatApi.class);
+        Call<Void> call = addChatApi.addChat(firstID, secondID);
+        call.enqueue(new Callback<Void>() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    Log.i("sucsess", "sucsess add subscribe");
+                } else {
+                    Log.i("eeeerrror", "error add subscribe");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.i("eeeerrror", "error add subscribe");
+                t.printStackTrace();
+            }
+        });
+    }
+
     public void addSubscribe(long followingID, long followerID) {
         Gson gson = new GsonBuilder()
                 .setLenient()
@@ -303,6 +334,47 @@ public class Api {
             }
         });
     }
+
+
+    //TODO: add offset and count params
+    public void getChats(long userID, Consumer<Collection<User>> onChatsLoaded) {
+        Collection<User> lst = new ArrayList<>();
+
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://84.252.137.106:9090")
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+
+        GetChatsApi getChatsApi = retrofit.create(GetChatsApi.class);
+        Call<List<User>> call = getChatsApi.getChats(userID, 0L, 1000L);
+        call.enqueue(new Callback<List<User>>() {
+
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+                if (response.isSuccessful()) {
+                    if (response.body() != null) {
+                        lst.addAll(response.body());
+                        onChatsLoaded.accept(lst);
+                    } else {
+                        Log.i("error", "response body is null");
+                    }
+                } else {
+                    Log.i("error", "error");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<User>> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
+
 
     //TODO: add offset and count params
     public void getFollowingsPosts(long userID, Consumer<Collection<Post>> onUserLoaded) {

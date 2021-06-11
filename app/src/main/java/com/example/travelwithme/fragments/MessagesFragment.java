@@ -32,6 +32,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class MessagesFragment extends Fragment {
@@ -41,7 +42,6 @@ public class MessagesFragment extends Fragment {
 
     private ChatsAdapter chatsAdapter;
     private View view;
-    Collection<User> chatsList;
     private static String email;
 
     @Nullable
@@ -55,35 +55,12 @@ public class MessagesFragment extends Fragment {
         return view;
     }
 
-   private void loadChats() {
-        chatsList = getChats();
-        chatsAdapter.setItems(chatsList);
-        //TODO:
-    }
-
-    private Collection<User> getChats() {
-        Collection<User> lst = new ArrayList<>();
+    private void loadChats() {
         new Api().getUser(email, user -> {
-            String userId = user.getUserID().toString();
-            FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
-            DatabaseReference messagesRef = mDatabase.getReference().child("dialogs");
-            messagesRef.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NotNull DataSnapshot snapshot) {
-                    for (DataSnapshot child : snapshot.getChildren()) {
-                        String result = child.getKey().replace(userId, "").replace("_", "");
-                        new Api().getUserByID(Long.parseLong(result), user1 -> {
-                            lst.add(user1);
-                            System.out.println(user1.getFirstName());
-                        });
-                    }
-                }
-                @Override
-                public void onCancelled(@NotNull DatabaseError error) {
-                }
+            new Api().getChats(user.getUserID(), chats -> {
+                chatsAdapter.setItems(chats);
             });
         });
-        return lst;
     }
 
     private void initRecyclerView() {
@@ -93,7 +70,7 @@ public class MessagesFragment extends Fragment {
             Long id1 = user.getUserID();
             Long id2 = currentUser.getUserID();
             if (id1 > id2) {
-                Long tmp = id2;
+                Long tmp = id1;
                 id1 = id2;
                 id2 = tmp;
             }
