@@ -1,4 +1,4 @@
-package com.example.travelwithme;
+package com.example.travelwithme.map;
 
 import android.graphics.Bitmap;
 import android.os.Build;

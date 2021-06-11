@@ -1,4 +1,4 @@
-package com.example.travelwithme;
+package com.example.travelwithme.fragments;
 
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
@@ -21,8 +21,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.travelwithme.Api;
+import com.example.travelwithme.ChatFragment;
+import com.example.travelwithme.R;
 import com.example.travelwithme.adapter.PostAdapter;
-import com.example.travelwithme.fragments.MainProfileFragment;
 import com.example.travelwithme.pojo.User;
 
 import java.util.Base64;
@@ -138,7 +140,7 @@ public class UsersProfileFragment extends Fragment {
     }
 
     private void loadPosts(long userId) {
-        new Api().getPosts(userId, posts -> {
+        new Api().getPosts(userId, 0, 10, posts -> {
             postAdapter.setItems(posts);
             progressDialog.dismiss();
             view.setVisibility(View.VISIBLE);

@@ -1,4 +1,4 @@
-package com.example.travelwithme;
+package com.example.travelwithme.map;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,26 +9,18 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-import com.example.travelwithme.api.AddPostApi;
+import com.example.travelwithme.Api;
+import com.example.travelwithme.R;
 import com.example.travelwithme.fragments.MainProfileFragment;
+import com.example.travelwithme.map.MapData;
 import com.example.travelwithme.pojo.Post;
-import com.example.travelwithme.requests.PostCreateRequest;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import java.util.Collections;
 import java.util.Date;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class StaticMapActivity extends AppCompatActivity {
 

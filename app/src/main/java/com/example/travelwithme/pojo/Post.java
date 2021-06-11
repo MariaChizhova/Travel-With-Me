@@ -1,9 +1,8 @@
 package com.example.travelwithme.pojo;
 
 import android.graphics.Bitmap;
-import android.widget.ImageView;
 
-import com.example.travelwithme.MapData;
+import com.example.travelwithme.map.MapData;
 
 public class Post {
     private Long user;

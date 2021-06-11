@@ -6,7 +6,7 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
-import com.example.travelwithme.MyMarker;
+import com.example.travelwithme.map.MyMarker;
 
 import java.util.ArrayList;
 import java.util.List;

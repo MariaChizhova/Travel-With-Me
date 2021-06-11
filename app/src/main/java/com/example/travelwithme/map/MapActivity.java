@@ -1,4 +1,4 @@
-package com.example.travelwithme;
+package com.example.travelwithme.map;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,6 +19,8 @@ import android.util.Log;
 import android.widget.Button;
 import android.Manifest;
 
+import com.example.travelwithme.PermissionUtils;
+import com.example.travelwithme.R;
 import com.example.travelwithme.api.RouteApi;
 import com.example.travelwithme.api.StaticApi;
 import com.google.android.gms.common.api.Status;

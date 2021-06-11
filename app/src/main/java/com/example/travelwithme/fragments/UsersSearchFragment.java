@@ -1,4 +1,4 @@
-package com.example.travelwithme;
+package com.example.travelwithme.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,6 +11,8 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.travelwithme.Api;
+import com.example.travelwithme.R;
 import com.example.travelwithme.adapter.UsersAdapter;
 
 

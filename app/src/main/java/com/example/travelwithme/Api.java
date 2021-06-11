@@ -359,8 +359,7 @@ public class Api {
         });
     }
 
-    //TODO: add offset and count params
-    public void getPosts(long userID, Consumer<Collection<Post>> onUserLoaded) {
+    public void getPosts(long userID, long offset, long count, Consumer<Collection<Post>> onUserLoaded) {
         Collection<Post> lst = new ArrayList<>();
 
         Gson gson = new GsonBuilder()
@@ -373,7 +372,7 @@ public class Api {
                 .build();
 
         GetPostsApi getPostsApi = retrofit.create(GetPostsApi.class);
-        Call<List<PostCreateRequest>> call = getPostsApi.getPosts(userID, 0L, 1000L);
+        Call<List<PostCreateRequest>> call = getPostsApi.getPosts(userID, offset, count);
         call.enqueue(new Callback<List<PostCreateRequest>>() {
 
             @RequiresApi(api = Build.VERSION_CODES.O)

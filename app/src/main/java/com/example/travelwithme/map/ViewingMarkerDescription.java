@@ -1,4 +1,4 @@
-package com.example.travelwithme;
+package com.example.travelwithme.map;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.travelwithme.R;
 import com.example.travelwithme.adapter.ImageAdapter;
 
 import java.util.List;

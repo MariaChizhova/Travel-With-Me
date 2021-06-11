@@ -1,6 +1,5 @@
 package com.example.travelwithme.fragments;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -19,7 +18,6 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.travelwithme.R;
-import com.example.travelwithme.UsersSearchFragment;
 import com.example.travelwithme.adapter.ViewPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 

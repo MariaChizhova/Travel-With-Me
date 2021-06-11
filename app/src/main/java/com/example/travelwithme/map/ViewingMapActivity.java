@@ -1,4 +1,4 @@
-package com.example.travelwithme;
+package com.example.travelwithme.map;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 
+import com.example.travelwithme.R;
 import com.example.travelwithme.api.RouteApi;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;

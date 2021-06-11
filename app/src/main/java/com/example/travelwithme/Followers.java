@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.travelwithme.adapter.UsersAdapter;
+import com.example.travelwithme.fragments.UsersProfileFragment;
 
 public class Followers extends Fragment {
     private UsersAdapter followersAdapter;

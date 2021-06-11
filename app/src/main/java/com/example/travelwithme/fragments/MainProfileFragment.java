@@ -1,7 +1,6 @@
 package com.example.travelwithme.fragments;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -30,7 +29,7 @@ import android.widget.TextView;
 import com.example.travelwithme.Api;
 import com.example.travelwithme.Followers;
 import com.example.travelwithme.Following;
-import com.example.travelwithme.MapActivity;
+import com.example.travelwithme.map.MapActivity;
 import com.example.travelwithme.R;
 import com.example.travelwithme.SettingsProfileActivity;
 import com.example.travelwithme.adapter.PostAdapter;
@@ -123,6 +122,7 @@ public class MainProfileFragment extends Fragment {
         followingCountTextView = view.findViewById(R.id.following_count_text_view);
         followersCountTextView = view.findViewById(R.id.followers_count_text_view);
         initRecyclerView();
+        initScrollListener();
 
         userImageView.setOnClickListener(v -> {
             Log.i("Click", "avatar");
@@ -162,7 +162,7 @@ public class MainProfileFragment extends Fragment {
         });
 
         if (currentUser != null) {
-            loadPosts(currentUser.getUserID());
+            loadPosts(currentUser.getUserID(), 0, 10);
             displayUserInfo(currentUser);
         } else {
             progressDialog = ProgressDialog.show(getActivity(), "", "Loading...");
@@ -172,8 +172,8 @@ public class MainProfileFragment extends Fragment {
         return view;
     }
 
-    private void loadPosts(long userId) {
-        new Api().getPosts(userId, posts -> {
+    private void loadPosts(long userId, long offset, long count) {
+        new Api().getPosts(userId, offset, count, posts -> {
             postAdapter.setItems(posts);
             view.setVisibility(View.VISIBLE);
         });
@@ -211,23 +211,13 @@ public class MainProfileFragment extends Fragment {
         postAdapter.postsList.add(null);
         postAdapter.notifyItemInserted(postAdapter.postsList.size() - 1);
         Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                postAdapter.postsList.remove(postAdapter.postsList.size() - 1);
-                int scrollPosition = postAdapter.postsList.size();
-                postAdapter.notifyItemRemoved(scrollPosition);
-                int currentSize = scrollPosition;
-                int nextLimit = currentSize + 10;
-                while (currentSize - 1 < nextLimit) {
-                    //     Post p = new Post(getUser(), ++currentId, "Thu Apr 1 07:31:08 +0000 2021", "Описание поста",
-                    //           1L, ++currentLike, "https://www.w3schools.com/w3css/img_manarola.jpg");
-                    // postAdapter.postsList.add(p);
-                    currentSize++;
-                }
-                postAdapter.notifyDataSetChanged();
-                isLoading = false;
-            }
+        handler.postDelayed(() -> {
+            postAdapter.postsList.remove(postAdapter.postsList.size() - 1);
+            int scrollPosition = postAdapter.postsList.size();
+            postAdapter.notifyItemRemoved(scrollPosition);
+            loadPosts(currentUser.getUserID(), scrollPosition, 10);
+            postAdapter.notifyDataSetChanged();
+            isLoading = false;
         }, 1000);
     }
 
@@ -245,7 +235,7 @@ public class MainProfileFragment extends Fragment {
                 progressDialog.dismiss();
             }
 
-            loadPosts(u.getUserID());
+            loadPosts(u.getUserID(), 0 , 10);
             displayUserInfo(u);
         });
     }

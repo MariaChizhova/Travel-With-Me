@@ -20,9 +20,9 @@
         <activity
             android:name=".SettingsProfileActivity"
             android:label="@string/title_activity_settings_profile"></activity>
-        <activity android:name=".ViewingMapActivity" />
-        <activity android:name=".StaticMapActivity" />
-        <activity android:name=".MapActivity" />
+        <activity android:name=".map.ViewingMapActivity" />
+        <activity android:name=".map.StaticMapActivity" />
+        <activity android:name=".map.MapActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

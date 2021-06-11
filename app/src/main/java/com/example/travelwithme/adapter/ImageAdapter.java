@@ -8,7 +8,7 @@ import android.widget.ImageView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.travelwithme.MarkerDescription;
+import com.example.travelwithme.map.MarkerDescription;
 import com.example.travelwithme.R;
 
 import org.jetbrains.annotations.NotNull;

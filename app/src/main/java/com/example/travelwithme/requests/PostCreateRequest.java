@@ -6,8 +6,8 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
-import com.example.travelwithme.MapData;
-import com.example.travelwithme.MyMarker;
+import com.example.travelwithme.map.MapData;
+import com.example.travelwithme.map.MyMarker;
 import com.example.travelwithme.pojo.Post;
 
 import java.io.ByteArrayOutputStream;

@@ -1,6 +1,6 @@
 package com.example.travelwithme.api;
 
-import com.example.travelwithme.RouteResponse;
+import com.example.travelwithme.map.RouteResponse;
 
 import retrofit.Callback;
 import retrofit.http.GET;
