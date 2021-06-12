@@ -26,6 +26,7 @@ import com.example.travelwithme.ChatFragment;
 import com.example.travelwithme.R;
 import com.example.travelwithme.adapter.PostAdapter;
 import com.example.travelwithme.pojo.User;
+import com.google.gson.Gson;
 
 import java.util.Base64;
 
@@ -100,11 +101,27 @@ public class UsersProfileFragment extends Fragment {
 
         isFollowingButton.setOnClickListener(v -> {
             if (isFollowingButton.getText() == UNFOLLOW) {
-                api.getUser(email, u -> new Api().deleteSubscribe(user.getUserID(), u.getUserID()));
+                api.getUser(email, u -> {
+                    new Api().deleteSubscribe(user.getUserID(), u.getUserID());
+
+                    u.decFollowingsNumber();
+                    Gson gson = new Gson();
+                    String json = gson.toJson(u);
+                    preferences.edit().putString("user", json).apply();
+
+                });
                 isFollowingButton.setText(FOLLOW);
                 isFollowingButton.setBackgroundResource(R.drawable.unfollow_shape);
             } else {
-                api.getUser(email, u -> new Api().addSubscribe(user.getUserID(), u.getUserID()));
+                api.getUser(email, u -> {
+                    new Api().addSubscribe(user.getUserID(), u.getUserID());
+
+                    u.incFollowingsNumber();
+                    Gson gson = new Gson();
+                    String json = gson.toJson(u);
+                    preferences.edit().putString("user", json).apply();
+
+                });
                 isFollowingButton.setText(UNFOLLOW);
                 isFollowingButton.setBackgroundResource(R.drawable.follow_shape);
             }

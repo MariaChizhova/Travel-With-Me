@@ -8,8 +8,8 @@ public class User {
     private final String avatar;
     //    private final String description;
 //    private final String location;
-    private final int followersNumber;
-    private final int followingsNumber;
+    private int followersNumber;
+    private int followingsNumber;
 
     public User(Long userID, String avatar, String firstName, String lastName, String email, int followingsNumber, int followersNumber) {
         this.userID = userID;
@@ -41,6 +41,14 @@ public class User {
 
     public String getEmail() {
         return email;
+    }
+
+    public void decFollowingsNumber() {
+        followingsNumber--;
+    }
+
+    public void incFollowingsNumber() {
+        followingsNumber++;
     }
 //
 //    public String getDescription() {

@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.travelwithme.Api;
 import com.example.travelwithme.R;
 import com.example.travelwithme.pojo.User;
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
@@ -98,12 +99,24 @@ public class UsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 if (isFollowingButton.getText() == UNFOLLOW) {
                     api.getUser(email, user -> {
                         new Api().deleteSubscribe(userId, user.getUserID());
+
+                        user.decFollowingsNumber();
+                        Gson gson = new Gson();
+                        String json = gson.toJson(user);
+                        preferences.edit().putString("user", json).apply();
+
                     });
                     isFollowingButton.setText(FOLLOW);
                     isFollowingButton.setBackgroundResource(R.drawable.unfollow_shape);
                 } else {
                     api.getUser(email, user -> {
                         new Api().addSubscribe(userId, user.getUserID());
+
+                        user.incFollowingsNumber();
+                        Gson gson = new Gson();
+                        String json = gson.toJson(user);
+                        preferences.edit().putString("user", json).apply();
+
                     });
                     isFollowingButton.setText(UNFOLLOW);
                     isFollowingButton.setBackgroundResource(R.drawable.follow_shape);
