@@ -166,7 +166,7 @@ public class MainProfileFragment extends Fragment {
             displayUserInfo(currentUser);
         } else {
             progressDialog = ProgressDialog.show(getActivity(), "", "Loading...");
-            loadUserInfo(true);
+            loadUserInfo();
         }
 
         return view;
@@ -223,7 +223,7 @@ public class MainProfileFragment extends Fragment {
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void loadUserInfo(boolean loadingPost) {
+    public void loadUserInfo() {
         new Api().getUser(email, u -> {
 
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
@@ -235,10 +235,7 @@ public class MainProfileFragment extends Fragment {
                 progressDialog.dismiss();
             }
 
-            if (loadingPost) {
-                loadPosts(u.getUserID(), 0, 10);
-            }
-
+            loadPosts(u.getUserID(), 0, 10);
             displayUserInfo(u);
         });
     }
@@ -249,7 +246,8 @@ public class MainProfileFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == RESULT_EDIT_USER) {
-            loadUserInfo(false);
+            postAdapter.del();
+            loadUserInfo();
         }
 
         if (requestCode == RESULT_LOAD_IMAGE && data != null) {

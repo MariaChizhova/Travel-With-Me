@@ -6,7 +6,7 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface DecPostNumberLikes {
-    @POST("/delete_post")
+    @POST("/dec_post_number_likes")
     Call<Void> decNumberLikes(
             @Query("postID") Long postID,
             @Query("userID") Long userID

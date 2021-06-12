@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.os.Build;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -114,10 +115,6 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     public void del() {
-        for (Post post : postsList) {
-            new Api().deletePost(post.getId());
-            delItem(post);
-        }
         postsList.clear();
         notifyDataSetChanged();
     }
@@ -143,7 +140,6 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         private final TextView likesTextView;
         private final LikeButton heartButton;
         private final ImageButton delete;
-        private long postId;
 
         public PostViewHolder(View itemView) {
             super(itemView);
@@ -162,27 +158,16 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         @RequiresApi(api = Build.VERSION_CODES.O)
         public void bind(Post post) {
-            new Api().getUserByID(post.getUser(), user -> {
+            Api api = new Api();
+            api.getUserByID(post.getUser(), user -> {
                 nameTextView.setText(user.getFirstName());
                 nickTextView.setText(user.getLastName());
                 if (user.getAvatar() != null) {
                     byte[] image = Base64.getDecoder().decode(user.getAvatar());
                     userImageView.setImageBitmap(BitmapFactory.decodeByteArray(image, 0, image.length));
                 }
-                postId = post.getId();
-            });
 
-
-            contentTextView.setText(post.getText());
-            //repostsTextView.setText(String.valueOf(post.getRepostCount()));
-            likesTextView.setText(String.valueOf(post.getFavouriteCount()));
-
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(parent.getActivity());
-            final String email = preferences.getString("user_email", "");
-
-            Api api = new Api();
-            api.getUser(email, user -> {
-                api.likeExists(postId, user.getUserID(), heartButton::setLiked);
+                api.likeExists(post.getId(), user.getUserID(), heartButton::setLiked);
 
                 heartButton.setOnLikeListener(new OnLikeListener() {
                     public void liked(LikeButton heartButton) {
@@ -190,7 +175,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         String text = Long.toString(count + 1);
                         likesTextView.setText(text);
 
-                        new Api().incNumberLikes(postId, user.getUserID());
+                        api.incNumberLikes(post.getId(), user.getUserID());
                     }
 
                     public void unLiked(LikeButton heartButton) {
@@ -198,10 +183,15 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         String text = Long.toString(count - 1);
                         likesTextView.setText(text);
 
-                        new Api().decNumberLikes(postId, user.getUserID());
+                        api.decNumberLikes(post.getId(), user.getUserID());
                     }
                 });
             });
+
+
+            contentTextView.setText(post.getText());
+            //repostsTextView.setText(String.valueOf(post.getRepostCount()));
+            likesTextView.setText(String.valueOf(post.getFavouriteCount()));
 
             if (fromProfile) {
                 delete.setVisibility(View.VISIBLE);
