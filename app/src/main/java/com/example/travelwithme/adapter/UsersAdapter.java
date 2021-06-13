@@ -1,6 +1,9 @@
 package com.example.travelwithme.adapter;
 
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
+import android.os.Build;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,6 +26,7 @@ import com.squareup.picasso.Picasso;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Collection;
 import java.util.List;
 
@@ -39,6 +44,7 @@ public class UsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         this.parent = parent;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public @NotNull FriendViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.user_item_view, parent, false);
@@ -66,12 +72,12 @@ public class UsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         private TextView nickTextView;
         private long userId;
 
+        @RequiresApi(api = Build.VERSION_CODES.O)
         public FriendViewHolder(View itemView) {
             super(itemView);
             userImageView = itemView.findViewById(R.id.profile_image_view);
             nameTextView = itemView.findViewById(R.id.user_name_text_view);
             nickTextView = itemView.findViewById(R.id.user_nick_text_view);
-
             itemView.setOnClickListener(v -> {
                 User user = usersList.get(getLayoutPosition());
                 onUsersClickListener.onUserClick(user);
@@ -124,10 +130,14 @@ public class UsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             });
         }
 
+        @RequiresApi(api = Build.VERSION_CODES.O)
         public void bind(User user) {
             nameTextView.setText(user.getFirstName());
             nickTextView.setText(user.getLastName());
-            Picasso.get().load(user.getAvatar()).into(userImageView);
+            if (user.getAvatar() != null) {
+                byte[] image = Base64.getDecoder().decode(user.getAvatar());
+                userImageView.setImageBitmap(BitmapFactory.decodeByteArray(image, 0, image.length));
+            }
             userId = user.getUserID();
         }
     }

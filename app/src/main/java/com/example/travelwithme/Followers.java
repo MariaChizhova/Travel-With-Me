@@ -1,10 +1,12 @@
 package com.example.travelwithme;
 
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -16,10 +18,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.travelwithme.adapter.UsersAdapter;
 import com.example.travelwithme.fragments.UsersProfileFragment;
 
+import java.util.Base64;
+
 public class Followers extends Fragment {
     private UsersAdapter followersAdapter;
     private View view;
-    private long currentId = 1;
 
     @Nullable
     @Override
