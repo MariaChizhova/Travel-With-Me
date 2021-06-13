@@ -106,8 +106,10 @@ public class MainProfileFragment extends Fragment {
         email = preferences.getString("user_email", "");
 
         Gson gson = new Gson();
-        String json = preferences.getString("user", "");
-        currentUser = gson.fromJson(json, User.class);
+        String json = preferences.getString("user", null);
+        if (json != null) {
+            currentUser = gson.fromJson(json, User.class);
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -123,7 +125,6 @@ public class MainProfileFragment extends Fragment {
         followingCountTextView = view.findViewById(R.id.following_count_text_view);
         followersCountTextView = view.findViewById(R.id.followers_count_text_view);
         initRecyclerView();
-        initScrollListener();
 
         userImageView.setOnClickListener(v -> {
             Log.i("Click", "avatar");
@@ -168,6 +169,8 @@ public class MainProfileFragment extends Fragment {
         } else {
             loadUserInfo();
         }
+
+        initScrollListener();
 
         return view;
     }
