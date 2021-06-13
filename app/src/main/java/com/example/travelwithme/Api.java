@@ -443,7 +443,7 @@ public class Api {
 
 
     //TODO: add offset and count params
-    public void getFollowingsPosts(long userID, Consumer<Collection<Post>> onUserLoaded) {
+    public void getFollowingsPosts(long userID, long offset, long count, Consumer<Collection<Post>> onUserLoaded) {
         Collection<Post> lst = new ArrayList<>();
 
         Gson gson = new GsonBuilder()
@@ -456,7 +456,7 @@ public class Api {
                 .build();
 
         GetFollowingsPostsApi getFollowingsPostsApi = retrofit.create(GetFollowingsPostsApi.class);
-        Call<List<PostCreateRequest>> call = getFollowingsPostsApi.getFollowingsPosts(userID, 0L, 1000L);
+        Call<List<PostCreateRequest>> call = getFollowingsPostsApi.getFollowingsPosts(userID, offset, count);
         call.enqueue(new Callback<List<PostCreateRequest>>() {
 
             @RequiresApi(api = Build.VERSION_CODES.O)

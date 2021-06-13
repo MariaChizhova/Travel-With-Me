@@ -163,7 +163,7 @@ public class MainProfileFragment extends Fragment {
         });
 
         if (currentUser != null) {
-            loadPosts(currentUser.getUserID(), 0, 10);
+            loadPosts(currentUser.getUserID(), 0, 4);
             displayUserInfo(currentUser);
         } else {
             loadUserInfo();
@@ -230,7 +230,7 @@ public class MainProfileFragment extends Fragment {
             String json = gson.toJson(u);
             preferences.edit().putString("user", json).apply();
 
-            loadPosts(u.getUserID(), 0, 10);
+            loadPosts(u.getUserID(), 0, 4);
             displayUserInfo(u);
         });
     }
