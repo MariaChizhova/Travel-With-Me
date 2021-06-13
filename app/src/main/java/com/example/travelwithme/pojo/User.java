@@ -4,21 +4,22 @@ public class User {
     private final Long userID;
     private final String firstName;
     private final String lastName;
+    private final String description;
+    private final String location;
     private final String email;
     private final String avatar;
-    //    private final String description;
-//    private final String location;
-    private int followersNumber;
+    private final int followersNumber;
     private int followingsNumber;
 
-    public User(Long userID, String avatar, String firstName, String lastName, String email, int followingsNumber, int followersNumber) {
+    public User(Long userID, String avatar, String firstName, String lastName, String email,
+                String description, String location, int followingsNumber, int followersNumber) {
         this.userID = userID;
         this.avatar = avatar;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-//        this.description = description;
-//        this.location = location;
+        this.description = description;
+        this.location = location;
         this.followingsNumber = followingsNumber;
         this.followersNumber = followersNumber;
     }
@@ -50,14 +51,14 @@ public class User {
     public void incFollowingsNumber() {
         followingsNumber++;
     }
-//
-//    public String getDescription() {
-//        return description;
-//    }
-//
-//    public String getLocation() {
-//        return location;
-//    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getLocation() {
+        return location;
+    }
 
     public int getFollowingsNumber() {
         return followingsNumber;
@@ -81,12 +82,11 @@ public class User {
         if (avatar != null ? !avatar.equals(user.avatar) : user.avatar != null)
             return false;
         if (!firstName.equals(user.firstName)) return false;
-//        if (!lastName.equals(user.lastName)) return false;
-//        if (description != null ? !description.equals(user.description) : user.description != null) {
-//            return false;
-//        }
-//        return location != null ? location.equals(user.location) : user.location == null;
-        return !lastName.equals(user.lastName);
+        if (!lastName.equals(user.lastName)) return false;
+        if (description != null ? !description.equals(user.description) : user.description != null) {
+            return false;
+        }
+        return location != null ? location.equals(user.location) : user.location == null;
     }
 
     @Override
@@ -95,8 +95,8 @@ public class User {
         result = 31 * result + (avatar != null ? avatar.hashCode() : 0);
         result = 31 * result + firstName.hashCode();
         result = 31 * result + lastName.hashCode();
-//        result = 31 * result + (description != null ? description.hashCode() : 0);
-//        result = 31 * result + (location != null ? location.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (location != null ? location.hashCode() : 0);
         result = 31 * result + followingsNumber;
         result = 31 * result + followersNumber;
         return result;

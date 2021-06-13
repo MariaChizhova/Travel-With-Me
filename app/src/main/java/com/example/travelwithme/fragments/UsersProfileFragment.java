@@ -178,8 +178,8 @@ public class UsersProfileFragment extends Fragment {
         if (user.getLastName() != null) {
             lastNameTextView.setText(user.getLastName());
         }
-//        descriptionTextView.setText(user.getDescription());
-//        locationTextView.setText(user.getLocation());
+        descriptionTextView.setText(user.getDescription());
+        locationTextView.setText(user.getLocation());
 
         String followingCount = String.valueOf(user.getFollowingsNumber());
         followingCountTextView.setText(followingCount);

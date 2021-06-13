@@ -1,13 +1,9 @@
 package com.example.travelwithme;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
-
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.travelwithme.api.EditUserApi;
@@ -43,7 +39,8 @@ public class SettingsProfileActivity extends AppCompatActivity {
         new Api().getUser(email, user -> {
             firstName.setText(user.getFirstName());
             lastName.setText(user.getLastName());
-            // TODO: add description and email
+            description.setText(user.getDescription());
+            location.setText(user.getLocation());
         });
 
     }
@@ -61,6 +58,8 @@ public class SettingsProfileActivity extends AppCompatActivity {
             UserEditRequest userEditRequest = new UserEditRequest();
             userEditRequest.setFirstName(firstName.getText().toString());
             userEditRequest.setLastName(lastName.getText().toString());
+            userEditRequest.setDescription(description.getText().toString());
+            userEditRequest.setLocation(location.getText().toString());
             userEditRequest.setUserId(user.getUserID());
             Call<Void> call = editUserApi.editUser(userEditRequest);
             call.enqueue(new Callback<Void>() {
