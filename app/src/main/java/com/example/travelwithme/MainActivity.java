@@ -1,5 +1,6 @@
 package com.example.travelwithme;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
@@ -7,6 +8,7 @@ import androidx.preference.PreferenceManager;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -29,6 +31,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class MainActivity extends AppCompatActivity {
 
     // Firebase Authentication SDK
@@ -53,8 +56,6 @@ public class MainActivity extends AppCompatActivity {
         String email = mAuth.getCurrentUser().getEmail();
         preferences.edit().putString("user_email", email).apply();
 
-        String tmp = preferences.getString("user_email", "");
-        System.err.println(tmp);
         addUser(mAuth.getCurrentUser().getEmail());
 
         // set SearchFragment for opening application

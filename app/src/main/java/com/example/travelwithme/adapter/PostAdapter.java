@@ -164,24 +164,29 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     userImageView.setImageBitmap(BitmapFactory.decodeByteArray(image, 0, image.length));
                 }
 
-                api.likeExists(post.getId(), user.getUserID(), heartButton::setLiked);
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(parent.getContext());
+                String email = preferences.getString("user_email", "");
 
-                heartButton.setOnLikeListener(new OnLikeListener() {
-                    public void liked(LikeButton heartButton) {
-                        long count = Long.parseLong(likesTextView.getText().toString());
-                        String text = Long.toString(count + 1);
-                        likesTextView.setText(text);
+                api.getUser(email, u -> {
+                    api.likeExists(post.getId(), u.getUserID(), heartButton::setLiked);
 
-                        api.incNumberLikes(post.getId(), user.getUserID());
-                    }
+                    heartButton.setOnLikeListener(new OnLikeListener() {
+                        public void liked(LikeButton heartButton) {
+                            long count = Long.parseLong(likesTextView.getText().toString());
+                            String text = Long.toString(count + 1);
+                            likesTextView.setText(text);
 
-                    public void unLiked(LikeButton heartButton) {
-                        long count = Long.parseLong(likesTextView.getText().toString());
-                        String text = Long.toString(count - 1);
-                        likesTextView.setText(text);
+                            api.incNumberLikes(post.getId(), u.getUserID());
+                        }
 
-                        api.decNumberLikes(post.getId(), user.getUserID());
-                    }
+                        public void unLiked(LikeButton heartButton) {
+                            long count = Long.parseLong(likesTextView.getText().toString());
+                            String text = Long.toString(count - 1);
+                            likesTextView.setText(text);
+
+                            api.decNumberLikes(post.getId(), u.getUserID());
+                        }
+                    });
                 });
             });
 

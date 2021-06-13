@@ -94,5 +94,6 @@ dependencies {
 
     implementation 'androidx.appcompat:appcompat:1.2.0'
 
+    implementation 'com.adamstyrc.cookiecutter:cookie-cutter:1.0.2'
 
 }

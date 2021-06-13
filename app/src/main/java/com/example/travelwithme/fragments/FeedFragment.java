@@ -28,8 +28,7 @@ public class FeedFragment extends Fragment {
     private static String email;
     ProgressDialog progressDialog;
 
-    public FeedFragment() {
-    }
+    public FeedFragment() { }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -37,10 +36,8 @@ public class FeedFragment extends Fragment {
         super.onCreate(savedInstanceState);
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         email = preferences.getString("user_email", "");
-        if (savedInstanceState == null) {
-            progressDialog = ProgressDialog.show(getActivity(), "", "Loading...");
-            loadUserInfo(); //TODO: load one time!!!
-        }
+        progressDialog = ProgressDialog.show(getActivity(), "", "Loading...");
+        loadPosts();
     }
 
     @Override
@@ -51,19 +48,16 @@ public class FeedFragment extends Fragment {
         return view;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public void loadUserInfo() {
-        new Api().getUser(email, user -> {
-            loadPosts(user.getUserID());
-            progressDialog.dismiss();
-            view.setVisibility(View.VISIBLE);
+    private void loadPosts() {
+        Api api = new Api();
+        api.getUser(email, user -> {
+            api.getFollowingsPosts(user.getUserID(), 0, 5,  posts -> {
+                postAdapter.setItems(posts);
+                progressDialog.dismiss();
+                view.setVisibility(View.VISIBLE);
+            });
         });
     }
-
-    private void loadPosts(long userId) {
-        new Api().getFollowingsPosts(userId, posts -> postAdapter.setItems(posts));
-    }
-
 
     private void initRecyclerView() {
         postsRecyclerView = view.findViewById(R.id.posts_recycler_view_feed);

@@ -48,7 +48,6 @@ public class ViewingMapActivity extends AppCompatActivity implements OnMapReadyC
 
     private static final int COLOR_BLACK_ARGB = 0xff0066ff;
     private static final int POLYLINE_STROKE_WIDTH_PX = 10;
-    private final String KEY = "AIzaSyCCR3mC4nPmef7TeTzL49S8IKqkimIIqV8";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,10 +130,11 @@ public class ViewingMapActivity extends AppCompatActivity implements OnMapReadyC
             paint.setStrokeWidth(5);
             paint.setStyle(Paint.Style.STROKE);
             Path path = new Path();
+            int height = images.get(0).getHeight();
+            int width = images.get(0).getWidth();
             path.moveTo(10, images.get(0).getHeight() + 10);
-            path.lineTo(((float) images.get(0).getWidth() + 20) / 2, images.get(0).getHeight() + 25);
-            path.lineTo(images.get(0).getWidth() + 10, images.get(0).getHeight() + 10);
-            path.close();
+            path.cubicTo(10, height + 25, width / 2 + 5, height + 10, width / 2 + 5, height + 25);
+            path.cubicTo(width / 2 + 5, height + 10, width + 10, height + 25, width + 10, height + 10);
             canvas.drawPath(path, paint);
 
             marker.setIcon(BitmapDescriptorFactory.fromBitmap(bmpWithBorder));
@@ -152,7 +152,7 @@ public class ViewingMapActivity extends AppCompatActivity implements OnMapReadyC
         //Вызов запроса на маршрут (асинхрон)
         String from = "" + fromMarker.latitude + "," + fromMarker.longitude;
         String to = "" + toMarker.latitude + "," + toMarker.longitude;
-        routeService.getRoute(from, to, true, "ru", KEY, new Callback<RouteResponse>() {
+        routeService.getRoute(from, to, true, "ru", MapActivity.KEY, new Callback<RouteResponse>() {
             public void success(RouteResponse arg0, retrofit.client.Response arg1) {
                 //Если прошло успешно, то декодируем маршрут в точки LatLng
                 List<LatLng> mPoints = PolyUtil.decode(arg0.getPoints());

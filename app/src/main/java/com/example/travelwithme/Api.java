@@ -29,6 +29,7 @@ import com.example.travelwithme.requests.PostCreateRequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -62,7 +63,7 @@ public class Api {
                     Log.i("success", "sucsess");
                     onPostLoaded.accept(response.body());
                 } else {
-                    Log.i("eeeerrror", "error1");
+                    Log.i("eeeerrror", "error1 to add Post");
                 }
             }
 
@@ -442,7 +443,7 @@ public class Api {
 
 
     //TODO: add offset and count params
-    public void getFollowingsPosts(long userID, Consumer<Collection<Post>> onUserLoaded) {
+    public void getFollowingsPosts(long userID, long offset, long count, Consumer<Collection<Post>> onUserLoaded) {
         Collection<Post> lst = new ArrayList<>();
 
         Gson gson = new GsonBuilder()
@@ -455,7 +456,7 @@ public class Api {
                 .build();
 
         GetFollowingsPostsApi getFollowingsPostsApi = retrofit.create(GetFollowingsPostsApi.class);
-        Call<List<PostCreateRequest>> call = getFollowingsPostsApi.getFollowingsPosts(userID, 0L, 1000L);
+        Call<List<PostCreateRequest>> call = getFollowingsPostsApi.getFollowingsPosts(userID, offset, count);
         call.enqueue(new Callback<List<PostCreateRequest>>() {
 
             @RequiresApi(api = Build.VERSION_CODES.O)
