@@ -15,12 +15,15 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.travelwithme.AddChatFragment;
 import com.example.travelwithme.Api;
 import com.example.travelwithme.ChatFragment;
 import com.example.travelwithme.R;
 import com.example.travelwithme.SwipeController;
 import com.example.travelwithme.SwipeControllerActions;
 import com.example.travelwithme.adapter.ChatsAdapter;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import org.jetbrains.annotations.NotNull;
 
 public class MessagesFragment extends Fragment {
@@ -40,15 +43,19 @@ public class MessagesFragment extends Fragment {
         email = preferences.getString("user_email", "");
         initRecyclerView();
         loadChats();
+        FloatingActionButton fab = view.findViewById(R.id.fab);
+        fab.setOnClickListener(view -> {
+            Fragment newFragment = new AddChatFragment();
+            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_container, newFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        });
         return view;
     }
 
     private void loadChats() {
-        new Api().getUser(email, user -> {
-            new Api().getChats(user.getUserID(), chats -> {
-                chatsAdapter.setItems(chats);
-            });
-        });
+        new Api().getUser(email, user -> new Api().getChats(user.getUserID(), chats -> chatsAdapter.setItems(chats)));
     }
 
     private void initRecyclerView() {
@@ -88,7 +95,7 @@ public class MessagesFragment extends Fragment {
             }
         });
 
-        chatsAdapter = new ChatsAdapter(onChatClickListener, this);
+        chatsAdapter = new ChatsAdapter(onChatClickListener);
         chatsRecyclerView.setAdapter(chatsAdapter);
     }
 

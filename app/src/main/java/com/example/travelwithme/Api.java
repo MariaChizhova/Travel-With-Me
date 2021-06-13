@@ -482,8 +482,7 @@ public class Api {
         });
     }
 
-    //TODO: add offset and count params
-    public void getFollowers(long userID, Consumer<Collection<User>> onFollowersLoaded) {
+    public void getFollowers(long userID,  long offset, long count, Consumer<Collection<User>> onFollowersLoaded) {
         Collection<User> lst = new ArrayList<>();
 
         Gson gson = new GsonBuilder()
@@ -496,7 +495,7 @@ public class Api {
                 .build();
 
         GetFollowersApi getFollowersApi = retrofit.create(GetFollowersApi.class);
-        Call<List<User>> call = getFollowersApi.getFollowers(userID, 0L, 1000L);
+        Call<List<User>> call = getFollowersApi.getFollowers(userID, offset, count);
         call.enqueue(new Callback<List<User>>() {
 
             @RequiresApi(api = Build.VERSION_CODES.O)
@@ -521,8 +520,7 @@ public class Api {
         });
     }
 
-    //TODO: add offset and count params
-    public void getFollowing(long userID, Consumer<Collection<User>> onFollowingLoaded) {
+    public void getFollowing(long userID,  long offset, long count, Consumer<Collection<User>> onFollowingLoaded) {
         Collection<User> lst = new ArrayList<>();
 
         Gson gson = new GsonBuilder()
@@ -535,7 +533,7 @@ public class Api {
                 .build();
 
         GetFollowingsApi getFollowingsApi = retrofit.create(GetFollowingsApi.class);
-        Call<List<User>> call = getFollowingsApi.getFollowings(userID, 0L, 1000L);
+        Call<List<User>> call = getFollowingsApi.getFollowings(userID, offset, count);
         call.enqueue(new Callback<List<User>>() {
 
             @RequiresApi(api = Build.VERSION_CODES.O)
@@ -560,8 +558,7 @@ public class Api {
         });
     }
 
-    //TODO: add offset and count params
-    public void searchUsers(long myID, String inputText, Consumer<Collection<User>> onSearchResultsLoaded) {
+    public void searchUsers(long myID, String inputText, long offset, long count, Consumer<Collection<User>> onSearchResultsLoaded) {
         Collection<User> lst = new ArrayList<>();
 
         Gson gson = new GsonBuilder()
@@ -574,7 +571,7 @@ public class Api {
                 .build();
 
         SearchUsersApi searchUsersApi = retrofit.create(SearchUsersApi.class);
-        Call<List<User>> call = searchUsersApi.searchUsers(myID, inputText, 0L, 1000L);
+        Call<List<User>> call = searchUsersApi.searchUsers(myID, inputText, offset, count);
         call.enqueue(new Callback<List<User>>() {
 
             @RequiresApi(api = Build.VERSION_CODES.O)
