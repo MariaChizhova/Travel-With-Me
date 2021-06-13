@@ -97,7 +97,6 @@ public class MarkerDescription extends AppCompatDialogFragment {
             Uri imageUri = data.getData();
             try {
 
-                Point screenSize = ImageUtils.getScreenSize(getContext());
                 Bitmap scaledBitmap = ImageUtils.decodeUriToScaledBitmap(getContext(), imageUri, 120, 120);
                 image.add(scaledBitmap);
                 MarkerDescription.imageAdapter.setItems(scaledBitmap);

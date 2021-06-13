@@ -76,7 +76,7 @@ public class MapActivity extends AppCompatActivity implements
     Map<Integer, MarkerDescription> description;
     int currentDialog;
     Marker currentMarker;
-    private final String KEY = "";
+    public final static String KEY = "";
 
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
@@ -189,10 +189,11 @@ public class MapActivity extends AppCompatActivity implements
             paint.setStrokeWidth(5);
             paint.setStyle(Paint.Style.STROKE);
             Path path = new Path();
+            int height = image.get(0).getHeight();
+            int width = image.get(0).getWidth();
             path.moveTo(10, image.get(0).getHeight() + 10);
-            path.lineTo(((float) image.get(0).getWidth() + 20) / 2, image.get(0).getHeight() + 25);
-            path.lineTo(image.get(0).getWidth() + 10, image.get(0).getHeight() + 10);
-            path.close();
+            path.cubicTo(10, height + 25, width / 2 + 5, height + 10, width / 2 + 5, height + 25);
+            path.cubicTo(width / 2 + 5, height + 10, width + 10, height + 25, width + 10, height + 10);
             canvas.drawPath(path, paint);
 
             currentMarker.setIcon(BitmapDescriptorFactory.fromBitmap(bmpWithBorder));

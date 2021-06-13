@@ -29,6 +29,7 @@ import com.example.travelwithme.requests.PostCreateRequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -62,7 +63,7 @@ public class Api {
                     Log.i("success", "sucsess");
                     onPostLoaded.accept(response.body());
                 } else {
-                    Log.i("eeeerrror", "error1");
+                    Log.i("eeeerrror", "error1 to add Post");
                 }
             }
 
