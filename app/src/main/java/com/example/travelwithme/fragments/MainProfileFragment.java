@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -26,6 +27,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.adamstyrc.cookiecutter.ImageUtils;
 import com.example.travelwithme.Api;
 import com.example.travelwithme.Followers;
 import com.example.travelwithme.Following;
@@ -79,7 +81,6 @@ public class MainProfileFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private ProgressDialog progressDialog;
     private User currentUser;
 
 
@@ -165,7 +166,6 @@ public class MainProfileFragment extends Fragment {
             loadPosts(currentUser.getUserID(), 0, 10);
             displayUserInfo(currentUser);
         } else {
-            progressDialog = ProgressDialog.show(getActivity(), "", "Loading...");
             loadUserInfo();
         }
 
@@ -175,7 +175,6 @@ public class MainProfileFragment extends Fragment {
     private void loadPosts(long userId, long offset, long count) {
         new Api().getPosts(userId, offset, count, posts -> {
             postAdapter.setItems(posts);
-            view.setVisibility(View.VISIBLE);
         });
     }
 
@@ -231,10 +230,6 @@ public class MainProfileFragment extends Fragment {
             String json = gson.toJson(u);
             preferences.edit().putString("user", json).apply();
 
-            if (progressDialog != null) {
-                progressDialog.dismiss();
-            }
-
             loadPosts(u.getUserID(), 0, 10);
             displayUserInfo(u);
         });
@@ -253,13 +248,13 @@ public class MainProfileFragment extends Fragment {
         if (requestCode == RESULT_LOAD_IMAGE && data != null) {
             Uri imageUri = data.getData();
             try {
-                InputStream inputStream = getContext().getContentResolver().openInputStream(imageUri);
-                Bitmap chosenImage = BitmapFactory.decodeStream(inputStream);
-                chosenImage = Bitmap.createScaledBitmap(chosenImage, 400, 400, false);
-                userImageView.setImageBitmap(chosenImage);
+
+                Point screenSize = ImageUtils.getScreenSize(getContext());
+                Bitmap scaledBitmap = ImageUtils.decodeUriToScaledBitmap(getContext(), imageUri, screenSize.x, screenSize.y);
+                userImageView.setImageBitmap(scaledBitmap);
 
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                chosenImage.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
                 byte[] bytes = stream.toByteArray();
 
                 final Api api = new Api();
@@ -302,6 +297,9 @@ public class MainProfileFragment extends Fragment {
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
+
+            postAdapter.del();
+            loadUserInfo();
         }
     }
 
@@ -309,7 +307,6 @@ public class MainProfileFragment extends Fragment {
     private void displayUserInfo(User user) {
         if (user.getAvatar() != null) {
             byte[] image = Base64.getDecoder().decode(user.getAvatar());
-            Log.i("avatar", user.getAvatar());
             userImageView.setImageBitmap(BitmapFactory.decodeByteArray(image, 0, image.length));
         }
         if (user.getFirstName() != null) {

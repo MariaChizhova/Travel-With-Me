@@ -7,7 +7,7 @@ public class User {
     private final String description;
     private final String location;
     private final String email;
-    private final String avatar;
+    private String avatar;
     private final int followersNumber;
     private int followingsNumber;
 

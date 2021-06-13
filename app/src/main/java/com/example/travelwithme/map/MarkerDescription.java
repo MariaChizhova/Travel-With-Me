@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.adamstyrc.cookiecutter.ImageUtils;
 import com.example.travelwithme.R;
 import com.example.travelwithme.adapter.ImageAdapter;
 
@@ -94,11 +96,11 @@ public class MarkerDescription extends AppCompatDialogFragment {
         if (requestCode == RESULT_LOAD_IMAGE && null != data) {
             Uri imageUri = data.getData();
             try {
-                InputStream inputStream = getContext().getContentResolver().openInputStream(imageUri);
-                Bitmap chosenImage = BitmapFactory.decodeStream(inputStream);
-                chosenImage = cropToSquare(Bitmap.createScaledBitmap(chosenImage, 120, 120, false));
-                image.add(chosenImage);
-                MarkerDescription.imageAdapter.setItems(chosenImage);
+
+                Point screenSize = ImageUtils.getScreenSize(getContext());
+                Bitmap scaledBitmap = ImageUtils.decodeUriToScaledBitmap(getContext(), imageUri, 120, 120);
+                image.add(scaledBitmap);
+                MarkerDescription.imageAdapter.setItems(scaledBitmap);
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
