@@ -60,7 +60,7 @@ public class SettingsFragment extends Fragment {
     private void toLoginActivity() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         preferences.edit().remove("user").apply();
-        preferences.edit().remove("email").apply();
+        preferences.edit().remove("user_email").apply();
         mAuth.signOut();
         startActivity(new Intent(getContext(), LoginActivity.class));
         getActivity().finish();

@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Locale;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.view.LayoutInflater;
@@ -25,7 +24,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.travelwithme.Api;
@@ -55,11 +53,13 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final Fragment parent;
     private final View parentView;
     private final boolean fromProfile;
+    private final String email;
 
-    public PostAdapter(Fragment parent, View view, boolean fromProfile) {
+    public PostAdapter(Fragment parent, View view, boolean fromProfile, String email) {
         this.parent = parent;
         parentView = view;
         this.fromProfile = fromProfile;
+        this.email = email;
     }
 
     @Override
@@ -165,9 +165,6 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     byte[] image = Base64.getDecoder().decode(user.getAvatar());
                     userImageView.setImageBitmap(BitmapFactory.decodeByteArray(image, 0, image.length));
                 }
-
-                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(parent.getContext());
-                String email = preferences.getString("user_email", "");
 
                 api.getUser(email, u -> {
                     api.likeExists(post.getId(), u.getUserID(), heartButton::setLiked);

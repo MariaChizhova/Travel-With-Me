@@ -191,7 +191,9 @@ public class UsersProfileFragment extends Fragment {
     private void initRecyclerView() {
         RecyclerView postsRecyclerView = view.findViewById(R.id.posts_recycler_view);
         postsRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        postAdapter = new PostAdapter(this, view, false);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        String email = preferences.getString("user_email", "");
+        postAdapter = new PostAdapter(this, view, false, email);
         postsRecyclerView.setAdapter(postAdapter);
     }
 }

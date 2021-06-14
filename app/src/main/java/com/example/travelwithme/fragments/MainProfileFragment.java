@@ -164,7 +164,7 @@ public class MainProfileFragment extends Fragment {
         });
 
         if (currentUser != null) {
-            loadPosts(currentUser.getUserID(), 0, 4);
+            loadPosts(currentUser.getUserID(), 0, 5);
             displayUserInfo(currentUser);
         } else {
             loadUserInfo();
@@ -184,7 +184,7 @@ public class MainProfileFragment extends Fragment {
     private void initRecyclerView() {
         postsRecyclerView = view.findViewById(R.id.posts_recycler_view);
         postsRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        postAdapter = new PostAdapter(this, view, true);
+        postAdapter = new PostAdapter(this, view, true, email);
         postsRecyclerView.setAdapter(postAdapter);
     }
 
@@ -200,7 +200,7 @@ public class MainProfileFragment extends Fragment {
                 super.onScrolled(recyclerView, dx, dy);
                 LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
                 if (!isLoading) {
-                    if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() == postAdapter.postsList.size() - 1) {
+                    if (linearLayoutManager != null && linearLayoutManager.findLastVisibleItemPosition() == postAdapter.postsList.size() - 1) {
                         loadMore();
                         isLoading = true;
                     }
@@ -217,7 +217,7 @@ public class MainProfileFragment extends Fragment {
             postAdapter.postsList.remove(postAdapter.postsList.size() - 1);
             int scrollPosition = postAdapter.postsList.size();
             postAdapter.notifyItemRemoved(scrollPosition);
-            loadPosts(currentUser.getUserID(), scrollPosition, 10);
+            loadPosts(currentUser.getUserID(), scrollPosition, 5);
             postAdapter.notifyDataSetChanged();
             isLoading = false;
         }, 1000);
@@ -233,7 +233,7 @@ public class MainProfileFragment extends Fragment {
             String json = gson.toJson(u);
             preferences.edit().putString("user", json).apply();
 
-            loadPosts(u.getUserID(), 0, 4);
+            loadPosts(u.getUserID(), 0, 5);
             displayUserInfo(u);
         });
     }
