@@ -49,18 +49,19 @@ public class UsersSearchFragment extends Fragment {
 
         initRecyclerView();
         long offset = 0;
-        long count = 100;
+        long count = 10;
         if (currentUser != null) {
             searchUsers(currentUser.getUserID(), offset, count);
         }
-       // initScrollListener();
+        initScrollListener();
         return view;
     }
 
     private void searchUsers(long userId, long offset, long count) {
         new Api().searchUsers(userId, inputText, offset, count, users -> {
-            //     usersAdapter.clearItems();
-            usersAdapter.setItems(users);
+           // usersAdapter.clearItems();
+            usersList.addAll(users);
+            usersAdapter.notifyDataSetChanged();
         });
     }
 

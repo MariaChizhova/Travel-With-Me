@@ -43,16 +43,19 @@ public class Following extends Fragment {
 
         initRecyclerView();
         long offset = 0;
-        long count = 100;
+        long count = 10;
         if (currentUser != null) {
             loadFollowing(currentUser.getUserID(), offset, count);
         }
-    //    initScrollListener();
+        initScrollListener();
         return view;
     }
 
     private void loadFollowing(long userId, long offset, long count) {
-        new Api().getFollowing(userId, offset, count, followersList -> followingAdapter.setItems(followersList));
+        new Api().getFollowing(userId, offset, count, lst -> {
+            followingList.addAll(lst);
+            followingAdapter.notifyDataSetChanged();
+        });
     }
 
     private void initRecyclerView() {

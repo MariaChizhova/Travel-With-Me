@@ -42,16 +42,19 @@ public class Followers extends Fragment {
 
         initRecyclerView();
         long offset = 0;
-        long count = 100;
+        long count = 10;
         if (currentUser != null) {
             loadFollowers(currentUser.getUserID(), offset, count);
         }
-    //    initScrollListener();
+        initScrollListener();
         return view;
     }
 
     private void loadFollowers(long userId, long offset, long count) {
-        new Api().getFollowers(userId, offset, count, followersList -> followersAdapter.setItems(followersList));
+        new Api().getFollowers(userId, offset, count, lst ->  {
+            followersList.addAll(lst);
+            followersAdapter.notifyDataSetChanged();
+        });
     }
 
     private void initRecyclerView() {
