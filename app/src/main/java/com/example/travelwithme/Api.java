@@ -23,6 +23,7 @@ import com.example.travelwithme.api.GetUserApi;
 import com.example.travelwithme.api.GetUserByIDApi;
 import com.example.travelwithme.api.IncPostNumberLikesApi;
 import com.example.travelwithme.api.LikeExistsApi;
+import com.example.travelwithme.api.SearchChatsApi;
 import com.example.travelwithme.api.SearchUsersApi;
 import com.example.travelwithme.pojo.Post;
 import com.example.travelwithme.pojo.User;
@@ -603,6 +604,44 @@ public class Api {
 
         SearchUsersApi searchUsersApi = retrofit.create(SearchUsersApi.class);
         Call<List<User>> call = searchUsersApi.searchUsers(myID, inputText, offset, count);
+        call.enqueue(new Callback<List<User>>() {
+
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+                if (response.isSuccessful()) {
+                    if (response.body() != null) {
+                        lst.addAll(response.body());
+                        onSearchResultsLoaded.accept(lst);
+                    } else {
+                        Log.i("error", "response body is null");
+                    }
+                } else {
+                    Log.i("error", "error");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<User>> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
+
+    public void searchChats(long myID, String inputText, long offset, long count, Consumer<Collection<User>> onSearchResultsLoaded) {
+        Collection<User> lst = new ArrayList<>();
+
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://84.252.137.106:9090")
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+
+        SearchChatsApi searchChatsApi = retrofit.create(SearchChatsApi.class);
+        Call<List<User>> call = searchChatsApi.searchChats(myID, inputText, offset, count);
         call.enqueue(new Callback<List<User>>() {
 
             @RequiresApi(api = Build.VERSION_CODES.O)
