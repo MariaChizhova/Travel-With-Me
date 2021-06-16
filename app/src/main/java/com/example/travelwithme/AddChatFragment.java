@@ -5,16 +5,25 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.travelwithme.adapter.ChatsAdapter;
+import com.example.travelwithme.fragments.ChatFragment;
+import com.example.travelwithme.fragments.UsersChatSearchFragment;
+import com.example.travelwithme.fragments.UsersSearchFragment;
 import com.example.travelwithme.pojo.User;
 import com.google.gson.Gson;
+
+import java.util.List;
 
 
 public class AddChatFragment extends Fragment {
@@ -44,6 +53,19 @@ public class AddChatFragment extends Fragment {
         if (currentUser != null) {
             loadUsers(currentUser.getUserID(), offset, count);
         }
+
+        Toolbar toolbar = view.findViewById(R.id.toolbar_chats);
+        Button searchButton = toolbar.findViewById(R.id.search_button_chats);
+        EditText searchEditText = toolbar.findViewById(R.id.search_edit_text_chats);
+        searchButton.setOnClickListener(v -> {
+            String inputText = searchEditText.getText().toString();
+            System.out.println(inputText);
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            UsersChatSearchFragment usersSearchFragment = new UsersChatSearchFragment(inputText);
+            fragmentTransaction.replace(R.id.relative_layout_chats, usersSearchFragment);
+            fragmentTransaction.commit();
+        });
         return view;
     }
 

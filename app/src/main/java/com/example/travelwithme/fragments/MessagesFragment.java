@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.travelwithme.AddChatFragment;
 import com.example.travelwithme.Api;
-import com.example.travelwithme.ChatFragment;
 import com.example.travelwithme.R;
 import com.example.travelwithme.SwipeController;
 import com.example.travelwithme.SwipeControllerActions;

@@ -25,6 +25,11 @@ public class ChatsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private List<User> chatsList = new ArrayList<>();
     private OnChatClickListener onChatClickListener;
 
+    public ChatsAdapter(List<User> chatsList, OnChatClickListener onUserClickListener) {
+        this.onChatClickListener = onUserClickListener;
+        this.chatsList = chatsList;
+    }
+
     public ChatsAdapter(OnChatClickListener onUserClickListener) {
         this.onChatClickListener = onUserClickListener;
     }
