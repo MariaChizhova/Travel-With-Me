@@ -55,7 +55,7 @@ public class UsersChatSearchFragment extends Fragment {
         if (currentUser != null) {
             searchUsers(currentUser.getUserID(), offset, count);
         }
-        initScrollListener();
+      //  initScrollListener();
         return view;
     }
 
@@ -78,6 +78,7 @@ public class UsersChatSearchFragment extends Fragment {
                 id1 = id2;
                 id2 = tmp;
             }
+            new Api().addChat(id1, id2);
             Fragment newFragment = new ChatFragment(id1.toString(), id2.toString());
             FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.fragment_container, newFragment);

@@ -85,6 +85,7 @@ public class AddChatFragment extends Fragment {
                 id1 = id2;
                 id2 = tmp;
             }
+            new Api().addChat(id1, id2);
             Fragment newFragment = new ChatFragment(id1.toString(), id2.toString());
             FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.fragment_container, newFragment);

@@ -101,4 +101,8 @@ public class ChatsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         chatsList.remove(position);
         notifyDataSetChanged();
     }
+
+    public User getItem(int position) {
+        return chatsList.get(position);
+    }
 }
