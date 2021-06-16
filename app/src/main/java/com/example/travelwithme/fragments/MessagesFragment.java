@@ -17,12 +17,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.travelwithme.AddChatFragment;
 import com.example.travelwithme.Api;
-import com.example.travelwithme.ChatFragment;
 import com.example.travelwithme.R;
 import com.example.travelwithme.SwipeController;
 import com.example.travelwithme.SwipeControllerActions;
 import com.example.travelwithme.adapter.ChatsAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -80,9 +80,21 @@ public class MessagesFragment extends Fragment {
         swipeController = new SwipeController(new SwipeControllerActions() {
             @Override
             public void onRightClicked(int position) {
-                chatsAdapter.deleteItem(position);
-                chatsAdapter.notifyItemRemoved(position);
-                chatsAdapter.notifyItemRangeChanged(position, chatsAdapter.getItemCount());
+                new Api().getUser(email, user -> {
+                    Long id1 = user.getUserID();
+                    Long id2 = chatsAdapter.getItem(position).getUserID();
+                    if (id1 > id2) {
+                        Long tmp = id1;
+                        id1 = id2;
+                        id2 = tmp;
+                    }
+                    System.out.println(id1 + " " + id2);
+                    new Api().deleteChat(id1, id2);
+                    FirebaseDatabase.getInstance().getReference("dialogs").child(id1 + "_" + id2).removeValue();
+                    chatsAdapter.deleteItem(position);
+                    chatsAdapter.notifyItemRemoved(position);
+                    chatsAdapter.notifyItemRangeChanged(position, chatsAdapter.getItemCount());
+                });
             }
         });
 
