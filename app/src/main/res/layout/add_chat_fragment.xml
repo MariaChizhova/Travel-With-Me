@@ -38,5 +38,5 @@
         android:id="@+id/addChatRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/toolbar_chats"/>
+        android:layout_below="@+id/toolbar_chats"/>
 </RelativeLayout>

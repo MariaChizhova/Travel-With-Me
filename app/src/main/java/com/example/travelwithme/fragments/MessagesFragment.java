@@ -6,9 +6,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -32,6 +36,7 @@ public class MessagesFragment extends Fragment {
     }
 
     private ChatsAdapter chatsAdapter;
+    private RecyclerView chatsRecyclerView;
     private View view;
     private static String email;
 
@@ -51,6 +56,20 @@ public class MessagesFragment extends Fragment {
             transaction.addToBackStack(null);
             transaction.commit();
         });
+
+        Toolbar toolbar = view.findViewById(R.id.toolbar_chats);
+        Button searchButton = toolbar.findViewById(R.id.search_button_chats);
+        EditText searchEditText = toolbar.findViewById(R.id.search_edit_text_chats);
+        searchButton.setOnClickListener(v -> {
+            chatsRecyclerView.setVisibility(View.GONE);
+            String inputText = searchEditText.getText().toString();
+            System.out.println(inputText);
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            ChatsSearchFragment usersSearchFragment = new ChatsSearchFragment(inputText);
+            fragmentTransaction.replace(R.id.relative_layout_messages, usersSearchFragment);
+            fragmentTransaction.commit();
+        });
         return view;
     }
 
@@ -59,7 +78,7 @@ public class MessagesFragment extends Fragment {
     }
 
     private void initRecyclerView() {
-        RecyclerView chatsRecyclerView = view.findViewById(R.id.chats_recycler_view);
+        chatsRecyclerView = view.findViewById(R.id.chats_recycler_view);
         chatsRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         ChatsAdapter.OnChatClickListener onChatClickListener = user -> new Api().getUser(email, currentUser -> {
             Long id1 = user.getUserID();

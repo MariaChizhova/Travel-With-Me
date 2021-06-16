@@ -32,6 +32,7 @@ public class AddChatFragment extends Fragment {
     private static String email;
     private User currentUser;
     private View view;
+    private RecyclerView recyclerView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,6 +59,7 @@ public class AddChatFragment extends Fragment {
         Button searchButton = toolbar.findViewById(R.id.search_button_chats);
         EditText searchEditText = toolbar.findViewById(R.id.search_edit_text_chats);
         searchButton.setOnClickListener(v -> {
+            recyclerView.setVisibility(View.GONE);
             String inputText = searchEditText.getText().toString();
             System.out.println(inputText);
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
@@ -74,7 +76,7 @@ public class AddChatFragment extends Fragment {
     }
 
     private void initRecyclerView() {
-        RecyclerView recyclerView = view.findViewById(R.id.addChatRecyclerView);
+        recyclerView = view.findViewById(R.id.addChatRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         ChatsAdapter.OnChatClickListener onChatClickListener = user -> new Api().getUser(email, curUser -> {
             Long id1 = user.getUserID();

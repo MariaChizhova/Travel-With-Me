@@ -24,7 +24,7 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 
 
-public class UsersChatSearchFragment extends Fragment {
+public class ChatsSearchFragment extends Fragment {
     private RecyclerView usersRecyclerView;
     private ChatsAdapter usersAdapter;
     private View view;
@@ -34,14 +34,14 @@ public class UsersChatSearchFragment extends Fragment {
     private static String email;
     private ArrayList<User> usersList = new ArrayList<>();
 
-    public UsersChatSearchFragment(String inputText) {
+    public ChatsSearchFragment(String inputText) {
         this.inputText = inputText;
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.add_chat_search, container, false);
+        view = inflater.inflate(R.layout.fragment_messages_search, container, false);
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         email = preferences.getString("user_email", "");
@@ -55,12 +55,12 @@ public class UsersChatSearchFragment extends Fragment {
         if (currentUser != null) {
             searchUsers(currentUser.getUserID(), offset, count);
         }
-      //  initScrollListener();
+        //  initScrollListener();
         return view;
     }
 
     private void searchUsers(long userId, long offset, long count) {
-        new Api().searchUsers(userId, inputText, offset, count, users -> {
+        new Api().searchChats(userId, inputText, offset, count, users -> {
             // usersAdapter.clearItems();
             usersList.addAll(users);
             usersAdapter.notifyDataSetChanged();
@@ -68,7 +68,7 @@ public class UsersChatSearchFragment extends Fragment {
     }
 
     private void initRecyclerView() {
-        usersRecyclerView = view.findViewById(R.id.users_recycler_view_chat);
+        usersRecyclerView = view.findViewById(R.id.chats_recycler_view_search);
         usersRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         ChatsAdapter.OnChatClickListener onChatClickListener = user -> new Api().getUser(email, currentUser -> {
             Long id1 = user.getUserID();
