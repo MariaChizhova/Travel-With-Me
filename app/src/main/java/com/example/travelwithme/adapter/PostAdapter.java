@@ -208,7 +208,11 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             String creationDateFormatted = getFormattedDate(post.getCreationDate());
             creationDateTextView.setText(creationDateFormatted);
 
-            Picasso.get().load(S3IMAGES + post.getImageURL()).into(postImageView);
+            if (post.getImageURL() == null) {
+                postImageView.setImageBitmap(post.getImage());
+            } else {
+                Picasso.get().load(S3IMAGES + post.getImageURL()).into(postImageView);
+            }
 
             postImageView.setOnClickListener(v -> {
                 Intent i = new Intent(parentView.getContext(), ViewingMapActivity.class);
