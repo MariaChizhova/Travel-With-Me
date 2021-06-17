@@ -48,9 +48,7 @@ public class PostCreateRequest {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public Post getPost() {
         MapData mapData = new MapData(markers);
-        byte[] image = Base64.getDecoder().decode(picture);
-        return new Post(authorId, postId, date, description, numberLikes,
-                BitmapFactory.decodeByteArray(image, 0, image.length), mapData);
+        return new Post(authorId, postId, date, description, numberLikes, picture, mapData);
     }
 
     public Long getPostId() {

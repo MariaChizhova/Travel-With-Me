@@ -19,7 +19,6 @@ import java.util.List;
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHolder> {
 
     MarkerDescription parent;
-    boolean isViewing = false;
 
     private final List<Bitmap> list = new ArrayList<>();
 
@@ -27,9 +26,6 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
         parent = markerDescription;
     }
 
-    public ImageAdapter(){
-        isViewing = true;
-    }
 
     @Override
     public @NotNull ImageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -65,17 +61,12 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
 
         public void bind(Bitmap bitmap, int position) {
             imageView.setImageBitmap(bitmap);
-            if(isViewing){
-                cross.setVisibility(View.INVISIBLE);
-            }
 
             cross.setOnClickListener(arg0 -> {
-                if(!isViewing) {
-                    list.remove(position);
-                    notifyItemRemoved(position);
-                    notifyItemRangeChanged(position, list.size());
-                    parent.removeImage(position);
-                }
+                list.remove(position);
+                notifyItemRemoved(position);
+                notifyItemRangeChanged(position, list.size());
+                parent.removeImage(position);
             });
 
         }

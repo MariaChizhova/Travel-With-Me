@@ -82,6 +82,14 @@ public class MapData implements Parcelable {
         return (ArrayList<Bitmap>) markers.get(ind).photos;
     }
 
+    public ArrayList<String> getPhotosURL(int ind) {
+        return (ArrayList<String>) markers.get(ind).photosURL;
+    }
+
+    public String getIcon(int ind){
+        return markers.get(ind).icon;
+    }
+
     public int getIndexOfMarker(com.google.android.gms.maps.model.Marker marker) {
         for (int i = 0; i < markers.size(); i++) {
             if (markers.get(i).latLng.equals(marker.getPosition())) {

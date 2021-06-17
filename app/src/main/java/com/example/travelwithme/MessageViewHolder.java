@@ -10,9 +10,11 @@ import android.widget.TextView;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
+import com.example.travelwithme.adapter.PostAdapter;
 import com.example.travelwithme.pojo.Message;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import java.util.Base64;
 
@@ -61,8 +63,7 @@ public class MessageViewHolder extends RecyclerView.ViewHolder {
         }
 
         if (message.getPhotoUrl() != null) {
-            byte[] image = Base64.getDecoder().decode(message.getPhotoUrl());
-            messengerImageView.setImageBitmap(BitmapFactory.decodeByteArray(image, 0, image.length));
+            Picasso.get().load(PostAdapter.S3IMAGES + message.getPhotoUrl()).into(messengerImageView);
         }
     }
 }

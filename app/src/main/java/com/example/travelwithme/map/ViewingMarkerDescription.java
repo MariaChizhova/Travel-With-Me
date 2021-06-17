@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.travelwithme.R;
 import com.example.travelwithme.adapter.ImageAdapter;
+import com.example.travelwithme.adapter.ImageAdapterViewing;
 
 import java.util.List;
 
@@ -21,10 +22,10 @@ public class ViewingMarkerDescription extends AppCompatDialogFragment {
 
     private View view;
     private RecyclerView imageRecyclerView;
-    public static ImageAdapter imageAdapter;
+    public static ImageAdapterViewing imageAdapter;
     public String comments;
     public String name;
-    public List<Bitmap> image;
+    public List<String> image;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -36,7 +37,7 @@ public class ViewingMarkerDescription extends AppCompatDialogFragment {
         Bundle bundle = getArguments();
         comments = bundle.getString("text");
         name = bundle.getString("name");
-        image = bundle.getParcelableArrayList("image");
+        image = bundle.getStringArrayList("image");
 
         TextView textView = view.findViewById(R.id.tv_comment);
         textView.setText(comments);
@@ -49,9 +50,9 @@ public class ViewingMarkerDescription extends AppCompatDialogFragment {
         LinearLayoutManager l = new LinearLayoutManager(view.getContext());
         l.setOrientation(RecyclerView.HORIZONTAL);
         imageRecyclerView.setLayoutManager(l);
-        imageAdapter = new ImageAdapter();
+        imageAdapter = new ImageAdapterViewing();
         imageRecyclerView.setAdapter(imageAdapter);
-        for (Bitmap i : image) {
+        for (String i : image) {
             ViewingMarkerDescription.imageAdapter.setItems(i);
         }
 

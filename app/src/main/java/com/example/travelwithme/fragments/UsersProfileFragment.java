@@ -27,6 +27,7 @@ import com.example.travelwithme.R;
 import com.example.travelwithme.adapter.PostAdapter;
 import com.example.travelwithme.pojo.User;
 import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 
 import java.util.Base64;
 
@@ -168,9 +169,7 @@ public class UsersProfileFragment extends Fragment {
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void displayUserInfo(User user) {
         if (user.getAvatar() != null) {
-            byte[] image = Base64.getDecoder().decode(user.getAvatar());
-            Log.i("avatar", user.getAvatar());
-            userImageView.setImageBitmap(BitmapFactory.decodeByteArray(image, 0, image.length));
+            Picasso.get().load(PostAdapter.S3IMAGES + user.getAvatar()).into(userImageView);
         }
         if (user.getFirstName() != null) {
             nameTextView.setText(user.getFirstName());

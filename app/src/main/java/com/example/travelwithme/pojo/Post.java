@@ -13,6 +13,7 @@ public class Post {
     private Long likedCount;
     private Bitmap image;
     private MapData mapData;
+    private String imageURL;
 
     public Post(Long user, Long id, String creationDate, String text, Long likedCount, Bitmap image, MapData mapData) {
         this.user = user;
@@ -22,6 +23,16 @@ public class Post {
         //this.repostCount = repostCount;
         this.likedCount = likedCount;
         this.image = image;
+        this.mapData = mapData;
+    }
+
+    public Post(Long user, Long id, String creationDate, String text, Long likedCount, String imageURL, MapData mapData) {
+        this.user = user;
+        this.id = id;
+        this.creationDate = creationDate;
+        this.text = text;
+        this.likedCount = likedCount;
+        this.imageURL = imageURL;
         this.mapData = mapData;
     }
 
@@ -59,6 +70,10 @@ public class Post {
 
     public MapData getMapData() {
         return mapData;
+    }
+
+    public String getImageURL(){
+        return imageURL;
     }
 
     @Override

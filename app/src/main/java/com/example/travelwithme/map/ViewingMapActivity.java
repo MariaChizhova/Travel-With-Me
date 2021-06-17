@@ -9,11 +9,13 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 
 import com.example.travelwithme.R;
+import com.example.travelwithme.adapter.PostAdapter;
 import com.example.travelwithme.api.RouteApi;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -30,10 +32,18 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.RoundCap;
 import com.google.maps.android.PolyUtil;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import retrofit.Callback;
 import retrofit.RestAdapter;
@@ -45,6 +55,7 @@ public class ViewingMapActivity extends AppCompatActivity implements OnMapReadyC
     MapData mapData;
     Map<Integer, ViewingMarkerDescription> description;
     LatLngBounds.Builder latLngBuilder;
+    private final Set<PoiTarget> poiTargets = new HashSet<>();
 
     private static final int COLOR_BLACK_ARGB = 0xff0066ff;
     private static final int POLYLINE_STROKE_WIDTH_PX = 10;
@@ -88,8 +99,12 @@ public class ViewingMapActivity extends AppCompatActivity implements OnMapReadyC
             markerOptions.position(mapData.getMarker(i));
             //markerOptions.title(mapData.getText(i));
             Marker m = map.addMarker(markerOptions);
+            PoiTarget pt = new PoiTarget(m);
+            poiTargets.add(pt);
             latLngBuilder.include(mapData.getMarker(i));
-            addImageMarker(m, mapData.getImages(i));
+            if(mapData.getPhotosURL(i).size() > 0) {
+                Picasso.get().load(PostAdapter.S3IMAGES + mapData.getIcon(i)).into(pt);
+            }
         }
 
         for (int i = 0; i < mapData.sizeMarkers() - 1; i++) {
@@ -110,35 +125,12 @@ public class ViewingMapActivity extends AppCompatActivity implements OnMapReadyC
             int ind = mapData.getIndexOfMarker(marker);
             bundle.putString("text", mapData.getText(ind));
             bundle.putString("name", mapData.getName(ind));
-            bundle.putParcelableArrayList("image", mapData.getImages(ind));
+            bundle.putStringArrayList("image", mapData.getPhotosURL(ind));
             description.get(marker.hashCode()).setArguments(bundle);
             description.get(marker.hashCode()).show(getSupportFragmentManager(), "example dialog");
             return true;
         });
 
-    }
-
-    public void addImageMarker(Marker marker, List<Bitmap> images) {
-        if (images.size() > 0) {
-            Bitmap bmpWithBorder = Bitmap.createBitmap(images.get(0).getWidth() + 20, images.get(0).getHeight() + 30, images.get(0).getConfig());
-            Canvas canvas = new Canvas(bmpWithBorder);
-            canvas.drawBitmap(images.get(0), 10, 10, null);
-
-            Paint paint = new Paint();
-            paint.setAntiAlias(true);
-            paint.setColor(Color.BLACK);
-            paint.setStrokeWidth(5);
-            paint.setStyle(Paint.Style.STROKE);
-            Path path = new Path();
-            int height = images.get(0).getHeight();
-            int width = images.get(0).getWidth();
-            path.moveTo(10, images.get(0).getHeight() + 10);
-            path.cubicTo(10, height + 25, width / 2 + 5, height + 10, width / 2 + 5, height + 25);
-            path.cubicTo(width / 2 + 5, height + 10, width + 10, height + 25, width + 10, height + 10);
-            canvas.drawPath(path, paint);
-
-            marker.setIcon(BitmapDescriptorFactory.fromBitmap(bmpWithBorder));
-        }
     }
 
 
@@ -179,6 +171,47 @@ public class ViewingMapActivity extends AppCompatActivity implements OnMapReadyC
             }
 
         });
+    }
+
+    class PoiTarget implements Target {
+        private final Marker m;
+
+        public PoiTarget(Marker m) {
+            this.m = m;
+        }
+
+        @Override
+        public void onBitmapLoaded(Bitmap image, Picasso.LoadedFrom from) {
+            Bitmap bmpWithBorder = Bitmap.createBitmap(image.getWidth() + 20, image.getHeight() + 30, image.getConfig());
+            Canvas canvas = new Canvas(bmpWithBorder);
+            canvas.drawBitmap(image, 10, 10, null);
+
+            Paint paint = new Paint();
+            paint.setAntiAlias(true);
+            paint.setColor(Color.BLACK);
+            paint.setStrokeWidth(5);
+            paint.setStyle(Paint.Style.STROKE);
+            Path path = new Path();
+            int height = image.getHeight();
+            int width = image.getWidth();
+            path.moveTo(10, image.getHeight() + 10);
+            path.cubicTo(10, height + 25, width / 2 + 5, height + 10, width / 2 + 5, height + 25);
+            path.cubicTo(width / 2 + 5, height + 10, width + 10, height + 25, width + 10, height + 10);
+            canvas.drawPath(path, paint);
+
+            m.setIcon(BitmapDescriptorFactory.fromBitmap(bmpWithBorder));
+            poiTargets.remove(this);
+        }
+
+        @Override
+        public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+            poiTargets.remove(this);
+        }
+
+        @Override
+        public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+        }
     }
 
 }

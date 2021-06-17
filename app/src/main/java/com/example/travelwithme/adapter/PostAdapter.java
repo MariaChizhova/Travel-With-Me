@@ -11,6 +11,7 @@ import java.util.Locale;
 
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +35,7 @@ import com.like.OnLikeListener;
 
 import com.example.travelwithme.R;
 import com.example.travelwithme.pojo.Post;
+import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -45,6 +47,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final String MONTH_DAY_FORMAT = "MMM d";
     private final int VIEW_TYPE_ITEM = 0;
     private final int VIEW_TYPE_LOADING = 1;
+    public final static String S3IMAGES = "https://travel-with-me.s3.eu-north-1.amazonaws.com/";
 
 
     public List<Post> postsList = new ArrayList<>();
@@ -162,8 +165,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 nameTextView.setText(user.getFirstName());
                 nickTextView.setText(user.getLastName());
                 if (user.getAvatar() != null) {
-                    byte[] image = Base64.getDecoder().decode(user.getAvatar());
-                    userImageView.setImageBitmap(BitmapFactory.decodeByteArray(image, 0, image.length));
+                    Picasso.get().load(S3IMAGES + user.getAvatar()).into(userImageView);
                 }
 
                 api.getUser(email, u -> {
@@ -209,14 +211,13 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             String creationDateFormatted = getFormattedDate(post.getCreationDate());
             creationDateTextView.setText(creationDateFormatted);
 
-            postImageView.setImageBitmap(post.getImage());
+            Picasso.get().load(S3IMAGES + post.getImageURL()).into(postImageView);
 
             postImageView.setOnClickListener(v -> {
                 Intent i = new Intent(parentView.getContext(), ViewingMapActivity.class);
                 i.putExtra("mapData", post.getMapData());
                 parent.startActivity(i);
             });
-
 
             CircleImageView circleImageView = (CircleImageView) itemView.findViewById(R.id.profile_image_view);
             circleImageView.setOnClickListener(v -> new Api().getUserByID(post.getUser(), user -> {

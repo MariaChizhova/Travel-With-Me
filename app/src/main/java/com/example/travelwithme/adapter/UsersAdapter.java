@@ -21,6 +21,7 @@ import com.example.travelwithme.Api;
 import com.example.travelwithme.R;
 import com.example.travelwithme.pojo.User;
 import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -163,8 +164,7 @@ public class UsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 lastNameTextView.setText(user.getLastName());
             }
             if (user.getAvatar() != null) {
-                byte[] image = Base64.getDecoder().decode(user.getAvatar());
-                userImageView.setImageBitmap(BitmapFactory.decodeByteArray(image, 0, image.length));
+                Picasso.get().load(PostAdapter.S3IMAGES + user.getAvatar()).into(userImageView);
             }
             userId = user.getUserID();
         }

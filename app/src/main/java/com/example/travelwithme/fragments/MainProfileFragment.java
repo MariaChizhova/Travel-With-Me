@@ -43,6 +43,7 @@ import com.example.travelwithme.pojo.User;
 
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -214,12 +215,14 @@ public class MainProfileFragment extends Fragment {
         postAdapter.notifyItemInserted(postAdapter.postsList.size() - 1);
         Handler handler = new Handler();
         handler.postDelayed(() -> {
-            postAdapter.postsList.remove(postAdapter.postsList.size() - 1);
-            int scrollPosition = postAdapter.postsList.size();
-            postAdapter.notifyItemRemoved(scrollPosition);
-            loadPosts(currentUser.getUserID(), scrollPosition, 5);
-            postAdapter.notifyDataSetChanged();
-            isLoading = false;
+            new Api().getUser(email, u -> {
+                postAdapter.postsList.remove(postAdapter.postsList.size() - 1);
+                int scrollPosition = postAdapter.postsList.size();
+                postAdapter.notifyItemRemoved(scrollPosition);
+                loadPosts(u.getUserID(), scrollPosition, 5);
+                postAdapter.notifyDataSetChanged();
+                isLoading = false;
+            });
         }, 1000);
     }
 
@@ -309,8 +312,7 @@ public class MainProfileFragment extends Fragment {
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void displayUserInfo(User user) {
         if (user.getAvatar() != null) {
-            byte[] image = Base64.getDecoder().decode(user.getAvatar());
-            userImageView.setImageBitmap(BitmapFactory.decodeByteArray(image, 0, image.length));
+            Picasso.get().load(PostAdapter.S3IMAGES + user.getAvatar()).into(userImageView);
         }
         if (user.getFirstName() != null) {
             nameTextView.setText(user.getFirstName());

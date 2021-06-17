@@ -77,8 +77,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 lastNameTextView.setText(user.getLastName());
             }
             if (user.getAvatar() != null) {
-                byte[] image = Base64.getDecoder().decode(user.getAvatar());
-                userImageView.setImageBitmap(BitmapFactory.decodeByteArray(image, 0, image.length));
+                Picasso.get().load(PostAdapter.S3IMAGES + user.getAvatar()).into(userImageView);
             }
         }
     }
