@@ -25,6 +25,11 @@ public class ChatsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private List<User> chatsList = new ArrayList<>();
     private OnChatClickListener onChatClickListener;
 
+    public ChatsAdapter(List<User> chatsList, OnChatClickListener onUserClickListener) {
+        this.onChatClickListener = onUserClickListener;
+        this.chatsList = chatsList;
+    }
+
     public ChatsAdapter(OnChatClickListener onUserClickListener) {
         this.onChatClickListener = onUserClickListener;
     }
@@ -94,5 +99,9 @@ public class ChatsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public void deleteItem(int position) {
         chatsList.remove(position);
         notifyDataSetChanged();
+    }
+
+    public User getItem(int position) {
+        return chatsList.get(position);
     }
 }

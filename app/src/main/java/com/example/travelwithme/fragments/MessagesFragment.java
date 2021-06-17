@@ -6,9 +6,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -17,12 +21,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.travelwithme.AddChatFragment;
 import com.example.travelwithme.Api;
-import com.example.travelwithme.ChatFragment;
 import com.example.travelwithme.R;
 import com.example.travelwithme.SwipeController;
 import com.example.travelwithme.SwipeControllerActions;
 import com.example.travelwithme.adapter.ChatsAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -32,6 +36,7 @@ public class MessagesFragment extends Fragment {
     }
 
     private ChatsAdapter chatsAdapter;
+    private RecyclerView chatsRecyclerView;
     private View view;
     private static String email;
 
@@ -51,6 +56,20 @@ public class MessagesFragment extends Fragment {
             transaction.addToBackStack(null);
             transaction.commit();
         });
+
+        Toolbar toolbar = view.findViewById(R.id.toolbar_chats);
+        Button searchButton = toolbar.findViewById(R.id.search_button_chats);
+        EditText searchEditText = toolbar.findViewById(R.id.search_edit_text_chats);
+        searchButton.setOnClickListener(v -> {
+            chatsRecyclerView.setVisibility(View.GONE);
+            String inputText = searchEditText.getText().toString();
+            System.out.println(inputText);
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            ChatsSearchFragment usersSearchFragment = new ChatsSearchFragment(inputText);
+            fragmentTransaction.replace(R.id.relative_layout_messages, usersSearchFragment);
+            fragmentTransaction.commit();
+        });
         return view;
     }
 
@@ -59,7 +78,7 @@ public class MessagesFragment extends Fragment {
     }
 
     private void initRecyclerView() {
-        RecyclerView chatsRecyclerView = view.findViewById(R.id.chats_recycler_view);
+        chatsRecyclerView = view.findViewById(R.id.chats_recycler_view);
         chatsRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         ChatsAdapter.OnChatClickListener onChatClickListener = user -> new Api().getUser(email, currentUser -> {
             Long id1 = user.getUserID();
@@ -80,9 +99,21 @@ public class MessagesFragment extends Fragment {
         swipeController = new SwipeController(new SwipeControllerActions() {
             @Override
             public void onRightClicked(int position) {
-                chatsAdapter.deleteItem(position);
-                chatsAdapter.notifyItemRemoved(position);
-                chatsAdapter.notifyItemRangeChanged(position, chatsAdapter.getItemCount());
+                new Api().getUser(email, user -> {
+                    Long id1 = user.getUserID();
+                    Long id2 = chatsAdapter.getItem(position).getUserID();
+                    if (id1 > id2) {
+                        Long tmp = id1;
+                        id1 = id2;
+                        id2 = tmp;
+                    }
+                    System.out.println(id1 + " " + id2);
+                    new Api().deleteChat(id1, id2);
+                    FirebaseDatabase.getInstance().getReference("dialogs").child(id1 + "_" + id2).removeValue();
+                    chatsAdapter.deleteItem(position);
+                    chatsAdapter.notifyItemRemoved(position);
+                    chatsAdapter.notifyItemRangeChanged(position, chatsAdapter.getItemCount());
+                });
             }
         });
 

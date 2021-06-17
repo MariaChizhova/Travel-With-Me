@@ -22,7 +22,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.travelwithme.Api;
-import com.example.travelwithme.ChatFragment;
 import com.example.travelwithme.R;
 import com.example.travelwithme.adapter.PostAdapter;
 import com.example.travelwithme.pojo.User;

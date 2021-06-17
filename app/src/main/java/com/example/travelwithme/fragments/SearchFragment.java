@@ -68,23 +68,12 @@ public class SearchFragment extends Fragment {
             viewPager.removeAllViews();
             viewPagerAdapter.notifyDataSetChanged();
             tabLayout.removeAllTabs();
-
-            //TODO: check bug @hotckiss
             String inputText = searchEditText.getText().toString();
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             UsersSearchFragment usersSearchFragment = new UsersSearchFragment(inputText);
-            fragmentTransaction.add(R.id.relative_layout, usersSearchFragment);
+            fragmentTransaction.replace(R.id.relative_layout, usersSearchFragment);
             fragmentTransaction.commit();
-            List<Fragment> fragmentsList = getActivity().getSupportFragmentManager().getFragments();
-            for (int i = 0; i < fragmentsList.size() - 1; i++) {
-                Fragment fragment = fragmentsList.get(i);
-                fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.hide(fragment);
-                fragmentTransaction.commit();
-            }
-
-
         });
         return view;
     }
