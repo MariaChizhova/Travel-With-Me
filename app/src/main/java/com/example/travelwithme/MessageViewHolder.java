@@ -15,7 +15,10 @@ import com.example.travelwithme.pojo.Message;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
+<<<<<<< HEAD
+=======
 
+>>>>>>> 83dec7eb5b551c03925cdb597ff1f2ffae0a5e4d
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MessageViewHolder extends RecyclerView.ViewHolder {
@@ -38,6 +41,7 @@ public class MessageViewHolder extends RecyclerView.ViewHolder {
     public void bindMessage(Message message) {
         if (message.getText() != null) {
             messageTextView.setText(message.getText());
+            messengerTextView.setText(message.getName());
             messageTextView.setVisibility(TextView.VISIBLE);
             messageImageView.setVisibility(ImageView.GONE);
         } else if (message.getImageUrl() != null) {
