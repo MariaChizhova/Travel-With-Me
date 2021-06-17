@@ -49,7 +49,7 @@ public class UsersSearchFragment extends Fragment {
 
         initRecyclerView();
         long offset = 0;
-        long count = 20;
+        long count = 10;
         if (currentUser != null) {
             searchUsers(currentUser.getUserID(), offset, count);
         }
