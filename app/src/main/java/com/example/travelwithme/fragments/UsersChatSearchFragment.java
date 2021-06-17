@@ -55,13 +55,12 @@ public class UsersChatSearchFragment extends Fragment {
         if (currentUser != null) {
             searchUsers(currentUser.getUserID(), offset, count);
         }
-        //  initScrollListener();
+        initScrollListener();
         return view;
     }
 
     private void searchUsers(long userId, long offset, long count) {
         new Api().searchUsers(userId, inputText, offset, count, users -> {
-            // usersAdapter.clearItems();
             usersList.addAll(users);
             usersAdapter.notifyDataSetChanged();
         });
