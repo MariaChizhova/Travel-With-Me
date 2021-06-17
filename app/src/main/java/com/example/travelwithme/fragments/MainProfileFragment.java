@@ -158,7 +158,7 @@ public class MainProfileFragment extends Fragment {
             loadUserInfo();
         }
 
-        initScrollListener();
+    //    initScrollListener();
 
         return view;
     }
