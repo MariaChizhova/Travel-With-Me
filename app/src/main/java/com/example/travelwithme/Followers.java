@@ -42,7 +42,7 @@ public class Followers extends Fragment {
 
         initRecyclerView();
         long offset = 0;
-        long count = 10;
+        long count = 20;
         if (currentUser != null) {
             loadFollowers(currentUser.getUserID(), offset, count);
         }
@@ -103,7 +103,7 @@ public class Followers extends Fragment {
             loadFollowers(currentUser.getUserID(), scrollPosition, 10);
             followersAdapter.notifyDataSetChanged();
             isLoading = false;
-        }, 2000);
+        }, 1000);
     }
 
 

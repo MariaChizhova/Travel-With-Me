@@ -43,7 +43,7 @@ public class Following extends Fragment {
 
         initRecyclerView();
         long offset = 0;
-        long count = 10;
+        long count = 20;
         if (currentUser != null) {
             loadFollowing(currentUser.getUserID(), offset, count);
         }
@@ -105,7 +105,7 @@ public class Following extends Fragment {
             loadFollowing(currentUser.getUserID(), scrollPosition, 10);
             followingAdapter.notifyDataSetChanged();
             isLoading = false;
-        }, 2000);
+        }, 1000);
     }
 
 

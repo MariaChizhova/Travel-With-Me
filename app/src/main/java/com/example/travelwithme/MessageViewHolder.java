@@ -1,6 +1,5 @@
 package com.example.travelwithme;
 
-import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.util.Log;
 import android.view.View;
@@ -15,9 +14,6 @@ import com.example.travelwithme.pojo.Message;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
-
-import java.util.Base64;
-
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MessageViewHolder extends RecyclerView.ViewHolder {
@@ -40,6 +36,7 @@ public class MessageViewHolder extends RecyclerView.ViewHolder {
     public void bindMessage(Message message) {
         if (message.getText() != null) {
             messageTextView.setText(message.getText());
+            messengerTextView.setText(message.getName());
             messageTextView.setVisibility(TextView.VISIBLE);
             messageImageView.setVisibility(ImageView.GONE);
         } else if (message.getImageUrl() != null) {

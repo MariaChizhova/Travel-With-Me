@@ -170,7 +170,10 @@ public class ChatFragment extends Fragment {
 
         if (currentUser != null) {
             new Api().getUser(currentUser.getEmail(), user -> {
-                String name = user.getFirstName();
+                String firstName = user.getFirstName();
+                String lastName = user.getLastName();
+                String name = firstName + " " + lastName;
+                System.out.println(name);
                 String photo = user.getAvatar();
 
                 Message message = new Message(messageText, name, photo, imageUrl);
