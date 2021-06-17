@@ -31,7 +31,8 @@ public class FeedFragment extends Fragment {
     private ProgressDialog progressDialog;
     boolean isLoading = false;
 
-    public FeedFragment() { }
+    public FeedFragment() {
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -55,7 +56,7 @@ public class FeedFragment extends Fragment {
     private void loadPosts(long offset, long count) {
         Api api = new Api();
         api.getUser(email, user -> {
-            api.getFollowingsPosts(user.getUserID(), offset, count,  posts -> {
+            api.getFollowingsPosts(user.getUserID(), offset, count, posts -> {
                 postAdapter.setItems(posts);
                 progressDialog.dismiss();
                 view.setVisibility(View.VISIBLE);

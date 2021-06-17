@@ -2,7 +2,6 @@ package com.example.travelwithme.fragments;
 
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
-import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -13,7 +12,6 @@ import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,13 +26,6 @@ import com.example.travelwithme.pojo.User;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
-import java.util.Base64;
-
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link MainProfileFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 
 public class UsersProfileFragment extends Fragment {
 
@@ -63,7 +54,7 @@ public class UsersProfileFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (savedInstanceState == null) {
             progressDialog = ProgressDialog.show(getActivity(), "", "Loading...");
-            loadUserInfo(); //TODO: load one time!!!
+            loadUserInfo();
         }
     }
 

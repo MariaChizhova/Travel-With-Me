@@ -20,7 +20,8 @@ public class ImageAdapterViewing extends RecyclerView.Adapter<ImageAdapterViewin
 
     private final List<String> list = new ArrayList<>();
 
-    public ImageAdapterViewing(){ }
+    public ImageAdapterViewing() {
+    }
 
     @Override
     public @NotNull ImageAdapterViewing.ImageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

@@ -72,7 +72,7 @@ public class Post {
         return mapData;
     }
 
-    public String getImageURL(){
+    public String getImageURL() {
         return imageURL;
     }
 

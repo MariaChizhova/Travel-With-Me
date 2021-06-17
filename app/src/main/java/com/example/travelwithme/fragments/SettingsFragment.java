@@ -15,8 +15,6 @@ import android.widget.Button;
 import com.example.travelwithme.LoginActivity;
 import com.example.travelwithme.R;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.gson.Gson;
 
 public class SettingsFragment extends Fragment {
 

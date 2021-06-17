@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -51,7 +52,7 @@ public class Followers extends Fragment {
     }
 
     private void loadFollowers(long userId, long offset, long count) {
-        new Api().getFollowers(userId, offset, count, lst ->  {
+        new Api().getFollowers(userId, offset, count, lst -> {
             followersList.addAll(lst);
             followersAdapter.notifyDataSetChanged();
         });

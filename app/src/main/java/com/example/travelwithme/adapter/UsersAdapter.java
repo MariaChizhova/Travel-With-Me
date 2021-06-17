@@ -1,7 +1,6 @@
 package com.example.travelwithme.adapter;
 
 import android.content.SharedPreferences;
-import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +24,6 @@ import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Base64;
 import java.util.Collection;
 import java.util.List;
 
@@ -48,7 +46,7 @@ public class UsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
-    public  RecyclerView.@NotNull ViewHolder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
+    public RecyclerView.@NotNull ViewHolder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
         if (viewType == VIEW_TYPE_ITEM) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.user_item_view, parent, false);
             return new FriendViewHolder(view);
@@ -158,7 +156,7 @@ public class UsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         @RequiresApi(api = Build.VERSION_CODES.O)
         public void bind(User user) {
             if (user.getFirstName() != null) {
-               nameTextView.setText(user.getFirstName());
+                nameTextView.setText(user.getFirstName());
             }
             if (user.getLastName() != null) {
                 lastNameTextView.setText(user.getLastName());

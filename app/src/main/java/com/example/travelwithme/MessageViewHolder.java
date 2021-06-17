@@ -1,6 +1,5 @@
 package com.example.travelwithme;
 
-import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.util.Log;
 import android.view.View;
@@ -9,14 +8,13 @@ import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.example.travelwithme.adapter.PostAdapter;
 import com.example.travelwithme.pojo.Message;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
-
-import java.util.Base64;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 

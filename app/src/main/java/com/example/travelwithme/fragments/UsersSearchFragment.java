@@ -59,7 +59,7 @@ public class UsersSearchFragment extends Fragment {
 
     private void searchUsers(long userId, long offset, long count) {
         new Api().searchUsers(userId, inputText, offset, count, users -> {
-           // usersAdapter.clearItems();
+            // usersAdapter.clearItems();
             usersList.addAll(users);
             usersAdapter.notifyDataSetChanged();
         });

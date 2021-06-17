@@ -22,7 +22,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
 
     private final List<Bitmap> list = new ArrayList<>();
 
-    public ImageAdapter(MarkerDescription markerDescription){
+    public ImageAdapter(MarkerDescription markerDescription) {
         parent = markerDescription;
     }
 

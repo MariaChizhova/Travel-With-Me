@@ -1,10 +1,8 @@
 package com.example.travelwithme.fragments;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Build;
@@ -47,7 +45,6 @@ import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.util.Base64;
 
 import retrofit2.Call;
@@ -59,10 +56,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainProfileFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
     private static String email;
     private static final int RESULT_LOAD_IMAGE = 1;
     private static final int RESULT_EDIT_USER = 2;
@@ -79,9 +72,6 @@ public class MainProfileFragment extends Fragment {
     private View view;
     private long currentId = 1;
     boolean isLoading = false;
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
     private User currentUser;
 
 
@@ -93,8 +83,6 @@ public class MainProfileFragment extends Fragment {
     public static MainProfileFragment newInstance(String param1, String param2) {
         MainProfileFragment fragment = new MainProfileFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }

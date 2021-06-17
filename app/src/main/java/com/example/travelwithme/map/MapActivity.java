@@ -180,7 +180,6 @@ public class MapActivity extends AppCompatActivity implements
         if (image.size() > 0) {
             Bitmap bmpWithBorder = Bitmap.createBitmap(image.get(0).getWidth() + 20, image.get(0).getHeight() + 30, image.get(0).getConfig());
             Canvas canvas = new Canvas(bmpWithBorder);
-//            canvas.drawColor(Color.WHITE);
             canvas.drawBitmap(image.get(0), 10, 10, null);
 
             Paint paint = new Paint();
@@ -207,14 +206,11 @@ public class MapActivity extends AppCompatActivity implements
                 .build();
         RouteApi routeService = restAdapter.create(RouteApi.class);
 
-        //Вызов запроса на маршрут (асинхрон)
         String from = "" + mapData.getMarker(mapData.sizeMarkers() - 2).latitude + "," + mapData.getMarker(mapData.sizeMarkers() - 2).longitude;
         String to = "" + mapData.getMarker(mapData.sizeMarkers() - 1).latitude + "," + mapData.getMarker(mapData.sizeMarkers() - 1).longitude;
         routeService.getRoute(from, to, true, "ru", KEY, new Callback<RouteResponse>() {
             public void success(RouteResponse arg0, retrofit.client.Response arg1) {
-                //Если прошло успешно, то декодируем маршрут в точки LatLng
                 List<LatLng> mPoints = PolyUtil.decode(arg0.getPoints());
-                //Строим полилинию
                 PolylineOptions line = new PolylineOptions();
                 for (int i = 0; i < mPoints.size(); i++) {
                     line.add(mPoints.get(i));

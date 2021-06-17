@@ -19,11 +19,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.travelwithme.adapter.ChatsAdapter;
 import com.example.travelwithme.fragments.ChatFragment;
 import com.example.travelwithme.fragments.UsersChatSearchFragment;
-import com.example.travelwithme.fragments.UsersSearchFragment;
 import com.example.travelwithme.pojo.User;
 import com.google.gson.Gson;
-
-import java.util.List;
 
 
 public class AddChatFragment extends Fragment {

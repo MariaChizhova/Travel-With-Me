@@ -35,15 +35,11 @@ import com.google.maps.android.PolyUtil;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
-import java.io.IOException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import retrofit.Callback;
 import retrofit.RestAdapter;
@@ -102,7 +98,7 @@ public class ViewingMapActivity extends AppCompatActivity implements OnMapReadyC
             PoiTarget pt = new PoiTarget(m);
             poiTargets.add(pt);
             latLngBuilder.include(mapData.getMarker(i));
-            if(mapData.getPhotosURL(i).size() > 0) {
+            if (mapData.getPhotosURL(i).size() > 0) {
                 Picasso.get().load(PostAdapter.S3IMAGES + mapData.getIcon(i)).into(pt);
             }
         }
@@ -141,14 +137,11 @@ public class ViewingMapActivity extends AppCompatActivity implements OnMapReadyC
                 .build();
         RouteApi routeService = restAdapter.create(RouteApi.class);
 
-        //Вызов запроса на маршрут (асинхрон)
         String from = "" + fromMarker.latitude + "," + fromMarker.longitude;
         String to = "" + toMarker.latitude + "," + toMarker.longitude;
         routeService.getRoute(from, to, true, "ru", MapActivity.KEY, new Callback<RouteResponse>() {
             public void success(RouteResponse arg0, retrofit.client.Response arg1) {
-                //Если прошло успешно, то декодируем маршрут в точки LatLng
                 List<LatLng> mPoints = PolyUtil.decode(arg0.getPoints());
-                //Строим полилинию
                 PolylineOptions line = new PolylineOptions();
                 for (int i = 0; i < mPoints.size(); i++) {
                     line.add(mPoints.get(i));
