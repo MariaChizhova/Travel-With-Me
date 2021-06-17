@@ -55,7 +55,7 @@ public class UsersChatSearchFragment extends Fragment {
         if (currentUser != null) {
             searchUsers(currentUser.getUserID(), offset, count);
         }
-      //  initScrollListener();
+        //  initScrollListener();
         return view;
     }
 

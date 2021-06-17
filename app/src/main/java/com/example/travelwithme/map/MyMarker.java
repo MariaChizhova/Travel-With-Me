@@ -1,22 +1,16 @@
 package com.example.travelwithme.map;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
-import com.example.travelwithme.adapter.PostAdapter;
 import com.example.travelwithme.requests.MarkerCreateRequest;
 import com.google.android.gms.maps.model.LatLng;
-import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 
 public class MyMarker implements Parcelable {

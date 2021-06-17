@@ -16,7 +16,6 @@ import android.widget.ImageView;
 import com.example.travelwithme.Api;
 import com.example.travelwithme.R;
 import com.example.travelwithme.fragments.MainProfileFragment;
-import com.example.travelwithme.map.MapData;
 import com.example.travelwithme.pojo.Post;
 
 import java.util.Collections;

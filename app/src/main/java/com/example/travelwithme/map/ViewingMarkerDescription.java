@@ -2,7 +2,6 @@ package com.example.travelwithme.map;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.travelwithme.R;
-import com.example.travelwithme.adapter.ImageAdapter;
 import com.example.travelwithme.adapter.ImageAdapterViewing;
 
 import java.util.List;

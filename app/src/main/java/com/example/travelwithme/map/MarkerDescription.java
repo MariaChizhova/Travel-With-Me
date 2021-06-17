@@ -4,8 +4,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -22,7 +20,6 @@ import com.example.travelwithme.R;
 import com.example.travelwithme.adapter.ImageAdapter;
 
 import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -108,11 +105,11 @@ public class MarkerDescription extends AppCompatDialogFragment {
     }
 
 
-    public static Bitmap cropToSquare(Bitmap bitmap){
-        int width  = bitmap.getWidth();
+    public static Bitmap cropToSquare(Bitmap bitmap) {
+        int width = bitmap.getWidth();
         int height = bitmap.getHeight();
         int newWidth = Math.min(height, width);
-        int newHeight = (height > width)? height - ( height - width) : height;
+        int newHeight = (height > width) ? height - (height - width) : height;
         int cropW = (width - height) / 2;
         cropW = Math.max(cropW, 0);
         int cropH = (height - width) / 2;

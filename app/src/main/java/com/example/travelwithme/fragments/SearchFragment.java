@@ -21,7 +21,6 @@ import com.example.travelwithme.R;
 import com.example.travelwithme.adapter.ViewPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 
-import java.util.List;
 
 public class SearchFragment extends Fragment {
 

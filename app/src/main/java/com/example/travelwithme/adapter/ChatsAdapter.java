@@ -1,22 +1,23 @@
 package com.example.travelwithme.adapter;
 
-import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.travelwithme.R;
 import com.example.travelwithme.pojo.User;
 import com.squareup.picasso.Picasso;
+
 import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.Collection;
 import java.util.List;
 

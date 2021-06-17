@@ -86,7 +86,7 @@ public class MapData implements Parcelable {
         return (ArrayList<String>) markers.get(ind).photosURL;
     }
 
-    public String getIcon(int ind){
+    public String getIcon(int ind) {
         return markers.get(ind).icon;
     }
 

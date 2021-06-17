@@ -31,7 +31,6 @@ import com.example.travelwithme.requests.PostCreateRequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -514,7 +513,7 @@ public class Api {
         });
     }
 
-    public void getFollowers(long userID,  long offset, long count, Consumer<Collection<User>> onFollowersLoaded) {
+    public void getFollowers(long userID, long offset, long count, Consumer<Collection<User>> onFollowersLoaded) {
         Collection<User> lst = new ArrayList<>();
 
         Gson gson = new GsonBuilder()
@@ -552,7 +551,7 @@ public class Api {
         });
     }
 
-    public void getFollowing(long userID,  long offset, long count, Consumer<Collection<User>> onFollowingLoaded) {
+    public void getFollowing(long userID, long offset, long count, Consumer<Collection<User>> onFollowingLoaded) {
         Collection<User> lst = new ArrayList<>();
 
         Gson gson = new GsonBuilder()

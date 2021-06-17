@@ -9,7 +9,8 @@ public class Message {
     private String time;
     private String date;
 
-    public Message() { }
+    public Message() {
+    }
 
     public Message(String text, String name, String photoUrl, String imageUrl) {
         this.text = text;

@@ -8,12 +8,17 @@ import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.example.travelwithme.adapter.PostAdapter;
 import com.example.travelwithme.pojo.Message;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
+<<<<<<< HEAD
+=======
+
+>>>>>>> 83dec7eb5b551c03925cdb597ff1f2ffae0a5e4d
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MessageViewHolder extends RecyclerView.ViewHolder {

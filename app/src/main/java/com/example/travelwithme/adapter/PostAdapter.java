@@ -3,15 +3,12 @@ package com.example.travelwithme.adapter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 import android.content.Intent;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -211,7 +208,11 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             String creationDateFormatted = getFormattedDate(post.getCreationDate());
             creationDateTextView.setText(creationDateFormatted);
 
-            Picasso.get().load(S3IMAGES + post.getImageURL()).into(postImageView);
+            if (post.getImageURL() == null) {
+                postImageView.setImageBitmap(post.getImage());
+            } else {
+                Picasso.get().load(S3IMAGES + post.getImageURL()).into(postImageView);
+            }
 
             postImageView.setOnClickListener(v -> {
                 Intent i = new Intent(parentView.getContext(), ViewingMapActivity.class);

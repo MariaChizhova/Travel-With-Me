@@ -144,15 +144,15 @@ public class ChatFragment extends Fragment {
                 Log.d(TAG, "Uri: " + uri.toString());
                 final FirebaseUser user = mFirebaseAuth.getCurrentUser();
                 onMessage(null, uri.toString(), tempMessage -> mDatabase.getReference().child(DIALOGS_CHILD).child(userId1 + "_" + userId2).push()
-                    .setValue(tempMessage, (databaseError, databaseReference) -> {
-                        if (databaseError != null) {
-                            Log.w(TAG, "Unable to write message to database.", databaseError.toException());
-                            return;
-                        }
-                        String key = databaseReference.getKey();
-                        StorageReference storageReference = FirebaseStorage.getInstance().getReference(user.getUid()).child(key).child(uri.getLastPathSegment());
-                        putImageInStorage(storageReference, uri, key);
-                    }));
+                        .setValue(tempMessage, (databaseError, databaseReference) -> {
+                            if (databaseError != null) {
+                                Log.w(TAG, "Unable to write message to database.", databaseError.toException());
+                                return;
+                            }
+                            String key = databaseReference.getKey();
+                            StorageReference storageReference = FirebaseStorage.getInstance().getReference(user.getUid()).child(key).child(uri.getLastPathSegment());
+                            putImageInStorage(storageReference, uri, key);
+                        }));
             }
         }
     }
