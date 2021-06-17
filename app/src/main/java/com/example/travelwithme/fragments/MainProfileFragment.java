@@ -41,6 +41,7 @@ import com.example.travelwithme.pojo.User;
 
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
@@ -295,7 +296,7 @@ public class MainProfileFragment extends Fragment {
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void displayUserInfo(User user) {
         if (user.getAvatar() != null) {
-            Picasso.get().load(PostAdapter.S3IMAGES + user.getAvatar()).into(userImageView);
+            Picasso.get().load(PostAdapter.S3IMAGES + user.getAvatar()).memoryPolicy(MemoryPolicy.NO_CACHE).into(userImageView);
         }
         if (user.getFirstName() != null) {
             nameTextView.setText(user.getFirstName());
