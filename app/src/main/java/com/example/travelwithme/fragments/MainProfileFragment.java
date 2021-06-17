@@ -116,7 +116,6 @@ public class MainProfileFragment extends Fragment {
         initRecyclerView();
 
         userImageView.setOnClickListener(v -> {
-            Log.i("Click", "avatar");
             Intent i = new Intent(
                     Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             startActivityForResult(i, RESULT_LOAD_IMAGE);
@@ -223,6 +222,7 @@ public class MainProfileFragment extends Fragment {
             Gson gson = new Gson();
             String json = gson.toJson(u);
             preferences.edit().putString("user", json).apply();
+            currentUser = u;
 
             loadPosts(u.getUserID(), 0, 5);
             displayUserInfo(u);
@@ -251,49 +251,44 @@ public class MainProfileFragment extends Fragment {
                 scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
                 byte[] bytes = stream.toByteArray();
 
-                final Api api = new Api();
-                api.getUser(email, user -> {
+                Gson gson = new GsonBuilder()
+                        .setLenient()
+                        .create();
 
-                    Gson gson = new GsonBuilder()
-                            .setLenient()
-                            .create();
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl("http://84.252.137.106:9090")
+                        .addConverterFactory(GsonConverterFactory.create(gson))
+                        .build();
 
-                    Retrofit retrofit = new Retrofit.Builder()
-                            .baseUrl("http://84.252.137.106:9090")
-                            .addConverterFactory(GsonConverterFactory.create(gson))
-                            .build();
+                EditAvatarApi editAvatarApi = retrofit.create(EditAvatarApi.class);
+                AvatarEditRequest avatarEditRequest = new AvatarEditRequest();
+                avatarEditRequest.setUserId(currentUser.getUserID());
+                avatarEditRequest.setAvatar(Base64.getEncoder().encodeToString(bytes));
+                Call<Void> call = editAvatarApi.editAvatar(avatarEditRequest);
+                call.enqueue(new Callback<Void>() {
 
-                    EditAvatarApi editAvatarApi = retrofit.create(EditAvatarApi.class);
-                    AvatarEditRequest avatarEditRequest = new AvatarEditRequest();
-                    avatarEditRequest.setUserId(user.getUserID());
-                    avatarEditRequest.setAvatar(Base64.getEncoder().encodeToString(bytes));
-                    Call<Void> call = editAvatarApi.editAvatar(avatarEditRequest);
-                    call.enqueue(new Callback<Void>() {
-
-                        @RequiresApi(api = Build.VERSION_CODES.O)
-                        @Override
-                        public void onResponse(Call<Void> call, Response<Void> response) {
-                            if (response.isSuccessful()) {
-                                Log.i("succsess", "sucses to edit avavtar");
-                            } else {
-                                Log.i("error", response.errorBody().toString());
-                            }
+                    @RequiresApi(api = Build.VERSION_CODES.O)
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        if (response.isSuccessful()) {
+                            Log.i("succsess", "sucses to edit avavtar");
+                            postAdapter.del();
+                            loadUserInfo();
+                        } else {
+                            Log.i("error", response.errorBody().toString());
                         }
+                    }
 
-                        @Override
-                        public void onFailure(Call<Void> call, Throwable t) {
-                            Log.i("error", "error to edit avavtar 2");
-                            t.printStackTrace();
-                        }
-                    });
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        Log.i("error", "error to edit avavtar 2");
+                        t.printStackTrace();
+                    }
                 });
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
-
-            postAdapter.del();
-            loadUserInfo();
         }
     }
 
