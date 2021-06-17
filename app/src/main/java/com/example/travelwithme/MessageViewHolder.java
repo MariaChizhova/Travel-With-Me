@@ -37,7 +37,7 @@ public class MessageViewHolder extends RecyclerView.ViewHolder {
     public void bindMessage(Message message) {
         if (message.getText() != null) {
             messageTextView.setText(message.getText());
-            messengerTextView.setText(message.getName());
+           // messengerTextView.setText(message.getName());
             messageTextView.setVisibility(TextView.VISIBLE);
             messageImageView.setVisibility(ImageView.GONE);
         } else if (message.getImageUrl() != null) {
